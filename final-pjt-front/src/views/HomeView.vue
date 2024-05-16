@@ -53,7 +53,7 @@
 <style scoped>
 .main-background {
   background-color: rgb(33, 95, 255);
-  height: 690px;
+  height: 700px;
 }
 .nav-link {
   color: white;
@@ -75,7 +75,7 @@ nav {
 }
 .main-img {
   position: absolute;
-  top: 200px;
+  top: 210px;
   left: 330px;
   width: 630px;
 }
@@ -110,7 +110,8 @@ nav {
   padding: 10px 20px;
   border: none;
   width: fit-content;
-  margin-top: 40px;
+  margin-top: 30px;
   font-weight: bold;
 }
+
 </style>
