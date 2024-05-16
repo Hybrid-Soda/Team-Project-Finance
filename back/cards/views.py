@@ -91,31 +91,27 @@ def review_detail(request, card_pk, review_pk):
 @api_view(["GET"])
 # @permission_classes([IsAuthenticated])
 def card_recommend(request, username):
-    import pandas as pd
     from django.shortcuts import render
+    context = {}
+    return render(request, 'card_recommend.html', context)
+
+# 크롤링 CSV 데이터 DB에 저장
+def csv_to_db(request):
+    import pandas as pd
     from sqlalchemy import create_engine
 
-    engine = create_engine('sqlite:///mydatabase.db')
-    data = pd.read_csv('static/card_data.csv', encoding='cp949')
-    table_name = Card._meta.db_table
-    data.to_sql(table_name, con=engine, if_exists='replace', index=False)
-    result_df = pd.read_sql_table(table_name, con=engine)
-    # cards = get_list_or_404(Card)
-    # survey = get_object_or_404(Survey, user=request.user)
-
-    # 카드 데이터
-    # data_frame = pd.DataFrame(data)
-    # df_html = data_frame.to_html(index=False)
-
-    # # 혜택 데이터
-    # data = pd.read_csv('static/benefit_data.csv', encoding='cp949')
-    # data_frame = pd.DataFrame(data)
-    # df_html = data_frame.to_html(index=False)
-
-    context = {
-        'data': result_df.to_html(index=False),
-    }
-    return render(request, 'card_recommend.html', context)
+    # 데이터베이스 연결
+    engine = create_engine('sqlite:///db.sqlite3')
+    # CSV 파일 읽기
+    card_data = pd.read_csv('static/card_data.csv', encoding='cp949')
+    benefit_data = pd.read_csv('static/benefit_data.csv', encoding='cp949')
+    # 테이블 이름 가져오기
+    card_table = Card._meta.db_table
+    benefit_table = Benefit._meta.db_table
+    # 데이터베이스에 데이터 저장 (기존 테이블을 덮어쓰려면 if_exists='replace' -> 속성까지 덮어씌움, 추가하려면 'append')
+    card_data.to_sql(card_table, con=engine, if_exists='append', index=False)
+    benefit_data.to_sql(benefit_table, con=engine, if_exists='append', index=False)
+    return
 
 # 카드 고릴라 셀레니움 크롤링
 def card_gorilla_selenium(request):

@@ -1,4 +1,4 @@
-id,name,brand,image,annual_fee1,annual_fee2,record,type
+id,name,brand,image_url,annual_fee1,annual_fee2,record,type
 1,신한카드 Hi-Point,신한카드,https://api.card-gorilla.com:8080/storage/card/1/card_img/20083/1card.png,8000,0,0,VISA
 2,신한카드 Love,신한카드,https://api.card-gorilla.com:8080/storage/card/2/card_img/20084/2card.png,8000,0,20,VISA
 3,신한카드 Lady,신한카드,https://api.card-gorilla.com:8080/storage/card/3/card_img/20085/3card.png,5000,0,30,VISA
