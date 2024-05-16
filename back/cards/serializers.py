@@ -7,7 +7,7 @@ class BenefitListSerializer(serializers.ModelSerializer):
         model = Benefit
         fields = '__all__'
 
-class ReviewListSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
@@ -19,7 +19,7 @@ class CardListSerializer(serializers.ModelSerializer):
 
 class CardSerializer(serializers.ModelSerializer):
     benefit_set = BenefitListSerializer(many=True)
-    review_set = ReviewListSerializer(many=True)
+    review_set = ReviewSerializer(many=True)
 
     class Meta:
         model = Card
@@ -27,8 +27,3 @@ class CardSerializer(serializers.ModelSerializer):
             'name', 'brand', 'image_url', 'annual_fee1',
             'annual_fee2', 'record', 'type', 'benefit_set'
         )
-
-class SurveySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Survey
-        fields = '__all__'

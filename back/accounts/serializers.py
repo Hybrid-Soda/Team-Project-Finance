@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import User
 from cards.models import Recommendation
+from .models import *
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -14,3 +14,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'nickname', 'email', 'age', 'gender', 'recommendations')
+
+
+class SurveySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Survey
+        fields = '__all__'

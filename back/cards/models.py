@@ -31,21 +31,3 @@ class Review(models.Model):
     rating = models.FloatField()
     content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-# 설문조사
-class Survey(models.Model):
-    car_owner = models.BooleanField(default=False)
-    live_alone = models.BooleanField(default=False)
-    student = models.BooleanField(default=False)
-    baby = models.BooleanField(default=False)
-    pets = models.BooleanField(default=False)
-    easy_pay = models.BooleanField(default=False)
-    healthcare = models.BooleanField(default=False)
-    telecom = models.BooleanField(default=False)
-    sports = models.BooleanField(default=False)
-    shopping = models.BooleanField(default=False)
-    friends = models.BooleanField(default=False)
-    fitness = models.BooleanField(default=False)
-    movie = models.BooleanField(default=False)
-    travel_inter = models.BooleanField(default=False)
-    trevel_dome = models.BooleanField(default=False)
