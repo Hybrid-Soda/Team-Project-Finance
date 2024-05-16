@@ -8,6 +8,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404, get_list_or_404
+from django.contrib.auth import get_user_model
 
 from .serializers import *
 from .models import *
@@ -27,6 +28,63 @@ def card_detail(request, card_pk):
     serializer = CardListSerializer(card)
     return Response(serializer.data)
 
+# 관심 카드 등록 및 해제
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def favorite(request, card_pk):
+    card = get_object_or_404(Card, pk=card_pk)
+
+    if request.user in card.favorite_users.all():
+        card.favorite_users.remove(request.user)
+        is_favorite = False
+    else:
+        card.favorite_users.add(request.user)
+        is_favorite = True
+    context = {
+        'is_favorite': is_favorite,
+    }
+    return Response(context, status=status.HTTP_200_OK)
+
+# 카드 리뷰 전체 조회 / 생성
+@api_view(["GET", "POST"])
+def review(request, card_pk):
+    card = get_object_or_404(Card, pk=card_pk)
+
+    if request.method == "GET":
+        reviews = card.review_set.all().order_by('-created_at')
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+
+    elif request.method == "POST":
+        if request.user.is_authenticated:
+            serializer = ReviewSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(card=card, user=request.user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+# 카드 리뷰 수정 / 삭제
+@api_view(["PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
+def review_detail(request, card_pk, review_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+
+    if request.method == "PUT":
+        if request.user == review.user:
+            serializer = ReviewSerializer(review, data=request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    elif request.method == "DELETE":
+        if request.user == review.user:
+            review.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 # 카드 고릴라 셀레니움 크롤링
