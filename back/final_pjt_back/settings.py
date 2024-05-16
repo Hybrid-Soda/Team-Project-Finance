@@ -27,22 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-################## env로 api_key 관리 ##################
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-import os
-import environ
-
-env = environ.Env(DEBUG=(bool, True))
-
-environ.Env.read_env(
-    env_file=os.path.join(BASE_DIR, '.env')
-)
-
-FINLIFE_API_KEY = env('FINLIFE_API_KEY')
-ECOS_API_KEY = env('ECOS_API_KEY')
-#######################################################
-
 # Application definition
 
 INSTALLED_APPS = [
