@@ -30,7 +30,7 @@ class Review(models.Model):
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
     rating = models.FloatField()
     content = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 # 설문조사
 class Survey(models.Model):

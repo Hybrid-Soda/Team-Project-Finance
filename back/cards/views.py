@@ -1,4 +1,32 @@
-from django.shortcuts import render
+# rest_framework module
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+
+# permission Decorators
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+from django.shortcuts import get_object_or_404, get_list_or_404
+
+from .serializers import *
+from .models import *
+
+
+# 카드 리스트
+@ api_view(['GET'])
+def card_list(request):
+    cards = get_list_or_404(Card)
+    serializer = CardListSerializer(cards, many=True)
+    return Response(serializer.data)
+
+# 카드 상세
+@ api_view(['GET'])
+def card_detail(request, card_pk):
+    card = get_object_or_404(Card, pk=card_pk)
+    serializer = CardListSerializer(card)
+    return Response(serializer.data)
+
 
 
 # 카드 고릴라 셀레니움 크롤링
@@ -30,8 +58,6 @@ def card_gorilla_selenium(request):
     csv_data2 = open(f"{static_dir}\\benefit_data.csv", 'w', encoding='CP949', newline='')
     benefit_data = csv.writer(csv_data2)
 
-    cards = [] # 2498
-    benefits = [] # 2498
     card_data.writerow(['pk', 'name', 'brand', 'image', 'annual_fee1', 'annual_fee2', 'record', 'type'])
     benefit_data.writerow(['card', 'title', 'content'])
     
@@ -70,23 +96,14 @@ def card_gorilla_selenium(request):
             benefit_name = driver.find_elements(By.CSS_SELECTOR, f"{BENEFIT_URL} > dt > p")
             # 혜택 내용
             benefit_content = driver.find_elements(By.CSS_SELECTOR, f"{BENEFIT_URL} > dt > i")
-            # 혜택 상세 버튼
-            # benefit_click = driver.find_elements(By.CSS_SELECTOR, BENEFIT_URL)
 
             for i in range(len(benefit_name)):
                 bnf_name = benefit_name[i].text
                 bnf_content = benefit_content[i].text
-                # benefit_click[i].click()
-                # bnf_detail = driver.find_elements(By.CSS_SELECTOR, f"{BENEFIT_URL} > dd > div > p")
-                # detail = bnf_detail[i].text
                 benefit_data.writerow([pk, bnf_name, bnf_content])
 
         except:
             continue
-    
+
     driver.quit()
-    context = {
-        'cards': cards,
-        'benefits': benefits,
-    }
-    return render(request, 'card_gorilla.html', context)
+    return
