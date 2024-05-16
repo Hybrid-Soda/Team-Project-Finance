@@ -1,5 +1,5 @@
 """
-URL configuration for final_pjt_back project.
+URL configuration for final_project project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -15,8 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    # 앱 경로
+    path('users/', include('accounts.urls')),
+    path('cards/', include('cards.urls')),
+    path('posts/', include('posts.urls')),
+    # 로그인 및 회원가입
+    path('accounts/', include('dj_rest_auth.urls')),
+    path('accounts/registration/', include('dj_rest_auth.registration.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
