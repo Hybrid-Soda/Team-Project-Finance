@@ -8,8 +8,8 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404, get_list_or_404
-from django.contrib.auth import get_user_model
 
+from accounts.models import Survey
 from .serializers import *
 from .models import *
 
@@ -86,6 +86,52 @@ def review_detail(request, card_pk, review_pk):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+# 카드 추천
+@api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+def card_recommend(request, username):
+    from django.shortcuts import render
+    context = {}
+    return render(request, 'card_recommend.html', context)
+
+# 카드 추천 테스트
+def card_recommend_test(request):
+    from django.contrib.auth import get_user_model
+    from django.shortcuts import render
+    
+    # 카드별 혜택 대분류 추출 -> ['쇼핑', '모든가맹점', '주유', '금융', '통신', '기타', '적립']
+    cards = get_list_or_404(Card)
+    benefits = []
+    for card in cards:
+        benefit = card.benefit_set.all()
+        bene = [bn.title for bn in benefit]
+        benefits.append(bene)
+
+    # 추출된 혜택을 딕셔너리를 이용해 0,1로 변환
+
+    context = {
+        'cards': cards,
+        'benefits': benefits,
+    }
+    return render(request, 'card_recommend.html', context)
+
+# 크롤링 CSV 데이터 DB에 저장
+def csv_to_db(request):
+    import pandas as pd
+    from sqlalchemy import create_engine
+
+    # 데이터베이스 연결
+    engine = create_engine('sqlite:///db.sqlite3')
+    # CSV 파일 읽기
+    card_data = pd.read_csv('static/card_data.csv', encoding='cp949')
+    benefit_data = pd.read_csv('static/benefit_data.csv', encoding='cp949')
+    # 테이블 이름 가져오기
+    card_table = Card._meta.db_table
+    benefit_table = Benefit._meta.db_table
+    # 데이터베이스에 데이터 저장 (기존 테이블을 덮어쓰려면 if_exists='replace' -> 속성까지 덮어씌움, 추가하려면 'append')
+    card_data.to_sql(card_table, con=engine, if_exists='append', index=False)
+    benefit_data.to_sql(benefit_table, con=engine, if_exists='append', index=False)
+    return
 
 # 카드 고릴라 셀레니움 크롤링
 def card_gorilla_selenium(request):
