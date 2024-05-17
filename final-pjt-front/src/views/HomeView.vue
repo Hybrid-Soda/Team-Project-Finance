@@ -5,9 +5,9 @@
       <nav>
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <RouterLink class="nav-link" :to="{name:'home'}">
               <img src="../assets/img/PICKardº.png" alt="logo" style="margin-right: 60px;">
-            </a>
+            </RouterLink>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">카드 모아보기</a>
@@ -23,8 +23,10 @@
           </li>
           <li class="nav-item">
             <div class="login-menu">
-              <button class="login-btn">로그인</button>
-              <button class="login-btn" style="font-weight: bold; background-color: rgb(255, 199, 39);">회원가입</button>
+              <RouterLink :to="{ name:'login' }">
+                <button class="login-btn">로그인</button>
+              </RouterLink>
+              <button class="login-btn" style="font-weight: bold; background-color: rgb(255, 199, 39); color: black;">회원가입</button>
             </div>
           </li>
         </ul>
@@ -46,6 +48,7 @@
 
 <script setup>
   import { ref } from 'vue'
+  import { RouterLink } from 'vue-router';
   
 
 </script>
@@ -112,6 +115,7 @@ nav {
   width: fit-content;
   margin-top: 30px;
   font-weight: bold;
+  color: black;
 }
 
 </style>

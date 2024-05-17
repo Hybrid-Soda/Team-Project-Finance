@@ -3,14 +3,13 @@
     <Header />
   </div>
   <main>
+    <!-- <ul>
+      <li><a href="">개요</a></li>
+      <li><a href="">혜택 정보</a></li>
+      <li><a href="">사용자 리뷰</a></li>
+    </ul> -->
     <div class="card-page-bg">
       <div class="menu-wrap">
-        <ul style="border: 2px solid red;">
-          <li>개요</li>
-          <li>혜택 정보</li>
-          <li>카드 신청</li>
-          <li>사용자 리뷰</li>
-        </ul>
         <div class="info-wrap">
           <CardDetailItem />
         </div>
@@ -46,12 +45,18 @@ main {
 }
 ul {
   display: flex;
-  justify-content: center;
-  
+  flex-direction: column;
+  align-items: end;
+  width: 150px;  
+  padding-top: 200px;
+  gap: 20px;
+  padding-right: 20px;
 }
 li {
-  display: inline;
+  /* display: inline; */
   margin: 0 5%;
+  font-size: large;
+  font-weight: 500;
 }
 .info-wrap {
   border: 2px solid green;

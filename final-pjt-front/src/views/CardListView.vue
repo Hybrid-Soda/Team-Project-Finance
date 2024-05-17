@@ -50,7 +50,7 @@
   /* border: 3px solid red; */
   display: flex;
   align-items: center;
-  padding-bottom: 5%;
+  padding-bottom: 2%;
 }
 .card-list {
   /* border: 3px solid blue; */

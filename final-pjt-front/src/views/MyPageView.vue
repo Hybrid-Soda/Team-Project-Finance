@@ -2,7 +2,11 @@
   <div>
     <Header />
     <div style="position: absolute; top: 100px;">
-      <div class="my-page-bg"></div>
+      <div class="my-page-bg">
+        <div class="my-info-item">
+          <MyPageItem />
+        </div>
+      </div>
     </div>
     <div class="my-page-wrap">
       <div class="my-page-menu">
@@ -24,11 +28,17 @@
           </li>
           <li>
             <a href="">
+              카드 추천 받기
+            </a>
+          </li>
+          <li>
+            <a href="">
               홈으로 가기
             </a>
           </li>
         </ul>
       </div>
+
     </div>
   </div>
 </template>
@@ -36,6 +46,7 @@
 <script setup>
   import { ref } from 'vue'
   import Header from '@/components/Header.vue';
+  import MyPageItem from '@/components/MyPageItem.vue';
 
 </script>
 
@@ -69,5 +80,14 @@
 .isNow {
   color: rgb(33, 95, 255);
   font-weight: bold;
+}
+.my-info-item {
+  /* border: 2px solid brown; */
+  width: 38%;
+  margin-left: 35%;
+  margin-top: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
