@@ -1,17 +1,87 @@
 <template>
-  <div>
+  <div class="header-wrap">
     <div>
-      <img src="../assets/img/PICKardº_blue.png" alt="">
+      <RouterLink :to="{ name:'home' }">
+        <img src="../assets/img/PICKardº_blue.png" alt="">
+      </RouterLink>   
+    </div>
+    <div class="header-menu">
+      <nav>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">카드 모아보기</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">카드 검색</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">내 관심 카드</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">커뮤니티</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div v-if="!store.isAuthenticated" class="login-menu-wrap">
+      <RouterLink class="header-menu nav-link" :to="{ name:'login' }">
+        <div>
+          로그인
+        </div>
+      </RouterLink>
+      <RouterLink :to="{ name:'signup' }" class="header-menu nav-link" style="background-color: rgb(33, 95, 255);">
+        <div style="color: white; font-weight: bold;">
+          회원가입
+        </div>
+      </RouterLink>
+    </div>
+    <div v-else class="login-menu-wrap">
+      <button class="header-menu nav-link" @click.prevent="store.logOut">로그아웃</button>
     </div>
   </div>
 </template>
 
 <script setup>
   import { ref } from 'vue'
-  
+  import { useAuthStore } from '@/stores/auth'
+
+  const store = useAuthStore()
 
 </script>
 
 <style scoped>
-
+.nav-link {
+  color: rgb(106, 106, 106);
+}
+nav {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 40px;
+}
+.nav {
+  gap: 30px;
+}
+.header-menu {
+  background: rgba(250,250,250,1);
+  border-radius: 38px;
+  padding: 5px 20px;
+  border: none;
+  width: max-content;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+.header-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 30px 0;
+}
+.login-menu-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
 </style>

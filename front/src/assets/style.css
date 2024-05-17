@@ -1,14 +1,29 @@
+/* 
+blue : rgb(33, 95, 255)
+yellow : rgb(255, 199, 39)
+
+font-color : rgb(106, 106, 106)
+font-color2: white
+
+background-color : rgb(242, 242, 242)
+
+*/
+
 * {
   font-family: "Noto Sans KR";
+  color: rgb(106, 106, 106);
 }
-
-.login-menu {
-  display: flex;
-  gap: 30px;
-  margin-left: 60px;
+body {
+  background-color: rgb(251, 251, 251);
 }
-.login-btn {
-  background: rgba(250,250,250,1);
+li {
+  list-style: none;
+}
+a { 
+  text-decoration: none;
+  color: inherit;
+}
+button {
   border-radius: 38px;
   padding: 10px 20px;
   border: none;
