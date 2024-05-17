@@ -15,6 +15,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'nickname', 'email', 'age', 'gender', 'recommendations')
 
+class EditProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'nickname', 'email', 'age', 'gender')
 
 class SurveySerializer(serializers.ModelSerializer):
     class Meta:

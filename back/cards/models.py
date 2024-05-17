@@ -21,9 +21,12 @@ class Benefit(models.Model):
 # 카드추천
 class Recommendation(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    card = models.ForeignKey(Card, on_delete=models.CASCADE)
-    score = models.FloatField()
-
+    first_card_pk = models.IntegerField()
+    second_card_pk = models.IntegerField()
+    third_card_pk = models.IntegerField()
+    fourth_card_pk = models.IntegerField()
+    fifth_card_pk = models.IntegerField()
+    
 # 카드리뷰
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

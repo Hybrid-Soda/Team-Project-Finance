@@ -1,59 +1,76 @@
 <template>
-  <div>
+  <div class="body">
     <div class="main-background">
-    <header>
-      <nav>
-        <ul class="nav">
-          <li class="nav-item">
-            <RouterLink class="nav-link" :to="{name:'home'}">
-              <img src="../assets/img/PICKardº.png" alt="logo" style="margin-right: 60px;">
-            </RouterLink>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">카드 모아보기</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">카드 검색</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">내 관심 카드</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">커뮤니티</a>
-          </li>
-          <li class="nav-item">
-            <div class="login-menu">
-              <RouterLink :to="{ name:'login' }">
-                <button class="login-btn">로그인</button>
+      <header>
+        <nav>
+          <ul class="nav">
+            <li class="nav-item">
+              <RouterLink class="nav-link" :to="{ name: 'home' }">
+                <img src="../assets/img/PICKardº.png" alt="logo" class="logo"/>
               </RouterLink>
-              <button class="login-btn" style="font-weight: bold; background-color: rgb(255, 199, 39); color: black;">회원가입</button>
-            </div>
-          </li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <img src="../assets/img/Analysis-cuate.png" class="main-img">
-      <div class="main-content">
-        <div class="main-text">
-          내게 필요한 신용카드<br>
-          <span style="color: rgb(255, 199, 39);">1분만에</span> 추천 받기
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">카드 모아보기</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">카드 검색</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">내 관심 카드</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">커뮤니티</a>
+            </li>
+            <li class="nav-item">
+              <div v-if="!store.isAuthenticated" class="auth-menu">
+                <RouterLink :to="{ name: 'login' }">
+                  <button class="login-btn">로그인</button>
+                </RouterLink>
+                <RouterLink :to="{ name: 'signup' }">
+                  <button class="login-btn" style="font-weight: bold; background-color: rgb(255, 199, 39); color: black;">
+                    회원가입
+                  </button>
+                </RouterLink>
+              </div>
+              <div v-else class="auth-menu">
+                <RouterLink :to="{ name: 'myPage', params: { 'username': store.userInfo.username } }">
+                  <button class="login-btn" style=" font-weight: bold; background-color: rgb(255, 199, 39); color: black;">
+                    마이페이지
+                  </button>
+                </RouterLink>
+                <button class="login-btn" @click.prevent="store.logOut">
+                  로그아웃
+                </button>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <img src="../assets/img/Analysis-cuate.png" class="main-img" />
+        <div class="main-content">
+          <div class="main-text">
+            내게 필요한 신용카드<br/>
+            <span style="color: rgb(255, 199, 39)">1분만에</span> 추천 받기
+          </div>
+          <button class="main-text-btn">가입하고 시작하기</button>
         </div>
-        <button class="main-text-btn">가입하고 시작하기</button>
-      </div>
-    </main>
-  </div>
+      </main>
+    </div>
   </div>
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import { RouterLink } from 'vue-router';
-  
-
+  import { ref } from "vue"
+  import { RouterLink } from "vue-router"
+  import { useAuthStore } from "@/stores/auth"
+  const store = useAuthStore()
 </script>
 
 <style scoped>
+.body {
+  min-width: 900px;
+}
 .main-background {
   background-color: rgb(33, 95, 255);
   height: 700px;
@@ -66,6 +83,9 @@
   display: flex;
   align-items: center;
 }
+.logo {
+  margin-right: 60px;
+}
 nav {
   width: 100%;
   height: 120px;
@@ -74,21 +94,21 @@ nav {
   justify-content: space-evenly;
 }
 .nav {
-  gap: 60px;
+  gap: 50px;
 }
 .main-img {
   position: absolute;
   top: 210px;
-  left: 330px;
+  left: 17%;
   width: 630px;
 }
-.login-menu {
+.auth-menu {
   display: flex;
   gap: 30px;
   margin-left: 60px;
 }
 .login-btn {
-  background: rgba(250,250,250,1);
+  background: rgba(250, 250, 250, 1);
   border-radius: 38px;
   padding: 10px 20px;
   border: none;
@@ -99,7 +119,7 @@ nav {
   flex-direction: column;
   position: absolute;
   top: 450px;
-  right: 450px;
+  right: 23%;
 }
 .main-text {
   text-align: end;
@@ -118,4 +138,29 @@ nav {
   color: black;
 }
 
+@media (max-width: 1300px) {
+  .nav {
+    gap: 0;
+  }
+  .nav-item {
+    margin: 10px 0;
+  }
+  .logo {
+    margin: 0;
+  }
+  .main-img {
+    position: absolute;
+    top: 210px;
+    left: 17%;
+    width: 500px;
+  }
+  .main-text {
+    font-size: 28px;
+  }
+  .auth-menu {
+    display: flex;
+    gap: 15px;
+    margin-left: 20px;
+  }
+}
 </style>

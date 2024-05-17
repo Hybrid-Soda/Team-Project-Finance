@@ -7,12 +7,15 @@
   
       <form @submit.prevent="logIn">
         <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="id" placeholder="ID" v-model.trim="username">
+          <input type="text" class="form-control" id="id" placeholder="" v-model.trim="username">
           <label for="id">아이디</label>
         </div>
         <div class="form-floating">
-          <input type="password" class="form-control" id="password" placeholder="Password" v-model.trim="password">
+          <input type="password" class="form-control" id="password" placeholder="" v-model.trim="password">
           <label for="password">비밀번호</label>
+        </div>
+        <div v-show="!isRight">
+          <p class="text-danger mt-3">아이디 또는 비밀번호를 잘못 입력했습니다.<br>입력하신 내용을 다시 확인해주세요.</p>
         </div>
         <input type="submit" value="로그인" class="btn btn-outline-warning login-btn">
       </form>
@@ -21,32 +24,42 @@
 </template>
 
 <script setup>
-  import { useCardStore } from '@/stores/card';
   import { ref } from 'vue'
-  import { RouterLink } from 'vue-router';
-  const store = useCardStore()
+  import { RouterLink } from 'vue-router'
+  import { useAuthStore } from '@/stores/auth'
+  
+  const store = useAuthStore()
+  const username = ref('')
+  const password = ref('')
+  const isRight = ref(true)
 
   const logIn = function() {
     const payload = {
       username: username.value,
       password: password.value
     }
-    store.logIn(payload)
-  }
-  
+    const temp = store.logIn(payload)
 
+    setTimeout(() => {
+      isRight.value = temp
+      if (!isRight.value) {
+        username.value = ''
+        password.value = ''
+      }
+    }, 200)
+  }
 </script>
 
 <style scoped>
 body {
-  height: 953px;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 main {
   /* border: 1px solid black; */
-  width: 40%;
+  width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;

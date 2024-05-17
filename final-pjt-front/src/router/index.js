@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
+// card 
 import HomeView from '../views/HomeView.vue'
 import MyPageView from '@/views/MyPageView.vue'
 import CardListView from '@/views/CardListView.vue'
 import CardDetailView from '@/views/CardDetailView.vue'
+// auth
 import LoginView from '@/views/LoginView.vue'
 import SignupView from '@/views/SignupView.vue'
 
@@ -15,7 +17,7 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/1',
+      path: '/:username',
       name: 'myPage',
       component: MyPageView
     },

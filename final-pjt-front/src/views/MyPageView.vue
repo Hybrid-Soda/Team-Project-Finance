@@ -52,7 +52,8 @@
 
 <style scoped>
 .my-page-bg {
-  width: 1760px;
+  /* width: 1760px; */
+  width: 90vw;
   height: 700px;
   border-radius: 47px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);

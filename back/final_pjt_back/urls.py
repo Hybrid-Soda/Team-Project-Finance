@@ -27,5 +27,5 @@ urlpatterns = [
     path('posts/', include('posts.urls')),
     # 로그인 및 회원가입
     path('accounts/', include('dj_rest_auth.urls')),
-    path('accounts/registration/', include('dj_rest_auth.registration.urls')),
+    path('accounts/signup/', include('dj_rest_auth.registration.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

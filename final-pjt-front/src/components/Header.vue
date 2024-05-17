@@ -23,7 +23,7 @@
         </ul>
       </nav>
     </div>
-    <div class="login-menu-wrap">
+    <div v-if="!store.isAuthenticated" class="login-menu-wrap">
       <RouterLink class="header-menu nav-link" :to="{ name:'login' }">
         <div>
           로그인
@@ -33,15 +33,19 @@
         <div style="color: white; font-weight: bold;">
           회원가입
         </div>
-        
       </RouterLink>
+    </div>
+    <div v-else class="login-menu-wrap">
+      <button class="header-menu nav-link" @click.prevent="store.logOut">로그아웃</button>
     </div>
   </div>
 </template>
 
 <script setup>
   import { ref } from 'vue'
-  
+  import { useAuthStore } from '@/stores/auth'
+
+  const store = useAuthStore()
 
 </script>
 
