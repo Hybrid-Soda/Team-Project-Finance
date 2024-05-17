@@ -98,20 +98,81 @@ def card_recommend(request, username):
 def card_recommend_test(request):
     from django.contrib.auth import get_user_model
     from django.shortcuts import render
-    
-    # 카드별 혜택 대분류 추출 -> ['쇼핑', '모든가맹점', '주유', '금융', '통신', '기타', '적립']
-    cards = get_list_or_404(Card)
-    benefits = []
-    for card in cards:
-        benefit = card.benefit_set.all()
-        bene = [bn.title for bn in benefit]
-        benefits.append(bene)
 
-    # 추출된 혜택을 딕셔너리를 이용해 0,1로 변환
+    # 혜택 인덱싱용 딕셔너리 생성
+    benefit_survey_model = [
+        "car_owner", "live_alone", "student", "baby", "pets", "easy_pay", "healthcare", 
+        "telecom", "sports", "shopping", "friends", "fitness", "movie", "travel_inter", "trevel_dome"
+    ]
+
+    benefit_survey_kor = [
+        "간편결제", "공과금/렌탈", "공항라운지/PP", "교육/육아", "교통", "레저/스포츠", "마트/편의점", 
+        "배달앱", "병원/약국", "뷰티/피트니스", "쇼핑", "애완동물", "여행/숙박", "영화/문화", "자동차/하이패스", 
+        "주유", "카페/디저트", "통신", "푸드", "항공마일리지", "항공", "해외"
+    ]
+
+    benefit_all = [
+        # 설문항목
+        "간편결제", "공과금/렌탈", "공항라운지/PP", "교육/육아", "교통", "레저/스포츠", "마트/편의점", 
+        "배달앱", "병원/약국", "뷰티/피트니스", "쇼핑", "애완동물", "여행/숙박", "영화/문화", "자동차/하이패스", 
+        "주유", "카페/디저트", "통신", "푸드", "항공마일리지", "항공", "해외", 
+        # 그 외
+        "APP", "BC TOP", "CJ ONE", "OK캐쉬백", "SSM", "게임", "국내외가맹점", "국민행복", "금융", "기타", 
+        "디지털구독", "렌터카", "멤버십포인트", "면세점", "모든가맹점", "무실적", "무이자할부", "바우처", 
+        "보험", "비즈니스", "생활", "선택형", "소셜커머스", "수수료우대", "연회비지원", "은행사", "인테리어", 
+        "적립", "전통시장", "제휴/PLCC", "지역", "직장인", "차/중고차", "카드사", "캐시백", "테마파크", 
+        "프리미엄", "할인", "해피포인트", "헤어", "혜택 프로모션", "혜택2"
+    ]
+
+    benefit_dict = {
+        "간편결제": 0,
+        "공과금/렌탈": 1,
+        "공항라운지/PP": 2,
+        "교육/육아": 3,
+        "교통": 4,
+        "레저/스포츠": 5,
+        "마트/편의점": 6,
+        "배달앱": 7,
+        "병원/약국": 8,
+        "뷰티/피트니스": 9,
+        "쇼핑": 10,
+        "애완동물": 11,
+        "여행/숙박": 12,
+        "영화/문화": 13,
+        "자동차/하이패스": 14,
+        "주유": 15,
+        "카페/디저트": 16,
+        "통신": 17,
+        "푸드": 18,
+        "항공마일리지": 19,
+        "항공": 20,
+        "해외": 21,
+    }
+    
+    # 카드별 혜택 대분류 추출 및 가공
+    cards = Card.objects.all().order_by('annual_fee1')
+    benefit_matrix = []  # 혜택 벡터 배열을 가지는 혜택 행렬
+    for card in cards:
+        benefits = card.benefit_set.all()
+        benefit = [bn.title for bn in benefits]  # ['쇼핑', '모든가맹점', '주유', '금융', '통신', '기타', '적립']
+        benefit_vector = [0] * (len(benefit_dict) + 1)  # 코사인 유사도를 판단하기 위한 벡터 배열
+
+        # print(benefit)
+        for bene in benefit:
+            # 항목이 메인 대분류에 있다면 해당 위치 벡터 활성화
+            if bene in benefit_dict:
+                index = benefit_dict[bene]
+                benefit_vector[index] = 1
+            # 기타 항목이라면 마지막 위치 벡터 활성화
+            else:
+                benefit_vector[-1] = 1
+
+        # 혜택 벡터
+        benefit_matrix.append(benefit_vector)
 
     context = {
         'cards': cards,
-        'benefits': benefits,
+        'benefit_matrix': benefit_matrix,
     }
     return render(request, 'card_recommend.html', context)
 
