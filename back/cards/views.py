@@ -8,11 +8,128 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404, get_list_or_404
+from django.contrib.auth import get_user_model
+from django.shortcuts import render
 
 from accounts.models import Survey
 from .serializers import *
 from .models import *
 
+
+# 카드 추천 테스트
+@api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+# def card_recommend(request, username):
+def card_recommend(request):
+    # 혜택 인덱싱용 딕셔너리 생성
+    benefit_survey_model = [
+        "car_owner", "live_alone", "student", "baby", "pets", "easy_pay", "healthcare", 
+        "telecom", "sports", "shopping", "friends", "fitness", "movie", "travel_inter", "trevel_dome"
+    ]
+
+    benefit_survey_kor = [
+        "간편결제", "공과금/렌탈", "공항라운지/PP", "교육/육아", "교통", "레저/스포츠", "마트/편의점", 
+        "배달앱", "병원/약국", "뷰티/피트니스", "쇼핑", "애완동물", "여행/숙박", "영화/문화", "자동차/하이패스", 
+        "주유", "카페/디저트", "통신", "푸드", "항공마일리지", "항공", "해외"
+    ]
+
+    benefit_all = [
+        # 설문항목
+        "간편결제", "공과금/렌탈", "공항라운지/PP", "교육/육아", "교통", "레저/스포츠", "마트/편의점", 
+        "배달앱", "병원/약국", "뷰티/피트니스", "쇼핑", "애완동물", "여행/숙박", "영화/문화", "자동차/하이패스", 
+        "주유", "카페/디저트", "통신", "푸드", "항공마일리지", "항공", "해외", 
+        # 그 외
+        "APP", "BC TOP", "CJ ONE", "OK캐쉬백", "SSM", "게임", "국내외가맹점", "국민행복", "금융", "기타", 
+        "디지털구독", "렌터카", "멤버십포인트", "면세점", "모든가맹점", "무실적", "무이자할부", "바우처", 
+        "보험", "비즈니스", "생활", "선택형", "소셜커머스", "수수료우대", "연회비지원", "은행사", "인테리어", 
+        "적립", "전통시장", "제휴/PLCC", "지역", "직장인", "차/중고차", "카드사", "캐시백", "테마파크", 
+        "프리미엄", "할인", "해피포인트", "헤어", "혜택 프로모션", "혜택2"
+    ]
+
+    benefit_dict = {
+        "간편결제": 0,
+        "공과금/렌탈": 1,
+        "공항라운지/PP": 2,
+        "교육/육아": 3,
+        "교통": 4,
+        "레저/스포츠": 5,
+        "마트/편의점": 6,
+        "배달앱": 7,
+        "병원/약국": 8,
+        "뷰티/피트니스": 9,
+        "쇼핑": 10,
+        "애완동물": 11,
+        "여행/숙박": 12,
+        "영화/문화": 13,
+        "자동차/하이패스": 14,
+        "주유": 15,
+        "카페/디저트": 16,
+        "통신": 17,
+        "푸드": 18,
+        "항공마일리지": 19,
+        "항공": 20,
+        "해외": 21,
+    }
+    BN = len(benefit_dict)
+    
+    # 페르소나 - 20대 여성 사회초년생
+    # persona = [1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1]
+    # 페르소나 - 20대 남성 사회초년생
+    persona = [1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1]
+    # persona = [0,0,1,1,0,1,0,0,1,0,0,1,0,0,1,1,0,1,0,1,1,1,1]
+
+    # 카드별 혜택 대분류 추출 및 가공
+    cards = Card.objects.all().order_by('annual_fee1', 'record').filter(id__gte=2200)
+    benefit_matrix = []  # 혜택 벡터 배열을 가지는 혜택 행렬
+    for card in cards:
+        benefits = card.benefit_set.all()
+        benefit = [bn.title for bn in benefits]  # ['쇼핑', '모든가맹점', '주유', '금융', '통신', '기타', '적립']
+        benefit_vector = [0] * (BN + 1)  # 코사인 유사도를 판단하기 위한 벡터 배열
+
+        for bene in benefit:
+            # 항목이 메인 대분류에 있다면 해당 위치 벡터 활성화
+            if bene in benefit_dict:
+                index = benefit_dict[bene]
+                benefit_vector[index] = 1
+            # 기타 항목이라면 마지막 위치 벡터 활성화
+            else:
+                benefit_vector[-1] = 1
+
+        # 혜택 벡터
+        benefit_matrix.append(benefit_vector)
+    
+    # 코사인 유사도 측정
+    similarity_vector = []
+    for idx, benefit_vector in enumerate(benefit_matrix):
+        similarity = sum(1 if benefit_vector[i] == persona[i] else 0 for i in range(BN))
+        similarity_vector.append((similarity, idx))
+    
+    # 코사인 유사도가 높은 순으로 정렬
+    similarity_vector.sort(reverse=True)
+
+    # 카드 추출
+    result_cards = []
+    for _, idx in similarity_vector[:5]:
+        card_information = {}
+        card_information['id'] = cards[idx].id
+        card_information['name'] = cards[idx].name
+        card_information['brand'] = cards[idx].brand
+        card_information['image_url'] = cards[idx].image_url
+        card_information['annual_fee1'] = cards[idx].annual_fee1
+        card_information['annual_fee2'] = cards[idx].annual_fee2
+        card_information['record'] = cards[idx].record
+        card_information['type'] = cards[idx].type
+        
+        benefits = card.benefit_set.all()
+        benefit = [bn.title for bn in benefits]
+        card_information['benefits'] = benefit
+
+        result_cards.append(card_information)
+
+    context = {
+        'result_cards': result_cards,
+    }
+    return render(request, 'card_recommend.html', context)
 
 # 카드 리스트
 @ api_view(['GET'])
@@ -86,96 +203,6 @@ def review_detail(request, card_pk, review_pk):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-# 카드 추천
-@api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-def card_recommend(request, username):
-    from django.shortcuts import render
-    context = {}
-    return render(request, 'card_recommend.html', context)
-
-# 카드 추천 테스트
-def card_recommend_test(request):
-    from django.contrib.auth import get_user_model
-    from django.shortcuts import render
-
-    # 혜택 인덱싱용 딕셔너리 생성
-    benefit_survey_model = [
-        "car_owner", "live_alone", "student", "baby", "pets", "easy_pay", "healthcare", 
-        "telecom", "sports", "shopping", "friends", "fitness", "movie", "travel_inter", "trevel_dome"
-    ]
-
-    benefit_survey_kor = [
-        "간편결제", "공과금/렌탈", "공항라운지/PP", "교육/육아", "교통", "레저/스포츠", "마트/편의점", 
-        "배달앱", "병원/약국", "뷰티/피트니스", "쇼핑", "애완동물", "여행/숙박", "영화/문화", "자동차/하이패스", 
-        "주유", "카페/디저트", "통신", "푸드", "항공마일리지", "항공", "해외"
-    ]
-
-    benefit_all = [
-        # 설문항목
-        "간편결제", "공과금/렌탈", "공항라운지/PP", "교육/육아", "교통", "레저/스포츠", "마트/편의점", 
-        "배달앱", "병원/약국", "뷰티/피트니스", "쇼핑", "애완동물", "여행/숙박", "영화/문화", "자동차/하이패스", 
-        "주유", "카페/디저트", "통신", "푸드", "항공마일리지", "항공", "해외", 
-        # 그 외
-        "APP", "BC TOP", "CJ ONE", "OK캐쉬백", "SSM", "게임", "국내외가맹점", "국민행복", "금융", "기타", 
-        "디지털구독", "렌터카", "멤버십포인트", "면세점", "모든가맹점", "무실적", "무이자할부", "바우처", 
-        "보험", "비즈니스", "생활", "선택형", "소셜커머스", "수수료우대", "연회비지원", "은행사", "인테리어", 
-        "적립", "전통시장", "제휴/PLCC", "지역", "직장인", "차/중고차", "카드사", "캐시백", "테마파크", 
-        "프리미엄", "할인", "해피포인트", "헤어", "혜택 프로모션", "혜택2"
-    ]
-
-    benefit_dict = {
-        "간편결제": 0,
-        "공과금/렌탈": 1,
-        "공항라운지/PP": 2,
-        "교육/육아": 3,
-        "교통": 4,
-        "레저/스포츠": 5,
-        "마트/편의점": 6,
-        "배달앱": 7,
-        "병원/약국": 8,
-        "뷰티/피트니스": 9,
-        "쇼핑": 10,
-        "애완동물": 11,
-        "여행/숙박": 12,
-        "영화/문화": 13,
-        "자동차/하이패스": 14,
-        "주유": 15,
-        "카페/디저트": 16,
-        "통신": 17,
-        "푸드": 18,
-        "항공마일리지": 19,
-        "항공": 20,
-        "해외": 21,
-    }
-    
-    # 카드별 혜택 대분류 추출 및 가공
-    cards = Card.objects.all().order_by('annual_fee1')
-    benefit_matrix = []  # 혜택 벡터 배열을 가지는 혜택 행렬
-    for card in cards:
-        benefits = card.benefit_set.all()
-        benefit = [bn.title for bn in benefits]  # ['쇼핑', '모든가맹점', '주유', '금융', '통신', '기타', '적립']
-        benefit_vector = [0] * (len(benefit_dict) + 1)  # 코사인 유사도를 판단하기 위한 벡터 배열
-
-        # print(benefit)
-        for bene in benefit:
-            # 항목이 메인 대분류에 있다면 해당 위치 벡터 활성화
-            if bene in benefit_dict:
-                index = benefit_dict[bene]
-                benefit_vector[index] = 1
-            # 기타 항목이라면 마지막 위치 벡터 활성화
-            else:
-                benefit_vector[-1] = 1
-
-        # 혜택 벡터
-        benefit_matrix.append(benefit_vector)
-
-    context = {
-        'cards': cards,
-        'benefit_matrix': benefit_matrix,
-    }
-    return render(request, 'card_recommend.html', context)
-
 # 크롤링 CSV 데이터 DB에 저장
 def csv_to_db(request):
     import pandas as pd
@@ -184,8 +211,8 @@ def csv_to_db(request):
     # 데이터베이스 연결
     engine = create_engine('sqlite:///db.sqlite3')
     # CSV 파일 읽기
-    card_data = pd.read_csv('static/card_data.csv', encoding='cp949')
-    benefit_data = pd.read_csv('static/benefit_data.csv', encoding='cp949')
+    card_data = pd.read_csv('static/card_data_new.csv', encoding='cp949')
+    benefit_data = pd.read_csv('static/benefit_data_new.csv', encoding='cp949')
     # 테이블 이름 가져오기
     card_table = Card._meta.db_table
     benefit_table = Benefit._meta.db_table
@@ -217,7 +244,7 @@ def card_gorilla_selenium(request):
     driver = webdriver.Chrome(options=chrome_options)
 
     # CSV 파일 생성 (저장 경로, 쓰기 모드, 인코딩, 줄바꿈 없음으로 조정)
-    static_dir = "C:\\Users\\limkt\\Desktop\\SSAFY\\Test-SSAFY\\final_project\\static"
+    static_dir = "cards/"
     csv_data1 = open(f"{static_dir}\\card_data.csv", 'w', encoding='CP949', newline='')
     card_data = csv.writer(csv_data1)
     csv_data2 = open(f"{static_dir}\\benefit_data.csv", 'w', encoding='CP949', newline='')
@@ -227,12 +254,22 @@ def card_gorilla_selenium(request):
     benefit_data.writerow(['card', 'title', 'content'])
     
 
+    pk = 1
     CARD_URL = "#q-app > section > div.card_detail.fr-view > section > div > article.card_top > div > div"
     BENEFIT_URL = "#q-app > section > div.card_detail.fr-view > section > div > article.cmd_con.benefit > div.lst.bene_area > dl"
-    for pk in range(1, 2498):
+    
+    # 크롤링
+    for idx in range(1, 2498):
         try:
-            driver.get(f"https://www.card-gorilla.com/card/detail/{pk}")
+            driver.get(f"https://www.card-gorilla.com/card/detail/{idx}")
             driver.execute_script('document.querySelector("#q-app > header").style.visibility="hidden";')
+
+            try :
+                if driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b"):
+                    print(driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b"))
+                    continue
+            except:
+                pass
 
             # 이름
             card_name = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.tit > strong").text
@@ -241,12 +278,12 @@ def card_gorilla_selenium(request):
             # 이미지
             card_image = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.plate_area > div.card_img > img").get_attribute("src")
             # 연회비 1
-            card_annual_fee1 = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(1) > b").text.replace(',', '')
+            card_annual_fee1 = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(1) > b").text.replace(',', '').replace('원', '')
             # 전월 실적
-            card_record = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(2) > dd > b").text.replace(',', '')
+            card_record = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(2) > dd > b").text.replace(',', '').replace('원', '')
             # 연회비 2
             try:
-                card_annual_fee2 = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(2) > b").text.replace(',', '')
+                card_annual_fee2 = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(2) > b").text.replace(',', '').replace('원', '')
             except NoSuchElementException:
                 card_annual_fee2 = None
             # 타입
@@ -255,7 +292,6 @@ def card_gorilla_selenium(request):
             except NoSuchWindowException:
                 card_type = None
             card_data.writerow([pk, card_name, card_brand, card_image, card_annual_fee1, card_annual_fee2, card_record, card_type])
-            # cards.append([pk, card_name, card_brand, card_image, card_annual_fee1, card_annual_fee2, card_record, card_type])
 
             # 혜택
             benefit_name = driver.find_elements(By.CSS_SELECTOR, f"{BENEFIT_URL} > dt > p")
@@ -266,9 +302,8 @@ def card_gorilla_selenium(request):
                 bnf_name = benefit_name[i].text
                 bnf_content = benefit_content[i].text
                 benefit_data.writerow([pk, bnf_name, bnf_content])
-
+            pk += 1
         except:
             continue
 
     driver.quit()
-    return

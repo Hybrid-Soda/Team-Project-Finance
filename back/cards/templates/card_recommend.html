@@ -6,10 +6,17 @@
   <title>Document</title>
 </head>
 <body>
-  {% comment %} {{ cards }} {% endcomment %}
-  {% comment %} {{ benefits }} {% endcomment %}
-  {% comment %} {{ benefit_set }} {% endcomment %}
-  {{ benefit_matrix }}
-  {% comment %} {{ data|safe }} {% endcomment %}
+  {% for card in result_cards %}
+    {{ card.id }}
+    {{ card.name }}
+    {{ card.brand }}
+    {{ card.annual_fee1 }}
+    {{ card.annual_fee2 }}
+    {{ card.record }}
+    {{ card.type }}
+    {{ card.benefits }}
+    <img src="{{card.image_url}}" alt="image">
+    <hr>
+  {% endfor %}
 </body>
 </html>
