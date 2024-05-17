@@ -1619,7 +1619,7 @@
         "brand": "KB국민카드",
         "image_url": "https://api.card-gorilla.com:8080/storage/card/132/card_img/20361/132card.png",
         "annual_fee1": 17000,
-        "annual_fee2": 0,
+        "annual_fee2": 15000,
         "record": 40,
         "type": "Mastercard"
     }
@@ -1632,7 +1632,7 @@
         "brand": "KB국민카드",
         "image_url": "https://api.card-gorilla.com:8080/storage/card/133/card_img/20362/133card.png",
         "annual_fee1": 200000,
-        "annual_fee2": 210000,
+        "annual_fee2": 65000,
         "record": 50,
         "type": "Mastercard"
     }
@@ -1645,7 +1645,7 @@
         "brand": "KB국민카드",
         "image_url": "https://api.card-gorilla.com:8080/storage/card/134/card_img/20363/134card.png",
         "annual_fee1": 15000,
-        "annual_fee2": 15000,
+        "annual_fee2": 20000,
         "record": 40,
         "type": "Mastercard"
     }
@@ -4533,6 +4533,19 @@
         "annual_fee1": 0,
         "annual_fee2": 0,
         "record": 25,
+        "type": "VISA"
+    }
+},
+{
+    "model": "cards.card",
+    "pk": 380,
+    "fields": {
+        "name": "하나멤버스 1Q 체크카드",
+        "brand": "하나카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/380/card_img/20880/380card.png",
+        "annual_fee1": 0,
+        "annual_fee2": 0,
+        "record": 20,
         "type": "VISA"
     }
 },
@@ -9738,6 +9751,19 @@
 },
 {
     "model": "cards.card",
+    "pk": 880,
+    "fields": {
+        "name": "S.Sing 씽화물복지 신한카드 체크",
+        "brand": "신한카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/880/card_img/21661/880card.png",
+        "annual_fee1": 0,
+        "annual_fee2": 0,
+        "record": 0,
+        "type": "VISA"
+    }
+},
+{
+    "model": "cards.card",
     "pk": 881,
     "fields": {
         "name": "IBK-Syrup카드[신용]",
@@ -10082,7 +10108,7 @@
         "brand": "우리카드",
         "image_url": "https://api.card-gorilla.com:8080/storage/card/916/card_img/21628/916card.png",
         "annual_fee1": 12000,
-        "annual_fee2": 12000,
+        "annual_fee2": 20000,
         "record": 30,
         "type": "Mastercard"
     }
@@ -10401,6 +10427,19 @@
 },
 {
     "model": "cards.card",
+    "pk": 947,
+    "fields": {
+        "name": "멍이냥이카드",
+        "brand": "광주은행",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/947/card_img/21596/947card.png",
+        "annual_fee1": 10000,
+        "annual_fee2": 0,
+        "record": 30,
+        "type": "Mastercard"
+    }
+},
+{
+    "model": "cards.card",
     "pk": 948,
     "fields": {
         "name": "여행스케치 아시아나클럽 플래티늄카드",
@@ -10466,6 +10505,19 @@
 },
 {
     "model": "cards.card",
+    "pk": 953,
+    "fields": {
+        "name": "마이카 우리카드",
+        "brand": "우리카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/953/card_img/21590/953card.png",
+        "annual_fee1": 12000,
+        "annual_fee2": 0,
+        "record": 30,
+        "type": "VISA"
+    }
+},
+{
+    "model": "cards.card",
     "pk": 954,
     "fields": {
         "name": "대전광역시 승용차요일제카드",
@@ -10527,6 +10579,19 @@
         "annual_fee2": 5000,
         "record": 30,
         "type": "BC"
+    }
+},
+{
+    "model": "cards.card",
+    "pk": 962,
+    "fields": {
+        "name": "현대카드M BLUEmembers Edition2",
+        "brand": "현대카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/962/card_img/21582/962card.png",
+        "annual_fee1": 15000,
+        "annual_fee2": 15000,
+        "record": 50,
+        "type": "Mastercard"
     }
 },
 {
@@ -10838,6 +10903,19 @@
         "annual_fee1": 35000,
         "annual_fee2": 40000,
         "record": 50,
+        "type": "VISA"
+    }
+},
+{
+    "model": "cards.card",
+    "pk": 989,
+    "fields": {
+        "name": "신협-현대카드 ZERO",
+        "brand": "현대카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/989/card_img/21546/989card.png",
+        "annual_fee1": 5000,
+        "annual_fee2": 10000,
+        "record": 0,
         "type": "VISA"
     }
 },
@@ -11163,6 +11241,19 @@
         "annual_fee1": 12000,
         "annual_fee2": 0,
         "record": 30,
+        "type": "Mastercard"
+    }
+},
+{
+    "model": "cards.card",
+    "pk": 1016,
+    "fields": {
+        "name": "OPTIN 플래티넘 카드",
+        "brand": "롯데카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/1016/card_img/21519/1016card.png",
+        "annual_fee1": 55000,
+        "annual_fee2": 60000,
+        "record": 20,
         "type": "Mastercard"
     }
 },
@@ -13833,6 +13924,19 @@
 },
 {
     "model": "cards.card",
+    "pk": 1258,
+    "fields": {
+        "name": "OK캐쉬백 썸(SUM)타는 우리체크카드",
+        "brand": "우리카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/1258/card_img/21049/1258card.png",
+        "annual_fee1": 0,
+        "annual_fee2": 0,
+        "record": 25,
+        "type": "BC"
+    }
+},
+{
+    "model": "cards.card",
     "pk": 1259,
     "fields": {
         "name": "LGU+ 라서즐거운 체크카드",
@@ -15961,6 +16065,19 @@
         "annual_fee2": 0,
         "record": 0,
         "type": "JCB"
+    }
+},
+{
+    "model": "cards.card",
+    "pk": 1469,
+    "fields": {
+        "name": "CUbig PAY 체크카드",
+        "brand": "신협",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/1469/card_img/20545/1469card.jpg",
+        "annual_fee1": 0,
+        "annual_fee2": 0,
+        "record": 20,
+        "type": "VISA"
     }
 },
 {
@@ -19189,6 +19306,19 @@
 },
 {
     "model": "cards.card",
+    "pk": 1817,
+    "fields": {
+        "name": "삼성생명 삼성시그니처카드 (포인트1%)",
+        "brand": "삼성카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/1817/card_img/22289/1817card.png",
+        "annual_fee1": 260000,
+        "annual_fee2": 0,
+        "record": 30,
+        "type": "VISA"
+    }
+},
+{
+    "model": "cards.card",
     "pk": 1818,
     "fields": {
         "name": "카드의정석 삼성화재 당신에게 좋은보험",
@@ -20268,6 +20398,19 @@
 },
 {
     "model": "cards.card",
+    "pk": 1911,
+    "fields": {
+        "name": "할인더함카드(비씨)",
+        "brand": "NH농협카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/1911/card_img/22085/1911card.png",
+        "annual_fee1": 8000,
+        "annual_fee2": 10000,
+        "record": 0,
+        "type": "BC"
+    }
+},
+{
+    "model": "cards.card",
     "pk": 1912,
     "fields": {
         "name": "유안타 Stock+ 체크카드",
@@ -20364,6 +20507,19 @@
         "name": "유안타 W-CMA 캐시백 롯데카드",
         "brand": "롯데카드",
         "image_url": "https://api.card-gorilla.com:8080/storage/card/1919/card_img/22077/1919card.jpg",
+        "annual_fee1": 5000,
+        "annual_fee2": 0,
+        "record": 0,
+        "type": "VISA"
+    }
+},
+{
+    "model": "cards.card",
+    "pk": 1920,
+    "fields": {
+        "name": "유안타 W-CMA 포인트플러스 롯데카드",
+        "brand": "롯데카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/1920/card_img/22076/1920card.jpg",
         "annual_fee1": 5000,
         "annual_fee2": 0,
         "record": 0,
@@ -21711,6 +21867,19 @@
 },
 {
     "model": "cards.card",
+    "pk": 2055,
+    "fields": {
+        "name": "THE Fine 플래티늄 카드(대한항공)",
+        "brand": "IBK기업은행",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/2055/card_img/21944/2055card.jpg",
+        "annual_fee1": 130000,
+        "annual_fee2": 0,
+        "record": 0,
+        "type": "VISA"
+    }
+},
+{
+    "model": "cards.card",
     "pk": 2056,
     "fields": {
         "name": "THE Fine 플래티늄 카드(아시아나클럽)",
@@ -22915,6 +23084,19 @@
         "annual_fee1": 0,
         "annual_fee2": 0,
         "record": 30,
+        "type": "Mastercard"
+    }
+},
+{
+    "model": "cards.card",
+    "pk": 2229,
+    "fields": {
+        "name": "LOCA LIKIT - New York Blue",
+        "brand": "롯데카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/2229/card_img/21352/2229card.png",
+        "annual_fee1": 10000,
+        "annual_fee2": 10000,
+        "record": 40,
         "type": "Mastercard"
     }
 },
@@ -24381,6 +24563,19 @@
         "name": "SC제일은행-현대카드 M CHECK",
         "brand": "현대카드",
         "image_url": "https://api.card-gorilla.com:8080/storage/card/2430/card_img/27293/2430card.png",
+        "annual_fee1": 0,
+        "annual_fee2": 0,
+        "record": 0,
+        "type": "VISA"
+    }
+},
+{
+    "model": "cards.card",
+    "pk": 2431,
+    "fields": {
+        "name": "SC제일은행-현대카드 X CHECK",
+        "brand": "현대카드",
+        "image_url": "https://api.card-gorilla.com:8080/storage/card/2431/card_img/27294/2431card.png",
         "annual_fee1": 0,
         "annual_fee2": 0,
         "record": 0,

@@ -25,5 +25,5 @@ class CardSerializer(serializers.ModelSerializer):
         model = Card
         fields = (
             'name', 'brand', 'image_url', 'annual_fee1',
-            'annual_fee2', 'record', 'type', 'benefit_set'
+            'annual_fee2', 'record', 'type', 'benefit_set', 'review_set'
         )
