@@ -2,12 +2,8 @@
   <div class="detail-main">
     <img src="../assets/img/example_card.png" class="card-img">
     <div class="card-content">
-      <p style="color: black;">신한카드 Point Plan</p>
+      <p class="card-name">신한카드 Point Plan</p>
       <p>큰 소비일수록 계획이 필요한 법</p>
-      <p>일상 생활비 0.5~3% 적립</p>
-      <p>주말 외식비 포인트 적립</p>
-      <p>정기결제 자동납부 포인트 적립</p>
-      <p>연회비 : 2만 ~ 2만3천원</p>
       <div>
         <button class="go-button">신청하러 가기</button>
         <button data-bs-toggle="modal" data-bs-target="#exampleModal">오프라인 매장 보기</button>    
@@ -70,5 +66,10 @@
   justify-content: center;
   gap: 5%;
   border: 2px solid blueviolet;
+}
+.card-name {
+  color: black;
+  font-size: 36px;
+  font-weight: 800;
 }
 </style>

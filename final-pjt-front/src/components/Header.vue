@@ -24,16 +24,17 @@
       </nav>
     </div>
     <div class="login-menu-wrap">
-      <a class="header-menu nav-link" href="#">
+      <RouterLink class="header-menu nav-link" :to="{ name:'login' }">
         <div>
           로그인
         </div>
-      </a>
-      <a class="header-menu nav-link" style="background-color: rgb(33, 95, 255);" href="#">
+      </RouterLink>
+      <RouterLink :to="{ name:'signup' }" class="header-menu nav-link" style="background-color: rgb(33, 95, 255);">
         <div style="color: white; font-weight: bold;">
           회원가입
         </div>
-      </a>
+        
+      </RouterLink>
     </div>
   </div>
 </template>
