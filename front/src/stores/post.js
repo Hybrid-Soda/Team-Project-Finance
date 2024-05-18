@@ -2,25 +2,13 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
-import { useAuthStore } from '@/stores/auth'
+import { useUserStore } from '@/stores/user'
 
 export const usePostStore = defineStore('post', () => {
-  const authStore = useAuthStore()
+  const userStore = useUserStore()
   const API_URL = 'http://127.0.0.1:8000'
   const router = useRouter()
   const posts = ref(null)
-
-  // 게시글 조회
-  const readPosts = function () {
-    axios({
-      method: 'get',
-      url: `${API_URL}/posts/`,
-    })
-    .then(res => {
-      posts.value = res.data
-    })
-    .catch(err => console.error(err))
-  }
 
   // 게시글 생성
   const createPost = function (payload) {
@@ -30,14 +18,13 @@ export const usePostStore = defineStore('post', () => {
       method: 'post',
       url: `${API_URL}/posts/`,
       headers: {
-        Authorization: `Token ${authStore.token}`,
+        Authorization: `Token ${userStore.token}`,
       },
       data: {
         title, content
       }
     })
     .then(res => {
-      console.log(res.data)
       router.push({ name: 'postDetail', params: { 'id': res.data.id } })
     })
     .catch(err => {
@@ -45,8 +32,77 @@ export const usePostStore = defineStore('post', () => {
       console.error(err)
     })
   }
-
+  
+  // 게시글 조회
+  const readPost = function () {
+    axios({
+      method: 'get',
+      url: `${API_URL}/posts/`,
+    })
+    .then(res => {
+      posts.value = res.data
+    })
+    .catch(err => console.error(err))
+  }
+  
+  // 게시글 삭제
+  const deletePost = function (postId) {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      axios({
+        method: 'delete',
+        url: `${API_URL}/posts/${postId}/`,
+        headers: {
+          Authorization: `Token ${userStore.token}`
+        }
+      })
+      .then((res) => {
+        router.push({ name: 'postList' })
+      })
+      .catch(err => console.error(err))
+    }
+  }
+  
+  // 게시글 수정
+  const updatePost = function (payload) {
+    const { postId, title, content } = payload
+  
+    axios({
+      method: 'put',
+      url: `${API_URL}/posts/${postId}/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+      data: {
+        title, content
+      }
+    })
+    .then(res => {
+      router.push({ name: 'postDetail', params: { 'id': res.data.id } })
+    })
+    .catch(err => {
+      alert('게시글 수정에 실패했습니다.')
+      console.error(err)
+    })
+  }
+  
+  // 댓글 수정
+  const updateComment = function (payload) {
+    const { postId, commentId, content } = payload
+  
+    axios({
+      method: 'put',
+      url: `${API_URL}/posts/${postId}/comments/${commentId}/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+      data: { content }
+    })
+    .then(res => {})
+    .catch(err => console.error(err))
+  }
   return {
-    posts, 
-    readPosts, createPost }
+    posts, API_URL,
+    createPost, readPost, updatePost, deletePost,
+    updateComment
+  }
 })

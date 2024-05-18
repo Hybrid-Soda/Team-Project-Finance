@@ -50,7 +50,7 @@
 
 <script setup>
   import { ref } from 'vue'
-  import { useCardStore } from '@/stores/card';
+  import { useCardStore } from '@/stores/card'
   const store = useCardStore()
 
 

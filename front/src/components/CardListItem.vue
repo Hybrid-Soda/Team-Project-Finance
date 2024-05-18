@@ -1,7 +1,7 @@
 <template>
   <RouterLink class="wrap" :to="{ name:'cardDetail' }">
     <div>
-      <img src="../assets/img/example_card.png" alt="" class="card-img">
+      <img src="@/assets/img/example_card.png" alt="" class="card-img">
     </div>
     <div class="card-content">
       <h2 style="color: black;">신한카드 Point Plan</h2>

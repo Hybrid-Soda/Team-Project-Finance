@@ -6,7 +6,7 @@
           <ul class="nav">
             <li class="nav-item">
               <RouterLink class="nav-link" :to="{ name: 'home' }">
-                <img src="../assets/img/PICKardº.png" alt="logo" class="logo"/>
+                <img src="@/assets/img/PICKardº.png" alt="logo" class="logo"/>
               </RouterLink>
             </li>
             <li class="nav-item">
@@ -22,7 +22,7 @@
               <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>
             </li>
             <li class="nav-item">
-              <div v-if="!store.isAuthenticated" class="auth-menu">
+              <div v-if="!userStore.isLogIn" class="user-menu">
                 <RouterLink :to="{ name: 'signIn' }">
                   <button class="login-btn">로그인</button>
                 </RouterLink>
@@ -32,13 +32,13 @@
                   </button>
                 </RouterLink>
               </div>
-              <div v-else class="auth-menu">
-                <RouterLink :to="{ name: 'myPage', params: { 'username': store.userInfo.username } }">
+              <div v-else class="user-menu">
+                <RouterLink :to="{ name: 'myPage', params: { 'username': userStore.userInfo.username } }">
                   <button class="login-btn" style=" font-weight: bold; background-color: rgb(255, 199, 39); color: black;">
                     마이페이지
                   </button>
                 </RouterLink>
-                <button class="login-btn" @click.prevent="store.logOut">
+                <button class="login-btn" @click.prevent="userStore.logOut">
                   로그아웃
                 </button>
               </div>
@@ -47,7 +47,7 @@
         </nav>
       </header>
       <main>
-        <img src="../assets/img/Analysis-cuate.png" class="main-img" />
+        <img src="@/assets/img/Analysis-cuate.png" class="main-img" />
         <div class="main-content">
           <div class="main-text">
             내게 필요한 신용카드<br/>
@@ -63,8 +63,8 @@
 <script setup>
   import { ref } from "vue"
   import { RouterLink } from "vue-router"
-  import { useAuthStore } from "@/stores/auth"
-  const store = useAuthStore()
+  import { useUserStore } from "@/stores/user"
+  const userStore = useUserStore()
 </script>
 
 <style scoped>
@@ -102,7 +102,7 @@ nav {
   left: 17%;
   width: 630px;
 }
-.auth-menu {
+.user-menu {
   display: flex;
   gap: 30px;
   margin-left: 60px;
@@ -157,7 +157,7 @@ nav {
   .main-text {
     font-size: 28px;
   }
-  .auth-menu {
+  .user-menu {
     display: flex;
     gap: 15px;
     margin-left: 20px;

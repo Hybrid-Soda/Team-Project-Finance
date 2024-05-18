@@ -3,8 +3,8 @@ import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-export const useAuthStore = defineStore('auth', () => {
-  const isAuthenticated = computed(() => {
+export const useUserStore = defineStore('user', () => {
+  const isLogIn = computed(() => {
     return token.value === null ? false : true
   })
   const router = useRouter()
@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
     })
     .then(res => {
-      alert('회원가입이 완료되었습니다!')
+      window.alert('회원가입이 완료되었습니다!')
       router.push({ name: 'signIn' })
     })
     .catch(err => console.error(err))
@@ -79,7 +79,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // 프로필변경
-  const changeProfile = function (payload) {
+  const updateProfile = function (payload) {
     const { username, nickname, gender, email, age } = payload
 
     axios({
@@ -94,13 +94,13 @@ export const useAuthStore = defineStore('auth', () => {
     })
     .then(res => {
       userInfo.value = res.data
-      alert('저장 되었습니다!')
+      window.alert('저장 되었습니다!')
     })
     .catch(err => console.error(err))
   }
 
   return {
-    token, isAuthenticated, userInfo, 
-    signUp, logIn, logOut, changeProfile
+    token, isLogIn, userInfo, 
+    signUp, logIn, logOut, updateProfile
   }
 }, { persist: true })

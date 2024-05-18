@@ -2,7 +2,7 @@
   <body>
     <main>
       <RouterLink :to="{ name:'home' }">
-        <img src="../assets/img/PICKardº_blue.png" alt="">
+        <img src="@/assets/img/PICKardº_blue.png" alt="">
       </RouterLink>
   
       <form @submit.prevent="logIn">
@@ -26,9 +26,9 @@
 <script setup>
   import { ref } from 'vue'
   import { RouterLink } from 'vue-router'
-  import { useAuthStore } from '@/stores/auth'
+  import { useUserStore } from '@/stores/user'
   
-  const store = useAuthStore()
+  const store = useUserStore()
   const username = ref('')
   const password = ref('')
   const isRight = ref(true)
@@ -46,7 +46,7 @@
         username.value = ''
         password.value = ''
       }
-    }, 200)
+    }, 250)
   }
 </script>
 

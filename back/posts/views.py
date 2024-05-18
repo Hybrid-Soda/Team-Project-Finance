@@ -86,6 +86,7 @@ def comment(request, post_pk):
     elif request.method == "POST":
         if request.user.is_authenticated:
             serializer = CommentSerializer(data=request.data)
+            print(serializer)
             if serializer.is_valid(raise_exception=True):
                 serializer.save(post=post, user=request.user)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)

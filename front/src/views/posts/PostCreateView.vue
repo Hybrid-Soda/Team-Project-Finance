@@ -15,7 +15,7 @@
       <!-- <div class="mb-3">
         <input type="file" class="form-control" id="upload-image" @change="handleFileUpload">
       </div> -->
-      <input type="submit" value="발행" class="btn btn-outline-warning login-btn">
+      <input type="submit" value="등록" class="btn btn-outline-warning login-btn">
     </form>
   </main>
 </template>
@@ -39,7 +39,7 @@ const createPost = function () {
     title: title.value,
     content: content.value,
   }
-  if (confirm('게시글을 작성하시겠습니까?')) {
+  if (window.confirm('게시글을 작성하시겠습니까?')) {
     postStore.createPost(payload)
   }
 }

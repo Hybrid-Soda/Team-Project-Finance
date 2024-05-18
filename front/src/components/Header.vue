@@ -2,8 +2,8 @@
   <div class="header-wrap">
     <div>
       <RouterLink :to="{ name:'home' }">
-        <img src="../assets/img/PICKardº_blue.png" alt="">
-      </RouterLink>   
+        <img src="@/assets/img/PICKardº_blue.png" alt="">
+      </RouterLink>
     </div>
     <div class="header-menu">
       <nav>
@@ -23,7 +23,7 @@
         </ul>
       </nav>
     </div>
-    <div v-if="!store.isAuthenticated" class="login-menu-wrap">
+    <div v-if="!store.isLogIn" class="login-menu-wrap">
       <RouterLink class="header-menu nav-link" :to="{ name:'signIn' }">
         <div>
           로그인
@@ -43,9 +43,9 @@
 
 <script setup>
   import { ref } from 'vue'
-  import { useAuthStore } from '@/stores/auth'
+  import { useUserStore } from '@/stores/user'
 
-  const store = useAuthStore()
+  const store = useUserStore()
 
 </script>
 

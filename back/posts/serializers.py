@@ -6,7 +6,7 @@ from .models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = '__all__'
+        fields = ('username', 'nickname')
 
 class PostListSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -22,6 +22,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
 
 class PostDetailSerializer(serializers.ModelSerializer):
     class CommentSerializer(serializers.ModelSerializer):
+        user = UserSerializer(read_only=True)
         class Meta:
             model = Post
             fields = ('user', 'like_users', 'content', 'created_at')
@@ -37,5 +38,5 @@ class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     class Meta:
         model = Comment
-        fields = "__all__"
-        read_only_fields = ('post',)
+        fields = '__all__'
+        read_only_fields = ('user', 'like_users', 'post')
