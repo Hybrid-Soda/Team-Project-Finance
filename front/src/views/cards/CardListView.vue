@@ -22,9 +22,9 @@
 
 <script setup>
   import { ref } from 'vue'
-  import CardListFilter from '@/components/CardListFilter.vue';
-  import Header from '@/components/Header.vue';
-  import CardListItem from '@/components/CardListItem.vue';
+  import CardListFilter from '@/components/CardListFilter.vue'
+  import CardListItem from '@/components/CardListItem.vue'
+  import Header from '@/components/Header.vue'
 
 </script>
 

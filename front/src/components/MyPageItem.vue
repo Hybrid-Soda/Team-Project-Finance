@@ -55,12 +55,12 @@
 </template>
 
 <script setup>
-  import { useAuthStore } from '@/stores/auth'
+  import { useUserStore } from '@/stores/user'
   import { ref, onMounted } from 'vue'
   import axios from 'axios'
 
-  const authStore = useAuthStore()
-  const userInfo = authStore.userInfo
+  const userStore = useUserStore()
+  const userInfo = userStore.userInfo
   const username = ref(userInfo.username)
   const nickname = ref(userInfo.nickname)
   const gender = ref(userInfo.gender)
@@ -75,7 +75,7 @@
       email: email.value,
       age: age.value,
     }
-    authStore.changeProfile(payload)
+    userStore.updateProfile(payload)
   }
 </script>
 
@@ -86,7 +86,7 @@
   height: 213px;
   opacity: 1;
   border-radius: 50%;
-  background-image: url("../assets/img/profile-man.png");
+  background-image: url("@/assets/img/profile-man.png");
   background-position: center;
   background-size: contain;
 }

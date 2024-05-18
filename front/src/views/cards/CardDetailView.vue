@@ -20,7 +20,7 @@
 
 <script setup>
   import { ref } from 'vue'
-  import Header from '@/components/Header.vue';
+  import Header from '@/components/Header.vue'
   import CardDetailItem from '@/components/CardDetailItem.vue'
 
 </script>

@@ -1,45 +1,73 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// card 
-import HomeView from '../views/HomeView.vue'
-import MyPageView from '@/views/MyPageView.vue'
-import CardListView from '@/views/CardListView.vue'
-import CardDetailView from '@/views/CardDetailView.vue'
-// auth
-import LoginView from '@/views/LoginView.vue'
-import SignupView from '@/views/SignupView.vue'
+// cards
+import HomeView from '@/views/cards/HomeView.vue'
+import CardListView from '@/views/cards/CardListView.vue'
+import CardDetailView from '@/views/cards/CardDetailView.vue'
+// users
+import MyPageView from '@/views/users/MyPageView.vue'
+import SignInView from '@/views/users/SignInView.vue'
+import SignUpView from '@/views/users/SignUpView.vue'
+// posts
+import PostListView from '@/views/posts/PostListView.vue'
+import PostCreateView from '@/views/posts/PostCreateView.vue'
+import PostDetailView from '@/views/posts/PostDetailView.vue'
+import PostUpdateView from '@/views/posts/PostUpdateView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // cards
     {
       path: '/',
       name: 'home',
       component: HomeView
     },
     {
+      path: '/cards',
+      name: 'cardList',
+      component: CardListView
+    },
+    {
+      path: '/cards/:id',
+      name: 'cardDetail',
+      component: CardDetailView
+    },
+    // users
+    {
       path: '/:username',
       name: 'myPage',
       component: MyPageView
     },
     {
-      path: '/2',
-      name: 'cardList',
-      component: CardListView
-    },
-    {
-      path: '/3',
-      name: 'cardDetail',
-      component: CardDetailView
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView
+      path: '/signin',
+      name: 'signIn',
+      component: SignInView
     },
     {
       path: '/signup',
-      name: 'signup',
-      component: SignupView
+      name: 'signUp',
+      component: SignUpView
+    },
+    // posts
+    {
+      path: '/posts',
+      name: 'postList',
+      component: PostListView
+    },
+    {
+      path: '/posts/:id',
+      name: 'postDetail',
+      component: PostDetailView
+    },
+    {
+      path: '/posts/create',
+      name: 'postCreate',
+      component: PostCreateView
+    },
+    {
+      path: '/posts/:id/update',
+      name: 'postUpdate',
+      component: PostUpdateView
     },
   ]
 })

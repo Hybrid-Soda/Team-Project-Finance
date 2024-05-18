@@ -1,6 +1,6 @@
 <template>
   <div class="detail-main">
-    <img src="../assets/img/example_card.png" class="card-img">
+    <img src="@/assets/img/example_card.png" class="card-img">
     <div class="card-content">
       <p class="card-name">신한카드 Point Plan</p>
       <p>큰 소비일수록 계획이 필요한 법</p>

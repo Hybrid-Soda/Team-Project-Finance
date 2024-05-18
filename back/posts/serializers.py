@@ -9,13 +9,20 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'nickname')
 
 class PostListSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserSerializer()
     class Meta:
         model = Post
-        fields = ('title', 'content', 'image', 'created_at')
+        fields = '__all__'
 
-class PostSerializer(serializers.ModelSerializer):
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'
+        read_only_fields = ('user', 'like_users')
+
+class PostDetailSerializer(serializers.ModelSerializer):
     class CommentSerializer(serializers.ModelSerializer):
+        user = UserSerializer(read_only=True)
         class Meta:
             model = Post
             fields = ('user', 'like_users', 'content', 'created_at')
@@ -31,5 +38,5 @@ class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     class Meta:
         model = Comment
-        fields = "__all__"
-        read_only_fields = ('post',)
+        fields = '__all__'
+        read_only_fields = ('user', 'like_users', 'post')

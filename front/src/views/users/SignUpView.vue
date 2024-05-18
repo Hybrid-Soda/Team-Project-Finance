@@ -2,7 +2,7 @@
   <div class="body">
     <main>
       <RouterLink :to="{ name:'home' }">
-        <img src="../assets/img/PICKardº_blue.png" alt="">
+        <img src="@/assets/img/PICKardº_blue.png" alt="">
       </RouterLink>
 
       <h1>회원가입</h1>
@@ -32,9 +32,9 @@
 <script setup>
   import { ref } from 'vue'
   import { RouterLink } from 'vue-router'
-  import { useAuthStore } from '@/stores/auth'
+  import { useUserStore } from '@/stores/user'
 
-  const store = useAuthStore()
+  const store = useUserStore()
   const username = ref(null) 
   const password1 = ref(null)
   const password2 = ref(null)

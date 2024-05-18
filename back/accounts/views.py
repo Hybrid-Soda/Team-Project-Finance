@@ -16,14 +16,23 @@ from .models import *
 
 get_user = get_user_model()
 
-# 유저 정보 조회
-@api_view(['GET'])
+# 유저 정보 조회 / 수정
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def profile(request, username):
-    if request.user.username == username:
-        user = get_object_or_404(get_user, username=username)
-        serializer = UserProfileSerializer(user)
-        return Response(serializer.data)
+    if request.method == "GET":
+        if request.user.username == username:
+            serializer = UserProfileSerializer(request.user)
+            return Response(serializer.data)
+    
+    if request.method == "PUT":
+        if request.user.username == username:
+            serializer = EditProfileSerializer(request.user, data=request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 # 설문 조사 등록 / 수정
 @api_view(["POST"])

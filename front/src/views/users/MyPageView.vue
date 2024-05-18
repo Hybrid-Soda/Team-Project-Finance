@@ -44,9 +44,9 @@
 </template>
 
 <script setup>
+  import MyPageItem from '@/components/MyPageItem.vue'
+  import Header from '@/components/Header.vue'
   import { ref } from 'vue'
-  import Header from '@/components/Header.vue';
-  import MyPageItem from '@/components/MyPageItem.vue';
 
 </script>
 
