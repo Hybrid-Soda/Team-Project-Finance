@@ -1,12 +1,13 @@
 import axios from 'axios'
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
+  const isAuthenticated = computed(() => {
+    return token.value === null ? false : true
+  })
   const router = useRouter()
-
-  const isAuthenticated = ref(false)
   const userInfo = ref(null)
   const API_URL = 'http://127.0.0.1:8000'
   const token = ref(null)
@@ -39,7 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
     })
     .then(res => {
       alert('회원가입이 완료되었습니다!')
-      router.push({ name: 'login' })
+      router.push({ name: 'signIn' })
     })
     .catch(err => console.error(err))
   }
@@ -58,7 +59,6 @@ export const useAuthStore = defineStore('auth', () => {
     .then(res => {
       token.value = res.data.key
       getUserInfo(username)
-      isAuthenticated.value = true
       router.push({ name: 'home' })
     })
     .catch(err => console.error(err))
@@ -73,7 +73,6 @@ export const useAuthStore = defineStore('auth', () => {
     .then(res => {
       token.value = null
       userInfo.value = null
-      isAuthenticated.value = false
       router.push({ name: 'home' })
     })
     .catch(err => console.error(err))
@@ -90,11 +89,12 @@ export const useAuthStore = defineStore('auth', () => {
         Authorization: `Token ${token.value}`
       },
       data: {
-        username, nickname, gender: '남자', email, age
+        username, nickname, gender, email, age
       }
     })
     .then(res => {
       userInfo.value = res.data
+      alert('저장 되었습니다!')
     })
     .catch(err => console.error(err))
   }

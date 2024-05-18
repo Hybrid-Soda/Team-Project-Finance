@@ -24,7 +24,7 @@ def post(request):
 
     elif request.method == "POST":
         if request.user.is_authenticated:
-            serializer = PostSerializer(data=request.data)
+            serializer = PostCreateSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
                 serializer.save(user=request.user)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -37,12 +37,12 @@ def post_detail(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
     
     if request.method == "GET":
-        serializer = PostSerializer(post)
+        serializer = PostDetailSerializer(post)
         return Response(serializer.data)
 
     elif request.method == "PUT":
         if request.user == post.user:
-            serializer = PostSerializer(post, data=request.data, partial=True)
+            serializer = PostDetailSerializer(post, data=request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)

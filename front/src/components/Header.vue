@@ -18,18 +18,18 @@
             <a class="nav-link" href="#">내 관심 카드</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">커뮤니티</a>
+            <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>
           </li>
         </ul>
       </nav>
     </div>
     <div v-if="!store.isAuthenticated" class="login-menu-wrap">
-      <RouterLink class="header-menu nav-link" :to="{ name:'login' }">
+      <RouterLink class="header-menu nav-link" :to="{ name:'signIn' }">
         <div>
           로그인
         </div>
       </RouterLink>
-      <RouterLink :to="{ name:'signup' }" class="header-menu nav-link" style="background-color: rgb(33, 95, 255);">
+      <RouterLink :to="{ name:'signUp' }" class="header-menu nav-link" style="background-color: rgb(33, 95, 255);">
         <div style="color: white; font-weight: bold;">
           회원가입
         </div>

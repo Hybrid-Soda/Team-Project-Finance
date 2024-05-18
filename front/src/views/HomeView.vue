@@ -19,14 +19,14 @@
               <a class="nav-link" href="#">내 관심 카드</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">커뮤니티</a>
+              <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>
             </li>
             <li class="nav-item">
               <div v-if="!store.isAuthenticated" class="auth-menu">
-                <RouterLink :to="{ name: 'login' }">
+                <RouterLink :to="{ name: 'signIn' }">
                   <button class="login-btn">로그인</button>
                 </RouterLink>
-                <RouterLink :to="{ name: 'signup' }">
+                <RouterLink :to="{ name: 'signUp' }">
                   <button class="login-btn" style="font-weight: bold; background-color: rgb(255, 199, 39); color: black;">
                     회원가입
                   </button>
