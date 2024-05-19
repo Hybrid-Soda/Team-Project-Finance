@@ -67,7 +67,8 @@ const router = createRouter({
     {
       path: '/posts/:id/update',
       name: 'postUpdate',
-      component: PostUpdateView
+      component: PostUpdateView,
+      props: true
     },
   ]
 })

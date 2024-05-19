@@ -10,7 +10,7 @@
       </div>
       <div class="mb-3">
         <label for="content" class="form-label">본문</label>
-        <textarea class="form-control" v-model.trim="content" id="content" rows="10"></textarea>
+        <textarea class="form-control" v-model.trim="content" id="content" rows="15"></textarea>
       </div>
       <!-- <div class="mb-3">
         <input type="file" class="form-control" id="upload-image" @change="handleFileUpload">
@@ -31,8 +31,8 @@
   const route = useRoute()
   
   const postId = route.params.id
-  const title = ref('')
-  const content = ref('')
+  const title = postStore.currentPost.title
+  const content = postStore.currentPost.content
 
   const updatePost = function () {
     const payload = {

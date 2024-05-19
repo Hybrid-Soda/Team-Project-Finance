@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 import { useUserStore } from '@/stores/user'
 
 export const usePostStore = defineStore('post', () => {
+  const currentPost = ref(null)
   const userStore = useUserStore()
   const API_URL = 'http://127.0.0.1:8000'
   const router = useRouter()

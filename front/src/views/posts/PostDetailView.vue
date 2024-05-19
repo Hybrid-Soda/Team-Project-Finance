@@ -106,6 +106,7 @@ const readPostDetail = function () {
   .then(res => {
     post.value = res.data
     comments.value = res.data.comment_set
+    postStore.currentPost = { title: res.data.title, content: res.data.content }
   })
   .catch(err => console.error(err))
 }
