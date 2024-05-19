@@ -21,3 +21,9 @@ class CardSerializer(serializers.ModelSerializer):
             'id', 'name', 'brand', 'image_url', 'annual_fee1',
             'annual_fee2', 'record', 'type', 'benefit_set', 'review_set'
         )
+
+class RecommendationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recommendation
+        fields = '__all__'
+        read_only_fields = ('user',)

@@ -27,9 +27,9 @@
             </a>
           </li>
           <li>
-            <a href="">
+            <RouterLink :to="{ name: 'recommend', params:{ 'username': userStore.userInfo.username }}">
               카드 추천 받기
-            </a>
+            </RouterLink>
           </li>
           <li>
             <a href="">
@@ -46,8 +46,11 @@
 <script setup>
   import MyPageItem from '@/components/MyPageItem.vue'
   import Header from '@/components/Header.vue'
+  import { RouterLink } from 'vue-router'
   import { ref } from 'vue'
+  import { useUserStore } from '@/stores/user'
 
+  const userStore = useUserStore()
 </script>
 
 <style scoped>

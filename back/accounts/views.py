@@ -43,11 +43,12 @@ def survey(request, username):
         serializer = SurveySerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == "PUT":
-        survey = get_object_or_404(get_user, username=username)
+        user = get_object_or_404(get_user, username=username)
+        survey = get_object_or_404(Survey, user=user)
         if request.user == survey.user:
             serializer = SurveySerializer(survey, data=request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
