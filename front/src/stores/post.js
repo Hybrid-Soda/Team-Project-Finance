@@ -84,25 +84,8 @@ export const usePostStore = defineStore('post', () => {
       console.error(err)
     })
   }
-  
-  // 댓글 수정
-  const updateComment = function (payload) {
-    const { postId, commentId, content } = payload
-  
-    axios({
-      method: 'put',
-      url: `${API_URL}/posts/${postId}/comments/${commentId}/`,
-      headers: {
-        Authorization: `Token ${userStore.token}`,
-      },
-      data: { content }
-    })
-    .then(res => {})
-    .catch(err => console.error(err))
-  }
   return {
     posts, API_URL,
     createPost, readPost, updatePost, deletePost,
-    updateComment
   }
 })
