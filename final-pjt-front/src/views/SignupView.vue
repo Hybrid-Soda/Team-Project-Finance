@@ -1,21 +1,39 @@
 <template>
-  <div>
-    <h1>회원가입</h1>
-    <form @submit.prevent="signUp">
-      <div>
-        <label for="username">username : </label>
-        <input type="text" v-model.trim="username" id="username">
+  <div class="body">
+    <main>
+      <RouterLink :to="{ name:'home' }">
+        <img src="../assets/img/PICKardº_blue.png" alt="">
+      </RouterLink>
+
+      <form @submit.prevent="signUp" class="sign-up-form">
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="id" placeholder="ID" v-model.trim="username">
+        <label for="id">아이디</label>
       </div>
-      <div>
-        <label for="password1">password : </label>
-        <input type="password" v-model.trim="password1" id="password1">
+      <div class="form-floating mb-3">
+        <input type="e-mail" class="form-control" id="id" placeholder="ID" v-model.trim="username">
+        <label for="id">이메일</label>
       </div>
-      <div>
-        <label for="password2">password confirmation : </label>
-        <input type="password" v-model.trim="password2" id="password2">
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="id" placeholder="ID" v-model.trim="username">
+        <label for="id">비밀번호</label>
       </div>
-      <input type="submit">
-    </form>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="id" placeholder="ID" v-model.trim="username">
+        <label for="id">비밀번호 확인</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="id" placeholder="ID" v-model.trim="username">
+        <label for="id">이름</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="number" class="form-control" id="id" placeholder="ID" v-model.trim="username">
+        <label for="id">나이</label>
+      </div>
+      
+      <input type="submit" value="회원가입" class="btn btn-outline-warning login-btn">
+      </form>
+    </main>
   </div>
 </template>
 
@@ -40,5 +58,38 @@ const signUp = function () {
 </script>
 
 <style scoped>
-
+.body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+main {
+  /* border: 1px solid black; */
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  padding: 5% 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  background-color: white;
+}
+form {
+  width: 70%;
+}
+.login-btn {
+  margin-top: 20px;
+  width: 100%;
+  font-weight: bold;
+}
+.sign-up-form {
+  height: 80%;
+  overflow: scroll;
+}
+.sign-up-form::-webkit-scrollbar {
+  display: none;
+}
 </style>

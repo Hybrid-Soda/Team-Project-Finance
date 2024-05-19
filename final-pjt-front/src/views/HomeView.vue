@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <div class="main-background">
     <header>
       <nav>
@@ -10,23 +10,25 @@
             </RouterLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">카드 모아보기</a>
+            <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">카드 검색</a>
+            <RouterLink class="nav-link" :to="{ name:'searchCard' }">카드 검색</RouterLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">내 관심 카드</a>
+            <RouterLink class="nav-link" :to="{ name:'myCard' }">내 관심 카드</RouterLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">커뮤니티</a>
+            <RouterLink class="nav-link" :to="{ name:'community' }">커뮤니티</RouterLink>
           </li>
           <li class="nav-item">
             <div class="login-menu">
               <RouterLink :to="{ name:'login' }">
                 <button class="login-btn">로그인</button>
               </RouterLink>
-              <button class="login-btn" style="font-weight: bold; background-color: rgb(255, 199, 39); color: black;">회원가입</button>
+              <RouterLink :to="{ name:'signup' }">
+                <button class="login-btn" style="font-weight: bold; background-color: rgb(255, 199, 39); color: black;">회원가입</button>
+              </RouterLink>
             </div>
           </li>
         </ul>
@@ -39,7 +41,9 @@
           내게 필요한 신용카드<br>
           <span style="color: rgb(255, 199, 39);">1분만에</span> 추천 받기
         </div>
-        <button class="main-text-btn">가입하고 시작하기</button>
+        <RouterLink :to="{ name:'signup' }">
+          <button class="main-text-btn">가입하고 시작하기</button>
+        </RouterLink>
       </div>
     </main>
   </div>
@@ -56,7 +60,7 @@
 <style scoped>
 .main-background {
   background-color: rgb(33, 95, 255);
-  height: 700px;
+  height: 75%;
 }
 .nav-link {
   color: white;
@@ -78,9 +82,9 @@ nav {
 }
 .main-img {
   position: absolute;
-  top: 210px;
-  left: 330px;
-  width: 630px;
+  top: 22%;
+  left: 18%;
+  width: 33%;
 }
 .login-menu {
   display: flex;
@@ -98,8 +102,8 @@ nav {
   align-items: end;
   flex-direction: column;
   position: absolute;
-  top: 450px;
-  right: 450px;
+  top: 50%;
+  right: 20%;
 }
 .main-text {
   text-align: end;

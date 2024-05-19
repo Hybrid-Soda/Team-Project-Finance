@@ -3,13 +3,9 @@
     <Header />
   </div>
   <main>
-    <!-- <ul>
-      <li><a href="">개요</a></li>
-      <li><a href="">혜택 정보</a></li>
-      <li><a href="">사용자 리뷰</a></li>
-    </ul> -->
     <div class="card-page-bg">
       <div class="menu-wrap">
+        <button @click="this.$router.go(-1)" class="backBtn"><img src="../assets/img/backArrow.png" alt="" class="backImg"></button>
         <div class="info-wrap">
           <CardDetailItem />
         </div>
@@ -29,19 +25,19 @@
 main {
   display: flex;
   justify-content: center;
-  height: 843px;
-  overflow: hidden;
+  height: 80%;
 }
 .card-page-bg {
   width: 70%;
-  height: 1000px;
   border-radius: 50px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   margin-top: 40px;
 }
 .menu-wrap {
-  border: 2px solid blue;
-  margin-top: 2%;
+  /* border: 2px solid blue; */
+  display: flex;
+  height: 100%;
+  width: 100%;
 }
 ul {
   display: flex;
@@ -59,9 +55,20 @@ li {
   font-weight: 500;
 }
 .info-wrap {
-  border: 2px solid green;
+  /* border: 2px solid green; */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding-top: 7%;
+}
+.backBtn {
+  position: absolute;
+  margin: 20px;
+  background-color: rgba(0, 0, 0, 0);
+}
+.backImg {
+  width: 50px;
+  opacity: .5;
 }
 </style>

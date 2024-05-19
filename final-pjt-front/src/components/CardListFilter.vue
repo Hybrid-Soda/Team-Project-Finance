@@ -72,10 +72,7 @@
   /* border: 2px solid red; */
  height: 150px;
  padding: 10px;
- overflow: scroll; 
-}
-.card-brand-list::-webkit-scrollbar {
-  display: none;
+ overflow-y: scroll; 
 }
 .category {
   text-align: center;

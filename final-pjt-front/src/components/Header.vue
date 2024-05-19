@@ -9,16 +9,16 @@
       <nav>
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">카드 모아보기</a>
+            <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">카드 검색</a>
+            <RouterLink class="nav-link" :to="{ name:'searchCard' }">카드 검색</RouterLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">내 관심 카드</a>
+            <RouterLink class="nav-link" :to="{ name:'myCard' }">내 관심 카드</RouterLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">커뮤니티</a>
+            <RouterLink class="nav-link" :to="{ name:'community' }">커뮤니티</RouterLink>
           </li>
         </ul>
       </nav>
@@ -58,7 +58,7 @@ nav {
   gap: 30px;
 }
 .header-menu {
-  background: rgba(250,250,250,1);
+  background: white;
   border-radius: 38px;
   padding: 5px 20px;
   border: none;
@@ -72,7 +72,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin: 30px 0;
+  padding: 30px 0;
 }
 .login-menu-wrap {
   display: flex;
