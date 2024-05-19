@@ -10,7 +10,7 @@
               </RouterLink>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">카드 모아보기</a>
+              <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">카드 검색</a>
@@ -53,17 +53,25 @@
             내게 필요한 신용카드<br/>
             <span style="color: rgb(255, 199, 39)">1분만에</span> 추천 받기
           </div>
-          <button class="main-text-btn">가입하고 시작하기</button>
+          <button v-if="!userStore.isLogIn" class="main-text-btn">
+            <RouterLink :to="{ name: 'signUp' }">가입하고 시작하기</RouterLink>
+          </button>
+          <button v-else class="main-text-btn">
+            <RouterLink :to="{ name: 'survey', params: { 'username': userStore.userInfo.username } }">카드 추천받기</RouterLink>
+          </button>
         </div>
       </main>
     </div>
   </div>
+  <Footer />
 </template>
 
 <script setup>
   import { ref } from "vue"
   import { RouterLink } from "vue-router"
   import { useUserStore } from "@/stores/user"
+  import Footer from '@/components/Footer.vue'
+
   const userStore = useUserStore()
 </script>
 

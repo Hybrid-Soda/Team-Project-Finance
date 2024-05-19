@@ -8,11 +8,11 @@
             <CardListFilter />
           </div>
           <div class="card-list">
-            <CardListItem />
-            <CardListItem />
-            <CardListItem />
-            <CardListItem />
-            <CardListItem />
+            <CardListItem
+            v-for="card in slicedCard"
+            :key="card.id"
+            :card="card"
+            />
           </div>
         </div>
       </div>
@@ -21,11 +21,23 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
   import CardListFilter from '@/components/CardListFilter.vue'
   import CardListItem from '@/components/CardListItem.vue'
   import Header from '@/components/Header.vue'
 
+  import { ref, onMounted, computed } from 'vue'
+  import { useCardStore } from '@/stores/card'
+
+  const cardStore = useCardStore()
+  const slicedCard = computed(() => {
+    if (cardStore.cards) {
+      return cardStore.cards.slice(800, 1000)
+    }
+  })
+
+  onMounted(() => {
+    cardStore.readCard()
+  })
 </script>
 
 <style scoped>

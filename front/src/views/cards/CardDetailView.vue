@@ -1,28 +1,49 @@
 <template>
-  <div>
+  <div class="container">
     <Header />
-  </div>
-  <main>
-    <!-- <ul>
-      <li><a href="">개요</a></li>
-      <li><a href="">혜택 정보</a></li>
-      <li><a href="">사용자 리뷰</a></li>
-    </ul> -->
-    <div class="card-page-bg">
-      <div class="menu-wrap">
-        <div class="info-wrap">
-          <CardDetailItem />
+    <main v-if="card">
+      <RouterLink :to="{ name: 'cardList' }">뒤로가기</RouterLink>
+      <!-- <ul>
+        <li><a href="">개요</a></li>
+        <li><a href="">혜택 정보</a></li>
+        <li><a href="">사용자 리뷰</a></li>
+      </ul> -->
+      <div class="card-page-bg">
+        <div class="menu-wrap">
+          <div class="info-wrap">
+            <CardDetailItem :card="card"/>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </div>
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import Header from '@/components/Header.vue'
-  import CardDetailItem from '@/components/CardDetailItem.vue'
+import CardDetailItem from '@/components/CardDetailItem.vue'
+import Header from '@/components/Header.vue'
+import axios from 'axios'
 
+import { ref, onMounted } from 'vue'
+import { useCardStore } from '@/stores/card'
+import { useRoute, RouterLink } from 'vue-router'
+
+const cardStore = useCardStore()
+const route = useRoute()
+
+const cardId = route.params.id
+const card = ref(null)
+
+onMounted(() => {
+  axios({
+    method: 'get',
+    url: `${cardStore.API_URL}/cards/${cardId}/`,
+  })
+  .then(res => {
+    card.value = res.data
+  })
+  .catch(err => console.error(err))
+})
 </script>
 
 <style scoped>

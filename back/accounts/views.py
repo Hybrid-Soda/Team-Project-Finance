@@ -35,20 +35,21 @@ def profile(request, username):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 # 설문 조사 등록 / 수정
-@api_view(["POST"])
+@api_view(["POST", "PUT"])
 @permission_classes([IsAuthenticated])
 def survey(request, username):
 
     if request.method == "POST":
-        serializer = SurveySerializer(Survey, data=request.data)
+        serializer = SurveySerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == "PUT":
         survey = get_object_or_404(get_user, username=username)
         if request.user == survey.user:
-            serializer = SurveySerializer(Survey, data=request.data, partial=True)
+            serializer = SurveySerializer(survey, data=request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)

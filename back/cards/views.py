@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.contrib.auth import get_user_model
+from django.forms.models import model_to_dict
 from django.shortcuts import render
 
 from accounts.models import Survey
@@ -21,6 +22,10 @@ from .models import *
 # @permission_classes([IsAuthenticated])
 # def card_recommend(request, username):
 def card_recommend(request):
+    # 설문
+    survey = get_object_or_404(Survey, pk=1)
+    survey = model_to_dict(survey)
+
     # 혜택 인덱싱용 딕셔너리 생성
     benefit_survey_model = [
         "car_owner", "live_alone", "student", "baby", "pets", "easy_pay", "healthcare", 
@@ -73,13 +78,13 @@ def card_recommend(request):
     BN = len(benefit_dict)
     
     # 페르소나 - 20대 여성 사회초년생
-    # persona = [1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1]
+    persona = [1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0]
     # 페르소나 - 20대 남성 사회초년생
-    persona = [1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1]
+    # persona = [1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1]
     # persona = [0,0,1,1,0,1,0,0,1,0,0,1,0,0,1,1,0,1,0,1,1,1,1]
 
     # 카드별 혜택 대분류 추출 및 가공
-    cards = Card.objects.all().order_by('annual_fee1', 'record').filter(id__gte=2200)
+    cards = Card.objects.all().order_by('annual_fee1', 'record').filter(id__gte=100)
     benefit_matrix = []  # 혜택 벡터 배열을 가지는 혜택 행렬
     for card in cards:
         benefits = card.benefit_set.all()
@@ -102,6 +107,8 @@ def card_recommend(request):
     similarity_vector = []
     for idx, benefit_vector in enumerate(benefit_matrix):
         similarity = sum(1 if benefit_vector[i] == persona[i] else 0 for i in range(BN))
+        if sum(benefit_vector) > 8: similarity /= 2
+        if benefit_vector[19] == 1: similarity -= 5
         similarity_vector.append((similarity, idx))
     
     # 코사인 유사도가 높은 순으로 정렬
@@ -120,7 +127,7 @@ def card_recommend(request):
         card_information['record'] = cards[idx].record
         card_information['type'] = cards[idx].type
         
-        benefits = card.benefit_set.all()
+        benefits = cards[idx].benefit_set.all()
         benefit = [bn.title for bn in benefits]
         card_information['benefits'] = benefit
 
@@ -128,6 +135,8 @@ def card_recommend(request):
 
     context = {
         'result_cards': result_cards,
+        'similarity_vector': similarity_vector,
+        'survey': survey,
     }
     return render(request, 'card_recommend.html', context)
 
@@ -135,14 +144,14 @@ def card_recommend(request):
 @ api_view(['GET'])
 def card_list(request):
     cards = get_list_or_404(Card)
-    serializer = CardListSerializer(cards, many=True)
+    serializer = CardSerializer(cards, many=True)
     return Response(serializer.data)
 
 # 카드 상세
 @ api_view(['GET'])
 def card_detail(request, card_pk):
     card = get_object_or_404(Card, pk=card_pk)
-    serializer = CardListSerializer(card)
+    serializer = CardSerializer(card)
     return Response(serializer.data)
 
 # 관심 카드 등록 및 해제

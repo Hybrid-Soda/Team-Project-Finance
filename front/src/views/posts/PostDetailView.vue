@@ -33,7 +33,7 @@
     </main><hr>
     
     <section>
-      <h6>댓글 | {{ comments.length }}</h6>
+      <h6>댓글 | {{ commentLength }}</h6>
       <article v-for="comment in comments" :key="comment.id" class="row">
 
         <!-- 댓글 본문 -->
@@ -79,11 +79,12 @@
 
 <script setup>
 import Header from '@/components/Header.vue'
-import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+import { ref, onMounted, computed } from 'vue'
 import { usePostStore } from '@/stores/post'
 import { useUserStore } from '@/stores/user'
 import { useRoute } from 'vue-router'
-import axios from 'axios'
 
 const postStore = usePostStore()
 const userStore = useUserStore()
@@ -96,6 +97,9 @@ const commentContent = ref('')
 const editingCommentId = ref(null)
 const editingCommentContent = ref('')
 
+const commentLength = computed(() => {
+  return comments.value.length
+})
 
 // 게시글 상세 조회
 const readPostDetail = function () {

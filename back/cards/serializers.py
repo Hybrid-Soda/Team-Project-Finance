@@ -12,18 +12,12 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = '__all__'
 
-class CardListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Card
-        fields = ('name', 'brand', 'image_url')
-
 class CardSerializer(serializers.ModelSerializer):
     benefit_set = BenefitListSerializer(many=True)
     review_set = ReviewSerializer(many=True)
-
     class Meta:
         model = Card
         fields = (
-            'name', 'brand', 'image_url', 'annual_fee1',
+            'id', 'name', 'brand', 'image_url', 'annual_fee1',
             'annual_fee2', 'record', 'type', 'benefit_set', 'review_set'
         )

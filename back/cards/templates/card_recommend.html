@@ -6,6 +6,7 @@
   <title>Document</title>
 </head>
 <body>
+  {{ survey }}<hr>
   {% for card in result_cards %}
     {{ card.id }}
     {{ card.name }}
@@ -19,5 +20,6 @@
     <img src="{{ card.image_url }}" alt="image" width="100">
     <hr>
   {% endfor %}
+  {{ similarity_vector }}
 </body>
 </html>

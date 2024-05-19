@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 // cards
 import HomeView from '@/views/cards/HomeView.vue'
+import SurveyView from '@/views/cards/SurveyView.vue'
 import CardListView from '@/views/cards/CardListView.vue'
+import RecommendView from '@/views/cards/RecommendView.vue'
 import CardDetailView from '@/views/cards/CardDetailView.vue'
 // users
 import MyPageView from '@/views/users/MyPageView.vue'
@@ -31,6 +33,16 @@ const router = createRouter({
       path: '/cards/:id',
       name: 'cardDetail',
       component: CardDetailView
+    },
+    {
+      path: '/:username/survey',
+      name: 'survey',
+      component: SurveyView
+    },
+    {
+      path: '/:username/recommend',
+      name: 'recommend',
+      component: RecommendView
     },
     // users
     {
@@ -68,7 +80,6 @@ const router = createRouter({
       path: '/posts/:id/update',
       name: 'postUpdate',
       component: PostUpdateView,
-      props: true
     },
   ]
 })

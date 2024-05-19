@@ -29,13 +29,13 @@ export const useUserStore = defineStore('user', () => {
 
   // 회원가입
   const signUp = function (payload) {
-    const { username, password1, password2 } = payload
-
+    const { username, password1, password2, nickname, gender, email, age } = payload
+    console.log(username, password1, password2, nickname, gender, email, age)
     axios({
       method: 'post',
       url: `${API_URL}/accounts/signup/`,
       data: {
-        username, password1, password2
+        username, password1, password2, nickname, gender, email, age
       }
     })
     .then(res => {
