@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.contrib.auth import get_user_model
+from django.forms.models import model_to_dict
 from django.shortcuts import render
 
 from accounts.models import Survey
@@ -16,11 +17,12 @@ from .serializers import *
 from .models import *
 
 
-# 카드 추천 테스트
-@api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-# def card_recommend(request, username):
-def card_recommend(request):
+User = get_user_model()
+
+# 카드 추천
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def card_recommend(request, username):
     # 혜택 인덱싱용 딕셔너리 생성
     benefit_survey_model = [
         "car_owner", "live_alone", "student", "baby", "pets", "easy_pay", "healthcare", 
@@ -71,15 +73,60 @@ def card_recommend(request):
         "해외": 21,
     }
     BN = len(benefit_dict)
-    
-    # 페르소나 - 20대 여성 사회초년생
-    # persona = [1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1]
-    # 페르소나 - 20대 남성 사회초년생
-    persona = [1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1]
-    # persona = [0,0,1,1,0,1,0,0,1,0,0,1,0,0,1,1,0,1,0,1,1,1,1]
+
+    # 설문
+    user = get_object_or_404(User, username=username)
+    # survey = get_object_or_404(Survey, user=user)
+    survey = get_object_or_404(Survey, pk=1)
+    survey = list(model_to_dict(survey).values())[2:]
+    survey_vector = [0] * BN
+
+    # 자동차 유무
+    if survey[0]:
+        survey_vector[14] = 1  # 자동차/하이패스
+        survey_vector[15] = 1  # 주유
+    else: survey_vector[4] = 1  # 교통
+    # 자취 여부
+    if survey[1]:
+        survey_vector[1] = 1  # 공과금/렌탈
+        survey_vector[6] = 1  # 마트/편의점
+        survey_vector[7] = 1  # 배달앱
+    # 학생 여부
+    if survey[2]: survey_vector[3] = 1  # 교육/육아
+    # 육아 여부
+    if survey[3]: survey_vector[3] = 1  # 교육/육아
+    # 애완동물
+    if survey[4]: survey_vector[11] = 1  # 애완동물
+    # 결제 방법
+    if survey[5]: survey_vector[0] = 1  # 간편결제
+    # 헬스케어
+    if survey[6]: survey_vector[8] = 1  # 병원/약국
+    # 통신
+    if survey[7]: survey_vector[17] = 1  # 통신
+    # 스포츠
+    if survey[8]: survey_vector[5] = 1  # 레저/스포츠
+    # 쇼핑
+    if survey[9]: survey_vector[10] = 1  # 쇼핑
+    # 친구
+    if survey[10]:
+        survey_vector[16] = 1  # 카페/디저트
+        survey_vector[18] = 1  # 푸드
+    # 운동
+    if survey[11]: survey_vector[9] = 1  # 뷰티/피트니스
+    # 영화
+    if survey[12]: survey_vector[13] = 1  # 영화/문화
+    # 국외여행
+    if survey[13]:
+        survey_vector[19] = 1  # 항공마일리지
+        survey_vector[20] = 1  # 항공
+        survey_vector[21] = 1  # 해외
+    # 국내여행
+    if survey[14]:
+        survey_vector[4] = 1  # 교통
+        survey_vector[12] = 1  # 여행/숙박
 
     # 카드별 혜택 대분류 추출 및 가공
-    cards = Card.objects.all().order_by('annual_fee1', 'record').filter(id__gte=2200)
+    cards = Card.objects.all().order_by('annual_fee1', 'record').filter(id__gte=100)
     benefit_matrix = []  # 혜택 벡터 배열을 가지는 혜택 행렬
     for card in cards:
         benefits = card.benefit_set.all()
@@ -101,48 +148,50 @@ def card_recommend(request):
     # 코사인 유사도 측정
     similarity_vector = []
     for idx, benefit_vector in enumerate(benefit_matrix):
-        similarity = sum(1 if benefit_vector[i] == persona[i] else 0 for i in range(BN))
+        similarity = sum(1 if benefit_vector[i] == survey_vector[i] else 0 for i in range(BN))
+        if sum(benefit_vector) > 8: similarity /= 2
+        if benefit_vector[19] == 1: similarity -= 5
         similarity_vector.append((similarity, idx))
     
     # 코사인 유사도가 높은 순으로 정렬
     similarity_vector.sort(reverse=True)
 
     # 카드 추출
-    result_cards = []
-    for _, idx in similarity_vector[:5]:
-        card_information = {}
-        card_information['id'] = cards[idx].id
-        card_information['name'] = cards[idx].name
-        card_information['brand'] = cards[idx].brand
-        card_information['image_url'] = cards[idx].image_url
-        card_information['annual_fee1'] = cards[idx].annual_fee1
-        card_information['annual_fee2'] = cards[idx].annual_fee2
-        card_information['record'] = cards[idx].record
-        card_information['type'] = cards[idx].type
-        
-        benefits = card.benefit_set.all()
-        benefit = [bn.title for bn in benefits]
-        card_information['benefits'] = benefit
-
-        result_cards.append(card_information)
-
-    context = {
-        'result_cards': result_cards,
+    card_data = {
+        'first_card_pk': similarity_vector[0][1],
+        'second_card_pk': similarity_vector[1][1],
+        'third_card_pk': similarity_vector[2][1],
+        'fourth_card_pk': similarity_vector[3][1],
+        'fifth_card_pk': similarity_vector[4][1],
     }
-    return render(request, 'card_recommend.html', context)
+    serializer = RecommendationSerializer(data=card_data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 추천 카드 조회
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def recommend(request, username):
+    user = get_object_or_404(User, username=username)
+    recommend = get_object_or_404(Recommendation, user=user)
+    serializer = RecommendationSerializer(recommend)
+    return Response(serializer.data)
 
 # 카드 리스트
 @ api_view(['GET'])
 def card_list(request):
     cards = get_list_or_404(Card)
-    serializer = CardListSerializer(cards, many=True)
+    serializer = CardSerializer(cards, many=True)
     return Response(serializer.data)
 
 # 카드 상세
 @ api_view(['GET'])
 def card_detail(request, card_pk):
     card = get_object_or_404(Card, pk=card_pk)
-    serializer = CardListSerializer(card)
+    serializer = CardSerializer(card)
     return Response(serializer.data)
 
 # 관심 카드 등록 및 해제

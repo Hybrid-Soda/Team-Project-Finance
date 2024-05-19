@@ -19,12 +19,35 @@
           <input type="password" class="form-control" placeholder="" v-model.trim="password2" id="password2">
           <label for="password2">비밀번호 확인</label>
         </div>
-        <div class="form-floating">
+        <hr>
+        <div class="form-floating mb-3">
           <input type="email" class="form-control" placeholder="" v-model.trim="email" id="email">
           <label for="email">이메일 [선택]</label>
         </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" placeholder="" v-model.trim="nickname" id="nickname">
+          <label for="nickname">닉네임</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control" placeholder="" v-model.trim="age" id="age">
+          <label for="age">나이</label>
+        </div>
+        <div class="row">
+          <legend class="col-form-label col-sm-3 pt-0">성별</legend>
+          <div class="col-sm-9">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="male" v-model.trim="gender" value="남자">
+              <label class="form-check-label" for="male">남자</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="female" v-model.trim="gender" value="여자">
+              <label class="form-check-label" for="female">여자</label>
+            </div>
+          </div>
+        </div>
         <input type="submit" value="회원가입" class="btn btn-outline-warning login-btn">
       </form>
+      <p>Already have an account? <RouterLink :to="{ name: 'signIn' }">Login</RouterLink></p>
     </main>
   </div>
 </template>
@@ -35,16 +58,24 @@
   import { useUserStore } from '@/stores/user'
 
   const store = useUserStore()
-  const username = ref(null) 
+  
   const password1 = ref(null)
   const password2 = ref(null)
+  const username = ref(null) 
+  const nickname = ref(null)
+  const gender = ref('남자')
   const email = ref(null)
+  const age = ref(null)
 
   const signUp = function () {
     const payload = {
       username: username.value,
       password1: password1.value,
-      password2: password2.value
+      password2: password2.value,
+      nickname: nickname.value,
+      gender: gender.value,
+      email: email.value,
+      age: age.value,
     }
     store.signUp(payload)
   }

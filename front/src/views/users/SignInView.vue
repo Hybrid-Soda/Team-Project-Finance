@@ -19,6 +19,7 @@
         </div>
         <input type="submit" value="로그인" class="btn btn-outline-warning login-btn">
       </form>
+      <p class="m-0">Already have an account? <RouterLink :to="{ name: 'signUp' }">Sign Up</RouterLink></p>
     </main>
   </body>
 </template>

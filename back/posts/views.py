@@ -86,7 +86,6 @@ def comment(request, post_pk):
     elif request.method == "POST":
         if request.user.is_authenticated:
             serializer = CommentSerializer(data=request.data)
-            print(serializer)
             if serializer.is_valid(raise_exception=True):
                 serializer.save(post=post, user=request.user)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -97,7 +96,7 @@ def comment(request, post_pk):
 @api_view(["PUT", "DELETE"])
 @permission_classes([IsAuthenticated])
 def comment_detail(request, post_pk, comment_pk):
-    comment = get_object_or_404(Post, pk=comment_pk)
+    comment = get_object_or_404(Comment, pk=comment_pk)
     
     if request.method == "PUT":
         if request.user == comment.user:

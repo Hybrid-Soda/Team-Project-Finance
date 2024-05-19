@@ -1,14 +1,16 @@
 <template>
-  <RouterLink class="wrap" :to="{ name:'cardDetail' }">
+  <RouterLink class="wrap" :to="{ name:'cardDetail', params: { 'id': card.id } }">
     <div>
-      <img src="@/assets/img/example_card.png" alt="" class="card-img">
+      <img :src="card.image_url" alt="" class="card-img">
     </div>
     <div class="card-content">
-      <h2 style="color: black;">신한카드 Point Plan</h2>
+      <h2 style="color: black;">{{ card.name }}</h2>
       <ul>
-        <li>큰 소비일수록 계획이 필요한 법</li>
-        <li>실적: 30만원 이상</li>
-        <li>연회비: 50,000 원</li>
+        <li>{{ card.brand }}</li>
+        <li v-if="card.record > 0">전월 실적 : {{ card.record }}만원 이상</li>
+        <li v-else>전월 실적 : 없음</li>
+        <li v-if="card.annual_fee1 > 0">연회비 : {{ card.annual_fee1 }} 원</li>
+        <li v-else>연회비 : 없음</li>
       </ul>
     </div>
   </RouterLink>
@@ -16,9 +18,12 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import { RouterLink } from 'vue-router';
+  import { ref, defineProps } from 'vue'
+  import { RouterLink } from 'vue-router'
 
+  defineProps({
+    card: Object
+  })
 </script>
 
 <style scoped>

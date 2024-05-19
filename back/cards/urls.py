@@ -12,5 +12,6 @@ urlpatterns = [
     path('<int:card_pk>/review/<int:review_pk>/', views.review),
     path('favorite/', views.favorite),
     #카드 추천
-    path('card_recommend/', views.card_recommend),
+    path('<str:username>/card_recommend/', views.card_recommend),
+    path('<str:username>/recommend/', views.recommend),
 ]

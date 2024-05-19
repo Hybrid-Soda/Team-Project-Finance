@@ -26,7 +26,7 @@ class Recommendation(models.Model):
     third_card_pk = models.IntegerField()
     fourth_card_pk = models.IntegerField()
     fifth_card_pk = models.IntegerField()
-
+    
 # 카드리뷰
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
