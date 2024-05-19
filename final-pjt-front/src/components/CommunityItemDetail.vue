@@ -24,7 +24,6 @@
           여기는 content입니다.<br>
           여기는 content입니다.<br>
           여기는 content입니다.<br>
-          여기는 content입니다.<br>
         </div>
       </main>
     </div>
