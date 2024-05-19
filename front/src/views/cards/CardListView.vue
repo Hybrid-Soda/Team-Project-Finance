@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="body">
     <Header />
-    <div style="height: 843px; overflow: hidden;">
+    <main>
       <div class="card-page-bg">
         <div class="content">
           <div class="filter">
@@ -16,7 +16,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -41,20 +41,23 @@
 </script>
 
 <style scoped>
-.card-page-bg {
+/* .card-page-bg {
   width: 100%;
   height: 1000px;
   border-radius: 50px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   margin-top: 40px;
+} */
+.card-page-bg {
+  background-image: url("@/assets/img/Rectangle 3.png");
 }
 .content {
   display: flex;
   justify-content: center;
   padding: 0 5%;
   padding-top: 2%;
-  height: 75%;
   align-items: center;
+  height: 800px;
 }
 .filter {
   width: 10%;
@@ -69,9 +72,6 @@
   width: 90%;
   padding-left: 10%;
   height: 100%;
-  overflow: scroll;
-}
-.card-list::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera*/
+  overflow-y: scroll;
 }
 </style>
