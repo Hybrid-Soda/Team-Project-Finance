@@ -2,7 +2,7 @@
   <div class="container">
     <Header />
     <main v-if="card">
-      <RouterLink :to="{ name: 'cardList' }">뒤로가기</RouterLink>
+      <!-- <RouterLink :to="{ name: 'cardList' }">뒤로가기</RouterLink> -->
       <div class="card-page-bg">
         <div class="menu-wrap">
           <button @click="this.$router.go(-1)" class="backBtn"><img src="../assets/img/backArrow.png" alt="" class="backImg"></button>

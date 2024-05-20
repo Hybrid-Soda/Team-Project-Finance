@@ -32,9 +32,9 @@
             </RouterLink>
           </li>
           <li>
-            <a href="">
+            <RouterLink :to="{ name:'home' }">
               홈으로 가기
-            </a>
+            </RouterLink>
           </li>
         </ul>
       </div>

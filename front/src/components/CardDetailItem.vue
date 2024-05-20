@@ -11,8 +11,14 @@
             <a :href="`https://www.card-gorilla.com/card/detail/${card.id}`">신청하러 가기</a>
           </button>
           <button data-bs-toggle="modal" data-bs-target="#exampleModal">오프라인 매장 보기</button>    
+          <button @click="commentActive" v-if="isActive">설명보기</button>
+          <button @click="commentActive" v-if="!isActive">후기보기</button>
         </div>
       </div>
+    </div>
+    <div class="detail-content">
+      <CardDetailContent v-if="!isActive"/>
+      <CardComment v-if="isActive"/>
     </div>
     <div v-for="benefit in card.benefit_set" :key="benefit.id">
       <h4>{{ benefit.title }}</h4>
@@ -43,10 +49,16 @@
 <script setup>
 import { ref, defineProps } from 'vue'
 import { RouterLink } from 'vue-router'
+import CardDetailContent from './CardDetailContent.vue';
+import CardComment from '@/components/CardComment.vue'
 
 defineProps({
   card: Object
 })
+const isActive = ref(false)
+  const commentActive = function() {
+    isActive.value = !isActive.value
+  }
 </script>
 
 <style scoped>
@@ -63,6 +75,7 @@ defineProps({
 .go-button {
   background-color: rgb(255, 199, 39);
   font-weight: bold;
+  color: black;
 }
 .detail-main {
   display: flex;
@@ -71,9 +84,17 @@ defineProps({
   gap: 5%;
   border: 2px solid blueviolet;
 }
+.btn-wrap {
+  display: flex;
+  gap: 4%;
+  width: 120%;
+}
 .card-name {
   color: black;
   font-size: 36px;
   font-weight: 800;
+}
+.detail-content {
+  margin-top: 5%;
 }
 </style>
