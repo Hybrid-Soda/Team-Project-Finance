@@ -10,12 +10,13 @@ import ChatBotView from '@/views/cards/ChatBotView.vue'
 import MyPageView from '@/views/users/MyPageView.vue'
 import SignInView from '@/views/users/SignInView.vue'
 import SignUpView from '@/views/users/SignUpView.vue'
+import MyCardView from '@/views/users/MyCardView.vue'
 // posts
 import PostListView from '@/views/posts/PostListView.vue'
 import PostCreateView from '@/views/posts/PostCreateView.vue'
 import PostDetailView from '@/views/posts/PostDetailView.vue'
 import PostUpdateView from '@/views/posts/PostUpdateView.vue'
-import FindCardView from '@/views/users/FindCardView.vue'
+// import FindCardView from '@/views/users/FindCardView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,6 +67,11 @@ const router = createRouter({
       path: '/signup',
       name: 'signUp',
       component: SignUpView
+    },
+    {
+      path: '/:username/cards',
+      name: 'myCard',
+      component: MyCardView
     },
     // posts
     {

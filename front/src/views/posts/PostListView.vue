@@ -20,16 +20,6 @@
             <div class="list">
               <CommunityItem  @click="activeDetail" class="touch"/>
               <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
             </div>
             <div class="detail" v-if="isActive">
               <CommunityItemDetail />
@@ -38,7 +28,7 @@
         </div>
       </div>
     </main>
-    <div class="d-flex justify-space-between">
+    <!-- <div class="d-flex justify-space-between">
       <h1 class="me-auto">금융상품 자유 게시판</h1>
       <RouterLink v-if="userStore.isLogIn" :to="{ name: 'postCreate' }">
         <button>글 쓰기</button>
@@ -62,7 +52,7 @@
           <td>{{ post.created_at.slice(0, 10) }}</td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -102,6 +92,9 @@ import { useUserStore } from '@/stores/user'
 import { onMounted } from 'vue'
 import Header from '@/components/Header.vue'
 import { ref } from 'vue'
+import PostDetailView from './PostDetailView.vue'
+import CommunityItem from '@/components/CommunityItem.vue'
+import CommunityItemDetail from '@/components/CommunityItemDetail.vue'
 
 const router = useRouter()
 const postStore = usePostStore()

@@ -31,7 +31,7 @@
   display: flex;
   gap: 10%;
   align-items: center;
-  margin: 5% auto;
+  margin: 2% auto;
 }
 .wrap:hover {
   opacity: 0.5;
