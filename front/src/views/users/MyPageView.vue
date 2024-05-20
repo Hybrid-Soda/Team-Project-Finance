@@ -17,9 +17,9 @@
             </a>
           </li>
           <li>
-            <a href="">
+            <RouterLink :to="{ name: 'passwordChange', params:{ 'username': userStore.userInfo.username }}">
               비밀번호 변경
-            </a>
+            </RouterLink>
           </li>
           <li>
             <a href="">
