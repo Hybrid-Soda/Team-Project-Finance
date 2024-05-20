@@ -5,8 +5,8 @@
         <img src="@/assets/img/PICKardº_blue.png" alt="">
       </RouterLink>
 
-      <h1>회원가입</h1>
-      <form @submit.prevent="signUp">
+      <div class="title">회원가입</div>
+      <form @submit.prevent="signUp" class="sign-up-form">
         <div class="form-floating mb-3">
           <input type="text" class="form-control" placeholder="" v-model.trim="username" id="username">
           <label for="username">아이디</label>
@@ -90,7 +90,7 @@
 }
 main {
   /* border: 1px solid black; */
-  width: 500px;
+  width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -104,9 +104,15 @@ main {
 form {
   width: 70%;
 }
+input {
+}
 .login-btn {
   margin-top: 20px;
   width: 100%;
   font-weight: bold;
+}
+.sign-up-form {
+  height: 80%;
+  overflow-y: scroll;
 }
 </style>

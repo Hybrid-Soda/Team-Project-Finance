@@ -3,13 +3,9 @@
     <Header />
     <main v-if="card">
       <RouterLink :to="{ name: 'cardList' }">뒤로가기</RouterLink>
-      <!-- <ul>
-        <li><a href="">개요</a></li>
-        <li><a href="">혜택 정보</a></li>
-        <li><a href="">사용자 리뷰</a></li>
-      </ul> -->
       <div class="card-page-bg">
         <div class="menu-wrap">
+          <button @click="this.$router.go(-1)" class="backBtn"><img src="../assets/img/backArrow.png" alt="" class="backImg"></button>
           <div class="info-wrap">
             <CardDetailItem :card="card"/>
           </div>
@@ -84,5 +80,14 @@ li {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.backBtn {
+  position: absolute;
+  margin: 20px;
+  background-color: rgba(0, 0, 0, 0);
+}
+.backImg {
+  width: 50px;
+  opacity: .5;
 }
 </style>

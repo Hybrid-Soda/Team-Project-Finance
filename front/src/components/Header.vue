@@ -12,17 +12,13 @@
             <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" :to="{ name:'searchCard' }">카드 검색</RouterLink>
+            <!-- <RouterLink class="nav-link" :to="{ name:'searchCard' }">카드 검색</RouterLink> -->
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" :to="{ name:'myCard' }">내 관심 카드</RouterLink>
+            <!-- <RouterLink class="nav-link" :to="{ name:'myCard' }">내 관심 카드</RouterLink> -->
           </li>
           <li class="nav-item">
-<<<<<<< HEAD:front/src/components/Header.vue
             <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>
-=======
-            <RouterLink class="nav-link" :to="{ name:'community' }">커뮤니티</RouterLink>
->>>>>>> yree2:final-pjt-front/src/components/Header.vue
           </li>
         </ul>
       </nav>
