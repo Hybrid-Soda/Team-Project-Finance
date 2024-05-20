@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 
 from .serializers import *
@@ -56,3 +56,10 @@ def survey(request, username):
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+# @api_view(["GET"])
+# def kakaoSignIn(request):
+#     app_key = ''
+#     redirect_url = 'http://localhost:8000/users/signin/kakao/callback'
+#     kakao_auth_api = 'https://kauth.kakao.com/oauth/authorize?response_type=code'
+#     return redirect(f'{kakao_auth_api}&client_id={app_key}&redirect_url={redirect_url}')

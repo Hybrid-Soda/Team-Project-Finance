@@ -46,6 +46,9 @@
           </div>
         </div>
         <input type="submit" value="회원가입" class="btn btn-outline-warning login-btn">
+        <div class="kakao mt-4">
+          <img src="@/assets/img/kakao_login.png" alt="kakao_login">
+        </div>
       </form>
       <p>Already have an account? <RouterLink :to="{ name: 'signIn' }">Login</RouterLink></p>
     </main>
@@ -83,7 +86,7 @@
 
 <style scoped>
 .body {
-  height: fit-content;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,8 +98,8 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 50px;
-  padding: 5% 0;
+  gap: 30px;
+  padding: 40px 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 30px;
   background-color: white;
@@ -109,7 +112,9 @@ form {
   width: 100%;
   font-weight: bold;
 }
-.sign-up-form {
-  height: 80%;
+.kakao {
+  width: 100%;
+  text-align: center;
+  border-color: yellow;
 }
 </style>
