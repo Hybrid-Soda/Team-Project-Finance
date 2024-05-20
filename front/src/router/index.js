@@ -11,6 +11,7 @@ import MyPageView from '@/views/users/MyPageView.vue'
 import SignInView from '@/views/users/SignInView.vue'
 import SignUpView from '@/views/users/SignUpView.vue'
 import MyCardView from '@/views/users/MyCardView.vue'
+import PasswordChangeView from '@/views/users/PasswordChangeView.vue'
 // posts
 import PostListView from '@/views/posts/PostListView.vue'
 import PostCreateView from '@/views/posts/PostCreateView.vue'
@@ -72,6 +73,11 @@ const router = createRouter({
       path: '/:username/cards',
       name: 'myCard',
       component: MyCardView
+    },
+    {
+      path: '/:username/password',
+      name: 'passwordChange',
+      component: PasswordChangeView
     },
     // posts
     {
