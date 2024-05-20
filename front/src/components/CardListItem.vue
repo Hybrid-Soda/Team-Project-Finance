@@ -41,6 +41,8 @@
 }
 .card-img {
   width: 300px;
+  height: 300px;
+  object-fit: contain;
 }
 ul {
   padding: 10px;
