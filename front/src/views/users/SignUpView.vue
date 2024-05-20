@@ -83,7 +83,7 @@
 
 <style scoped>
 .body {
-  height: 100vh;
+  height: fit-content;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,8 +104,6 @@ main {
 form {
   width: 70%;
 }
-input {
-}
 .login-btn {
   margin-top: 20px;
   width: 100%;
@@ -113,6 +111,5 @@ input {
 }
 .sign-up-form {
   height: 80%;
-  overflow-y: scroll;
 }
 </style>

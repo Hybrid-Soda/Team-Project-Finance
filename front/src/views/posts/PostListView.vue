@@ -1,61 +1,43 @@
 <template>
   <div class="body">
-    <Header/>
+    <Header />
     <main>
       <div class="community-bg">
         <div class="head">
           <div></div>
           <form class="filter">
-            <select name="" id="" class="form-select" style="width: 30%;">
+            <select name="" id="" class="form-select" style="width: 30%">
               <option value="작성자">작성자</option>
               <option value="글 내용">글 내용</option>
             </select>
-            <input type="text" class="form-control" placeholder="검색어를 입력해주세요.">
-            <input type="submit" class="button" value="검색">
+            <input type="text" class="form-control" placeholder="검색어를 입력해주세요."/>
+            <input type="submit" class="button" value="검색" />
           </form>
-          <button class="create-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">글 작성하기</button>
+          <button class="create-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            글 작성하기
+          </button>
         </div>
-        <div class="wrap-content">
+        <div v-if="postStore.posts" class="wrap-content">
           <div class="content">
             <div class="list">
-              <CommunityItem  @click="activeDetail" class="touch"/>
-              <CommunityItem  @click="activeDetail" class="touch"/>
+              <PostItem
+                v-for="post in postStore.posts"
+                :key="post.id"
+                :post="post"
+                @click="activeDetail(post)"
+                class="touch"
+              />
             </div>
             <div class="detail" v-if="isActive">
-              <CommunityItemDetail />
+              <PostDetail :post="selectedPost" />
             </div>
           </div>
         </div>
       </div>
     </main>
-    <!-- <div class="d-flex justify-space-between">
-      <h1 class="me-auto">금융상품 자유 게시판</h1>
-      <RouterLink v-if="userStore.isLogIn" :to="{ name: 'postCreate' }">
-        <button>글 쓰기</button>
-      </RouterLink>
-    </div><br>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">글 번호</th>
-          <th scope="col">제목</th>
-          <th scope="col">작성자</th>
-          <th scope="col">작성일자</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="post in postStore.posts" :key="post.id" @click="goDetail(post.id)" class="post">
-          <th scope="row">{{ post.id }}</th>
-          <td>{{ post.title }}</td>
-          <td>{{ post.user.nickname }}</td>
-          <td>{{ post.created_at.slice(0, 10) }}</td>
-        </tr>
-      </tbody>
-    </table> -->
   </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -67,7 +49,7 @@
             <label for="title">
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
               </div>
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
@@ -78,7 +60,7 @@
         </div>
         <div class="modal-footer">
           <button data-bs-dismiss="modal">Close</button>
-          <input type="submit" class="save-btn" value="Save">
+          <input type="submit" class="save-btn" value="Save"/>
         </div>
       </div>
     </div>
@@ -86,32 +68,30 @@
 </template>
 
 <script setup>
-import { useRouter, RouterLink } from 'vue-router'
-import { usePostStore } from '@/stores/post'
-import { useUserStore } from '@/stores/user'
-import { onMounted } from 'vue'
-import Header from '@/components/Header.vue'
-import { ref } from 'vue'
-import PostDetailView from './PostDetailView.vue'
-import CommunityItem from '@/components/CommunityItem.vue'
-import CommunityItemDetail from '@/components/CommunityItemDetail.vue'
+import PostDetail from "@/components/PostDetail.vue"
+import PostItem from "@/components/PostItem.vue"
+import Header from "@/components/Header.vue"
+import { usePostStore } from "@/stores/post"
+import { onMounted } from "vue"
+import { ref } from "vue"
 
-const router = useRouter()
 const postStore = usePostStore()
-const userStore = useUserStore()
+const selectedPost = ref(null)
+const isActive = ref(false)
 
 onMounted(() => {
   postStore.readPost()
 })
 
-const goDetail = (id) => {
-  router.push({ name: 'postDetail', params: { id } })
+const activeDetail = function (post) {
+  if (post !== selectedPost.value || isActive.value === false) {
+    selectedPost.value = post
+    isActive.value = true
+  } else {
+    isActive.value = false
+  }
 }
 
-const isActive = ref(false)
-  const activeDetail = function() {
-    isActive.value = !isActive.value
-  }
 </script>
 
 <style scoped>
@@ -179,7 +159,8 @@ main {
   border: none;
 }
 .touch:hover {
-  opacity: .6;
+  opacity: 0.6;
+  cursor: pointer;
 }
 .save-btn {
   border-radius: 38px;

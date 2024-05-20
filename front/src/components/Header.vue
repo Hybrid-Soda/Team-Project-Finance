@@ -14,8 +14,8 @@
           <li class="nav-item">
             <!-- <RouterLink class="nav-link" :to="{ name:'searchCard' }">카드 검색</RouterLink> -->
           </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: store.userInfo.username } }">내 관심 카드</RouterLink>
+          <li class="nav-item" v-if="store.isLogIn">
+            <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: store.userInfo?.username } }">내 관심 카드</RouterLink>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>
