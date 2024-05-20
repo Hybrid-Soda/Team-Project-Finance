@@ -54,3 +54,20 @@ button {
   border:4px solid #f4f4f4
 }
 ::-webkit-scrollbar-button {display:none}
+/* loading */
+#loading {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-sizing: border-box;
+  border-top-color: rgb(33, 95, 255);
+  border-radius: 100%;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  100%
+  {
+    transform: rotate(360deg);
+  }
+}

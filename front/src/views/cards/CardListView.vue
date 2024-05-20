@@ -8,6 +8,9 @@
             <CardListFilter />
           </div>
           <div class="card-list">
+            <div class="loading-box" v-if="!slicedCard">
+              <div id="loading"></div>
+            </div>
             <CardListItem
             v-for="card in slicedCard"
             :key="card.id"
@@ -73,5 +76,12 @@
   padding-left: 10%;
   height: 100%;
   overflow-y: scroll;
+}
+.loading-box {
+  width: 100%;
+  height: 100%;
+  display: flex;  
+  justify-content: center;
+  align-items: center;
 }
 </style>
