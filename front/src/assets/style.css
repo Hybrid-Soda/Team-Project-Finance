@@ -35,11 +35,11 @@ button {
 }
 /* scrollbar */
 ::-webkit-scrollbar {
-  background-color:#fff;
+  background-color:rgba(0, 0, 0, 0);
   width:16px
 }
 ::-webkit-scrollbar-track {
-  background-color:#fff
+  background-color:rgba(0, 0, 0, 0);
 }
 ::-webkit-scrollbar-track:hover {
   background-color:#f4f4f4

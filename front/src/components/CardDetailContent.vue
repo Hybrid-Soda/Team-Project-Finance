@@ -1,60 +1,35 @@
 <template>
-  <div class="container body">
-    <div class="content">
-      <img src="@\assets\img\icons\shopping.png" alt="" class="d-img">
-      <div class="detail">
-        <p class="title">쇼핑</p>
-        <p>백화점/할인점/홈쇼핑·온라인몰 1.0~5.0% 적립</p>
-      </div>
-    </div>
-    <div class="content">
-      <img src="@\assets\img\icons\shopping.png" alt="" class="d-img">
-      <div class="detail">
-        <p class="title">주유</p>
-        <p>S-OIL, 에이치디현대오일뱅크 주유 시 리터 당 60원 적립</p>
-      </div>
-    </div>
-    <div class="content">
-      <img src="@\assets\img\icons\shopping.png" alt="" class="d-img">
-      <div class="detail">
-        <p class="title">쇼핑</p>
-        <p>백화점/할인점/홈쇼핑·온라인몰 1.0~5.0% 적립</p>
-      </div>
-    </div>
-    <div class="content">
-      <img src="@\assets\img\icons\shopping.png" alt="" class="d-img">
-      <div class="detail">
-        <p class="title">쇼핑</p>
-        <p>백화점/할인점/홈쇼핑·온라인몰 1.0~5.0% 적립</p>
-      </div>
+  <div class="content">
+    <img :src="src" alt="" class="d-img" v-if="benefit.title in cardStore.benefit_dict">
+    <img src="@/assets/img/icons/default.png" alt="" class="d-img" v-else>
+    <div class="detail">
+      <p class="title">{{ benefit.title }}</p>
+      <p>{{ benefit.content }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-
+import { useCardStore } from '@/stores/card'
+import { ref, defineProps } from 'vue'
+const props = defineProps({
+  benefit: Object  
+})
+const cardStore = useCardStore()
+const src = new URL(`../assets/img/icons/${ cardStore.benefit_dict[`${props.benefit.title}`]}.png`, import.meta.url)
+console.log(src)
 </script>
 
 <style scoped>
-.body {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 2%;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 0% 2%;
-}
 .content {
   display: flex;
   align-items: center;
-  width: 40%;
   margin: 2% 0;
   gap: 5%;
+  width: 50%;
 }
 .d-img {
-  width: 15%;
+  width: 12%;
   opacity: .7;
 }
 .detail {

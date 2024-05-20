@@ -26,6 +26,20 @@
         </div>
         <div class="text">이 카드는 ~~~ 암튼 조아요<br>이 카드는 ~~~ 암튼 조아요</div>
       </div>
+      <div class="detail">
+        <div class="head">
+          <div class="title">안녕하세요</div>
+          <div class="user">user1</div>
+        </div>
+        <div class="text">이 카드는 ~~~ 암튼 조아요<br>이 카드는 ~~~ 암튼 조아요</div>
+      </div>
+      <div class="detail">
+        <div class="head">
+          <div class="title">안녕하세요</div>
+          <div class="user">user1</div>
+        </div>
+        <div class="text">이 카드는 ~~~ 암튼 조아요<br>이 카드는 ~~~ 암튼 조아요</div>
+      </div>
     </div>
   </div>
 </template>
@@ -57,7 +71,7 @@ form {
   height: 80%;
   margin: 2% 0;
   gap: 5%;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 .d-img {
   width: 15%;

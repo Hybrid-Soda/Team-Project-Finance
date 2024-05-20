@@ -15,6 +15,7 @@ import PostListView from '@/views/posts/PostListView.vue'
 import PostCreateView from '@/views/posts/PostCreateView.vue'
 import PostDetailView from '@/views/posts/PostDetailView.vue'
 import PostUpdateView from '@/views/posts/PostUpdateView.vue'
+import FindCardView from '@/views/users/FindCardView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

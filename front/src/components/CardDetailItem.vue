@@ -1,12 +1,14 @@
 <template>
   <div>
     <div class="detail-main">
-      <img :src="card.image_url" class="card-img">
+      <div class="card-img-wrap">
+        <img :src="card.image_url" class="card-img">
+      </div>
       <div class="card-content">
         <p class="card-name">{{ card.name }}</p>
         <p>{{ card.brand }}</p>
         <p>{{ card.type }}</p>
-        <div>
+        <div class="btn-wrap">
           <button class="go-button">
             <a :href="`https://www.card-gorilla.com/card/detail/${card.id}`">신청하러 가기</a>
           </button>
@@ -17,12 +19,16 @@
       </div>
     </div>
     <div class="detail-content">
-      <CardDetailContent v-if="!isActive"/>
-      <CardComment v-if="isActive"/>
-    </div>
-    <div v-for="benefit in card.benefit_set" :key="benefit.id">
-      <h4>{{ benefit.title }}</h4>
-      <p>{{ benefit.content }}</p>
+      <div class="row benefit-wrap" v-if="!isActive">
+          <CardDetailContent
+          v-for="benefit in card.benefit_set" 
+          :key="benefit.id"
+          :benefit="benefit"
+          />
+      </div>
+      <div class="comment-wrap" v-if="isActive">
+        <CardComment />
+      </div>
     </div>
 
     <!-- Modal -->
@@ -43,6 +49,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -63,8 +70,16 @@ const isActive = ref(false)
 
 <style scoped>
 .card-img {
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: contain;
+}
+.card-img-wrap {
   width: 300px;
-  height: fit-content;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .card-content {
   /* border: 2px solid pink; */
@@ -82,7 +97,8 @@ const isActive = ref(false)
   align-items: center;
   justify-content: center;
   gap: 5%;
-  border: 2px solid blueviolet;
+  margin-top: 2%;
+  /* border: 2px solid blueviolet; */
 }
 .btn-wrap {
   display: flex;
@@ -95,6 +111,20 @@ const isActive = ref(false)
   font-weight: 800;
 }
 .detail-content {
-  margin-top: 5%;
+  /* margin-top: 2%; */
+  height: 400px;
+  background-color: rgba(0, 0, 0, 0);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.benefit-wrap {
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  padding: 2% 5%;
+}
+.comment-wrap {
+  width: 100%;
+  /* overflow-y: scroll; */
 }
 </style>
