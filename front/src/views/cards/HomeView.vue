@@ -63,6 +63,9 @@
       </main>
     </div>
   </div>
+  <button class="chatbot main-text-btn">
+    <RouterLink :to="{ name: 'chatBot' }">chatbot</RouterLink>
+  </button>
   <Footer />
 </template>
 
@@ -144,6 +147,11 @@ nav {
   margin-top: 30px;
   font-weight: bold;
   color: black;
+}
+.chatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 
 @media (max-width: 1300px) {

@@ -5,6 +5,7 @@ import SurveyView from '@/views/cards/SurveyView.vue'
 import CardListView from '@/views/cards/CardListView.vue'
 import RecommendView from '@/views/cards/RecommendView.vue'
 import CardDetailView from '@/views/cards/CardDetailView.vue'
+import ChatBotView from '@/views/cards/ChatBotView.vue'
 // users
 import MyPageView from '@/views/users/MyPageView.vue'
 import SignInView from '@/views/users/SignInView.vue'
@@ -43,6 +44,11 @@ const router = createRouter({
       path: '/:username/recommend',
       name: 'recommend',
       component: RecommendView
+    },
+    {
+      path: '/chatbot',
+      name: 'chatBot',
+      component: ChatBotView
     },
     // users
     {

@@ -10,16 +10,22 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
-from django.shortcuts import render
 
 from accounts.models import Survey
 from .serializers import *
 from .models import *
+import numpy as np
 
+
+# 코사인 유사도 계산 함수
+def cos_similarity(x, y, eps=1e-8):
+    nx = x / np.sqrt(np.sum(x**2) + eps)
+    ny = y / np.sqrt(np.sum(y**2) + eps)
+    return np.dot(nx, ny)
 
 User = get_user_model()
 
-# 카드 추천
+# 카드 추천 - 콘텐츠 기반 필터링
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def card_recommend(request, username):
@@ -76,10 +82,10 @@ def card_recommend(request, username):
 
     # 설문
     user = get_object_or_404(User, username=username)
-    # survey = get_object_or_404(Survey, user=user)
-    survey = get_object_or_404(Survey, pk=1)
+    survey = get_object_or_404(Survey, user=user)
+    # survey = get_object_or_404(Survey, pk=1)
     survey = list(model_to_dict(survey).values())[2:]
-    survey_vector = [0] * BN
+    survey_vector = [0] * (BN + 1)
 
     # 자동차 유무
     if survey[0]:
@@ -126,7 +132,7 @@ def card_recommend(request, username):
         survey_vector[12] = 1  # 여행/숙박
 
     # 카드별 혜택 대분류 추출 및 가공
-    cards = Card.objects.all().order_by('annual_fee1', 'record').filter(id__gte=100)
+    cards = Card.objects.all().order_by('annual_fee1', 'record')
     benefit_matrix = []  # 혜택 벡터 배열을 가지는 혜택 행렬
     for card in cards:
         benefits = card.benefit_set.all()
@@ -138,9 +144,10 @@ def card_recommend(request, username):
             if bene in benefit_dict:
                 index = benefit_dict[bene]
                 benefit_vector[index] = 1
-            # 기타 항목이라면 마지막 위치 벡터 활성화
+            # 기타 항목이라면 기타 위치 벡터 활성화
             else:
-                benefit_vector[-1] = 1
+                benefit_vector[-2] = 1
+        benefit_vector[-1] = card.pk
 
         # 혜택 벡터
         benefit_matrix.append(benefit_vector)
@@ -148,9 +155,12 @@ def card_recommend(request, username):
     # 코사인 유사도 측정
     similarity_vector = []
     for idx, benefit_vector in enumerate(benefit_matrix):
-        similarity = sum(1 if benefit_vector[i] == survey_vector[i] else 0 for i in range(BN))
-        if sum(benefit_vector) > 8: similarity /= 2
-        if benefit_vector[19] == 1: similarity -= 5
+        similarity = cos_similarity(np.array(benefit_vector[:BN+1]), np.array(survey_vector))
+
+        # 협업 필터링
+        if sum(benefit_vector) > 8: similarity /= 0.2
+        if benefit_vector[19] == 1: similarity -= 0.3
+
         similarity_vector.append((similarity, idx))
     
     # 코사인 유사도가 높은 순으로 정렬
@@ -177,8 +187,15 @@ def card_recommend(request, username):
 def recommend(request, username):
     user = get_object_or_404(User, username=username)
     recommend = get_object_or_404(Recommendation, user=user)
-    serializer = RecommendationSerializer(recommend)
-    return Response(serializer.data)
+    first_card = model_to_dict(get_object_or_404(Card, pk=recommend.first_card_pk))
+    second_card = model_to_dict(get_object_or_404(Card, pk=recommend.second_card_pk))
+    third_card = model_to_dict(get_object_or_404(Card, pk=recommend.third_card_pk))
+    fourth_card = model_to_dict(get_object_or_404(Card, pk=recommend.fourth_card_pk))
+    fifth_card = model_to_dict(get_object_or_404(Card, pk=recommend.fifth_card_pk))
+    context = {
+        'first_card': first_card, 'second_card': second_card, 'third_card': third_card, 'fourth_card': fourth_card, 'fifth_card': fifth_card,
+    }
+    return Response(context)
 
 # 카드 리스트
 @ api_view(['GET'])
