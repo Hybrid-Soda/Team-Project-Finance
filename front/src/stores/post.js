@@ -89,4 +89,4 @@ export const usePostStore = defineStore('post', () => {
     posts, API_URL,
     createPost, readPost, updatePost, deletePost,
   }
-})
+}, { persist: true })

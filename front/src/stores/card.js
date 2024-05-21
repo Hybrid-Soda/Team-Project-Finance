@@ -52,5 +52,4 @@ export const useCardStore = defineStore('card', () => {
     cards, brands, API_URL, benefit_dict,
     readCard,
   }
-
-})
+}, { persist: true })
