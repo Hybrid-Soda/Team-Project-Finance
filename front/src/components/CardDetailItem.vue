@@ -6,7 +6,7 @@
       </div>
       <div class="card-content">
         <a href="#" @click="toggleFavoriteCard">
-          <h6>★ 관심 카드 등록</h6>
+          <h6>⭐ 관심 카드 등록</h6>
         </a>
         <p class="card-name">{{ card.name }}</p>
         <p>{{ card.brand }}</p>
@@ -14,7 +14,7 @@
         <!-- <div>★{{ card.review_set }}</div> -->
         <div class="btn-wrap">
           <button class="go-button">
-            <a :href="`https://www.card-gorilla.com/card/detail/${card.id}`">신청하러 가기</a>
+            <a :href="redirectUrl(card.brand, card.id)">신청하러 가기</a>
           </button>
           <button data-bs-toggle="modal" data-bs-target="#exampleModal" @click="openMap()">오프라인 매장 보기</button>    
           <button @click="reviewActive" v-if="isActive">설명보기</button>
@@ -70,19 +70,32 @@
 <script setup>
   import { KakaoMap, KakaoMapMarker } from 'vue3-kakao-maps'
   import { usePostStore } from '@/stores/post'
-  import { ref, defineProps } from 'vue'
+  import { useCardStore } from '@/stores/card'
+  import { ref, defineProps, computed } from 'vue'
 
   import CardDetailReview from '@/components/CardDetailReview.vue'
   import CardDetailContent from './CardDetailContent.vue'
   import axios from 'axios'
 
   const postStore = usePostStore()
+  const cardStore = useCardStore()
   const props = defineProps({
-    card: Object
+    card: {
+      type: Object,
+      required: true
+    }
   })
   const isActive = ref(false)
   const reviewActive = function() {
     isActive.value = !isActive.value
+  }
+
+  const redirectUrl = (brand, cardId) => {
+    const brandInfo = cardStore.BRAND_URLS.find(item => item.brand === brand)
+    if (brandInfo) {
+      return brandInfo.url;
+    }
+    return `https://www.card-gorilla.com/card/detail/${cardId}`
   }
 
   // kakaomap
