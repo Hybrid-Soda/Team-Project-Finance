@@ -13,7 +13,6 @@
             <input type="text" class="form-control" placeholder="검색어를 입력해주세요."/>
             <input type="submit" class="button" value="검색" />
           </form>
-          <!-- <button class="create-btn" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
           <RouterLink :to="{ name: 'postCreate' }">
             글 작성하기
           </RouterLink>
@@ -37,35 +36,6 @@
       </div>
     </main>
   </div>
-  <!-- Modal -->
-  <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">글 작성하기</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <label for="title">
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
-              </div>
-              <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-              </div>
-            </label>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button data-bs-dismiss="modal">Close</button>
-          <input type="submit" class="save-btn" value="Save"/>
-        </div>
-      </div>
-    </div>
-  </div> -->
 </template>
 
 <script setup>
