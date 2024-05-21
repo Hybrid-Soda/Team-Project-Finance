@@ -22,7 +22,9 @@
             <div>★&star;</div>
           </div>
           <div class="user">user1</div>
-          <button class="delete-btn">X</button>
+          <!-- <button class="delete-btn" v-if="request.user.username==commentUser">
+            <img src="@/assets/img/delete_X.png" alt="" style="width: 24px;">
+          </button> -->
         </div>
         <div class="text">이 카드는 ~~~ 암튼 조아요<br>이 카드는 ~~~ 암튼 조아요</div>
       </div>
@@ -31,7 +33,36 @@
 </template>
 
 <script setup>
+  import { useRoute } from 'vue-router'
+  import axios from 'axios'
+  import { ref, onMounted, computed } from 'vue'
+  const route = useRoute()
+  const card_pk = route.params.id
+  const API_URL = 'http://127.0.0.1:8000'
 
+  onMounted(() => {
+    axios({
+      method: 'get',
+      url: `${API_URL}/cards/${card_pk}/review/`,
+    })
+    .then(res => {
+      cards.value = res.data
+      console.value(res.data)
+    })
+    .catch(err => console.error(err))
+  })
+
+  const createReview = function() {
+    axios({
+      method: 'get',
+      url: `${API_URL}/cards/${card_pk}/review/`,
+    })
+    .then(res => {
+      cards.value = res.data
+      console.value(res.data)
+    })
+    .catch(err => console.error(err))
+  }
 </script>
 
 <style scoped>
@@ -123,5 +154,10 @@ form {
 }
 .star:hover ~ .star::after {
   content: '☆';
+}
+.delete-btn {
+  background-color: rgba(0, 0, 0, 0);
+  opacity: .5;
+  margin: 0;
 }
 </style>
