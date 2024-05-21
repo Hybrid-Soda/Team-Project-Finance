@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card-list-content">
-          <div>
+          <div class="filter-wrap">
             <ul class="filter-list">
               <div class="category">정렬</div>
               <li class="isActivate filter-sort">
@@ -10,7 +10,7 @@
                 </a>
               </li>
               <li class="filter-sort">
-                <a href="#">
+                <a href="#" @click="sortName">
                   이름순 정렬
                 </a>
               </li>
@@ -49,16 +49,22 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { ref, defineEmits } from 'vue'
   import { useCardStore } from '@/stores/card'
   const store = useCardStore()
+  const emit = defineEmits()
 
-
+  const sortName = function () {
+    emit('sortName')
+  }
 </script>
 
 <style scoped>
 .isActivate {
   color: rgb(255, 199, 39)
+}
+.filter-wrap {
+  width: 14vw;
 }
 .filter-comp {
   margin: 15px auto;
