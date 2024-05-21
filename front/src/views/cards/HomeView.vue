@@ -13,13 +13,13 @@
               <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
             </li>
             <li class="nav-item" v-if="userStore.isLogIn">
-              <RouterLink class="nav-link" :to="{ name:'searchCard', params: { username: store.userInfo.username } }">카드 검색</RouterLink>
+              <!-- <RouterLink class="nav-link" :to="{ name:'searchCard' }">카드 검색</RouterLink> -->
             </li>
             <li class="nav-item" v-if="!userStore.isLogIn">
               <RouterLink class="nav-link" :to="{ name:'signIn' }" onclick="alert('로그인이 필요합니다!')">카드 검색</RouterLink>
             </li>
             <li class="nav-item" v-if="userStore.isLogIn">
-              <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: store.userInfo.username } }">내 관심 카드</RouterLink>
+              <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: userStore.userInfo.username } }">내 관심 카드</RouterLink>
             </li>
             <li class="nav-item" v-if="!userStore.isLogIn">
             <RouterLink class="nav-link" :to="{ name:'signIn' }" onclick="alert('로그인이 필요합니다!')">내 관심 카드</RouterLink>

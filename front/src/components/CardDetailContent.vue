@@ -13,11 +13,10 @@
 import { useCardStore } from '@/stores/card'
 import { ref, defineProps } from 'vue'
 const props = defineProps({
-  benefit: Object  
+  benefit: Object
 })
 const cardStore = useCardStore()
 const src = new URL(`../assets/img/icons/${ cardStore.benefit_dict[`${props.benefit.title}`]}.png`, import.meta.url)
-console.log(src)
 </script>
 
 <style scoped>

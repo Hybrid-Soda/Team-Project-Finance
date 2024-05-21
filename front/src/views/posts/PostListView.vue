@@ -13,9 +13,10 @@
             <input type="text" class="form-control" placeholder="검색어를 입력해주세요."/>
             <input type="submit" class="button" value="검색" />
           </form>
-          <button class="create-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <!-- <button class="create-btn" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
+          <RouterLink :to="{ name: 'postCreate' }">
             글 작성하기
-          </button>
+          </RouterLink>
         </div>
         <div v-if="postStore.posts" class="wrap-content">
           <div class="content">
@@ -37,7 +38,7 @@
     </main>
   </div>
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -64,7 +65,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup>

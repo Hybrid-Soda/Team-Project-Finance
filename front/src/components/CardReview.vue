@@ -3,12 +3,8 @@
     <div class="content">
       <form class="form-wrap" @submit.prevent="">
         <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">제목</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">내용</label>
+          <input type="content" class="form-control" id="reviewContent" placeholder="" v-model="content">
+          <label for="reviewContent">내용</label>
         </div>
         <div class="star-rating">
           <input type="radio" class="star" value="1">
@@ -23,7 +19,7 @@
         <div class="head">
           <div class="title-wrap">
             <div class="title">안녕하세요</div>
-            <div>★</div>
+            <div>★&star;</div>
           </div>
           <div class="user">user1</div>
           <button class="delete-btn">X</button>
@@ -94,6 +90,12 @@ form {
 .form-wrap {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.form-floating {
+  width: 100%;
+  margin-bottom: 0;
 }
 .submit-btn {
   border-radius: 38px;

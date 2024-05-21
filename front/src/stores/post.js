@@ -26,7 +26,7 @@ export const usePostStore = defineStore('post', () => {
       }
     })
     .then(res => {
-      router.push({ name: 'postDetail', params: { 'id': res.data.id } })
+      router.push({ name: 'postList', params: { 'id': res.data.id } })
     })
     .catch(err => {
       alert('게시글 업로드에 실패했습니다.')

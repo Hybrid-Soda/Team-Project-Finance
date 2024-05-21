@@ -15,7 +15,7 @@ import PasswordChangeView from '@/views/users/PasswordChangeView.vue'
 // posts
 import PostListView from '@/views/posts/PostListView.vue'
 import PostCreateView from '@/views/posts/PostCreateView.vue'
-import PostDetailView from '@/views/posts/PostDetailView.vue'
+// import PostDetailView from '@/views/posts/PostDetailView.vue'
 import PostUpdateView from '@/views/posts/PostUpdateView.vue'
 // import FindCardView from '@/views/users/FindCardView.vue'
 
@@ -85,11 +85,11 @@ const router = createRouter({
       name: 'postList',
       component: PostListView
     },
-    {
-      path: '/posts/:id',
-      name: 'postDetail',
-      component: PostDetailView
-    },
+    // {
+    //   path: '/posts/:id',
+    //   name: 'postDetail',
+    //   component: PostDetailView
+    // },
     {
       path: '/posts/create',
       name: 'postCreate',

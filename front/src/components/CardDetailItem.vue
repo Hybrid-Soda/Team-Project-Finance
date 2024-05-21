@@ -13,8 +13,8 @@
             <a :href="`https://www.card-gorilla.com/card/detail/${card.id}`">신청하러 가기</a>
           </button>
           <button data-bs-toggle="modal" data-bs-target="#exampleModal">오프라인 매장 보기</button>    
-          <button @click="commentActive" v-if="isActive">설명보기</button>
-          <button @click="commentActive" v-if="!isActive">후기보기</button>
+          <button @click="reviewActive" v-if="isActive">설명보기</button>
+          <button @click="reviewActive" v-if="!isActive">후기보기</button>
         </div>
       </div>
     </div>
@@ -26,8 +26,8 @@
           :benefit="benefit"
           />
       </div>
-      <div class="comment-wrap" v-if="isActive">
-        <CardComment />
+      <div class="review-wrap" v-if="isActive">
+        <CardReview />
       </div>
     </div>
 
@@ -57,13 +57,13 @@
 import { ref, defineProps } from 'vue'
 import { RouterLink } from 'vue-router'
 import CardDetailContent from './CardDetailContent.vue';
-import CardComment from '@/components/CardComment.vue'
+import CardReview from '@/components/CardReview.vue'
 
 defineProps({
   card: Object
 })
 const isActive = ref(false)
-  const commentActive = function() {
+  const reviewActive = function() {
     isActive.value = !isActive.value
   }
 </script>
@@ -123,7 +123,7 @@ const isActive = ref(false)
   /* justify-content: center; */
   padding: 2% 5%;
 }
-.comment-wrap {
+.review-wrap {
   width: 100%;
   /* overflow-y: scroll; */
 }
