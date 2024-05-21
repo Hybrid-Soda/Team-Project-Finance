@@ -43,9 +43,19 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <button @click="openMap">지도</button>
-            <div class="map">
-              <KakaoMap :lat="33.450701" :lng="126.570667"/>
+            <div id="map" @click="openMap">
+              <!-- <KakaoMap :lat="35.0961457" :lng="128.8538772" /> -->
+              <KakaoMap :lat="35.0961457" :lng="128.8538772" @onLoadKakaoMap="onLoadKakaoMap">
+                <KakaoMapMarker
+                  v-for="(marker, index) in markerList"
+                  :key="marker.key === undefined ? index : marker.key"
+                  :lat="marker.lat"
+                  :lng="marker.lng"
+                  :infoWindow="marker.infoWindow"
+                  :clickable="true"
+                  @onClickKakaoMapMarker="onClickMapMarker(marker)"
+                />
+              </KakaoMap>
             </div>
           </div>
         </div>
@@ -55,30 +65,98 @@
 </template>
 
 <script setup>
-  import { ref, defineProps } from 'vue'
+  import { ref, defineProps, onMounted } from 'vue'
   import { RouterLink } from 'vue-router'
   import CardDetailContent from './CardDetailContent.vue';
   // import CardReview from '@/components/CardReview.vue'
   import { KakaoMap, KakaoMapMarker } from 'vue3-kakao-maps';
   import CardDetailReview from '@/components/CardDetailReview.vue'
 
-  defineProps({
+  const props = defineProps({
     card: Object
   })
   const isActive = ref(false)
   const reviewActive = function() {
     isActive.value = !isActive.value
   }
-  const coordinate = {
-  lat: 33.450701,
-  lng: 126.570667
+
+  // kakaomap
+  const kakao_api_key = import.meta.env.VITE_KAKAO_API
+  // let map = null;
+
+  // onMounted(() => {
+  //   if (window.kakao && window.kakao.maps) {
+  //     initMap();
+  //   } else {
+  //     const script = document.createElement('script');
+  //     /* global kakao */
+  //     script.onload = () => kakao.maps.load(initMap);
+  //     script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${kakao_api_key}`;
+  //     document.head.appendChild(script);
+  //   }
+  // });
+
+  //   const initMap = () => {
+  //   const container = document.getElementById('map');
+  //   const options = {
+  //     center: new kakao.maps.LatLng(35.0961457, 128.8538772),
+  //     level: 5,
+  //   };
+
+  //   // 지도 객체를 등록합니다.
+  //   // 지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
+  //   map = new kakao.maps.Map(container, options);
+  // };
+
+  let map = null;
+  const markerList = ref([]);
+
+  const onLoadKakaoMap = (mapRef) => {
+    map = mapRef;
+
+    // 장소 검색 객체를 생성합니다
+    const ps = new kakao.maps.services.Places();
+    // 키워드로 장소를 검색합니다
+    ps.keywordSearch(`${props.card.brand}`, placesSearchCB);
   };
 
-  const map = ref(kakao.maps.Map);
-  // const map = new Map(coordinate, options);
-  const openMap = function() {
-    KakaoMap.relayout()
-    // console.log('hi')
+  // 키워드 검색 완료 시 호출되는 콜백함수 입니다
+  const placesSearchCB = (data, status) => {
+    if (status === kakao.maps.services.Status.OK) {
+      // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+      // LatLngBounds 객체에 좌표를 추가합니다
+      const bounds = new kakao.maps.LatLngBounds();
+
+      for (let marker of data) {
+        const markerItem = {
+          lat: marker.y,
+          lng: marker.x,
+          infoWindow: {
+            content: marker.place_name,
+            visible: false
+          }
+        };
+        markerList.value.push(markerItem);
+        bounds.extend(new kakao.maps.LatLng(Number(marker.y), Number(marker.x)));
+      }
+
+      // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+      map.value?.setBounds(bounds);
+    }
+  };
+
+  //마커 클릭 시 인포윈도우의 visible 값을 반전시킵니다
+  const onClickMapMarker = (markerItem) => {
+    if (markerItem.infoWindow?.visible !== null && markerItem.infoWindow?.visible !== undefined) {
+      markerItem.infoWindow.visible = !markerItem.infoWindow.visible;
+    } else {
+      markerItem.infoWindow.visible = true;
+    }
+  };
+
+  const openMap = function () {
+    // console.log(map)
+    map.relayout();
   }
 
 </script>
@@ -142,7 +220,7 @@
   width: 100%;
   /* overflow-y: scroll; */
 }
-.map {
+#map {
   width: 100%;
   height: 100%;
   overflow: hidden;
