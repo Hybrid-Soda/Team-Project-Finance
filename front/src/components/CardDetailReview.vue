@@ -18,7 +18,6 @@
       <div class="detail">
         <div v-for="review in reviews" class="head">
           <div class="title-wrap">
-            <div class="title">{{  }}</div>
             <div class="text"><strong>{{ review.user.nickname }}</strong> | {{ review.content }}</div>
           </div>
           <div>★{{ review.rating }}</div>
@@ -74,6 +73,8 @@ const createReview = function() {
     })
     .then(res => {
       reviews.value.push(res.data)
+      content.value = ''
+      rating.value = 0
     })
     .catch(err => console.error(err))
   }

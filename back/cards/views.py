@@ -247,27 +247,16 @@ def review(request, card_pk):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-# 카드 리뷰 수정 / 삭제
-@api_view(["PUT", "DELETE"])
+# 카드 리뷰 삭제
+@api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def review_detail(request, card_pk, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
-
-    if request.method == "PUT":
-        if request.user == review.user:
-            serializer = ReviewSerializer(review, data=request.data, partial=True)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    elif request.method == "DELETE":
-        if request.user == review.user:
-            review.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+    if request.user == review.user:
+        review.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 # 크롤링 CSV 데이터 DB에 저장
 def csv_to_db(request):

@@ -36,12 +36,18 @@
             </div>
           </li>
           <li class="filter-comp" style="margin-top: 10px">
-            <label for="customRange3" class="form-label">실적</label>
-            <input type="range" class="form-range" min="0" max="5" step="0.5" id="customRange3"/>
+            <label for="customRange3" class="form-label">
+              <span v-if="record < 50">실적 : {{ record }}만원 이하</span>
+              <span v-else>실적 : {{ record }}만원 이상</span>
+            </label>
+            <input type="range" class="form-range" min="0" max="50" step="5" id="customRange3" v-model="record"/>
           </li>
           <li class="filter-comp">
-            <label for="customRange3" class="form-label">연회비</label>
-            <input type="range" class="form-range" min="0" max="5" step="0.5" id="customRange3"/>
+            <label for="customRangeMin" class="form-label">
+              <span v-if="annualFee < 100000">연회비 : {{ annualFee }}원 이하</span>
+              <span v-else>연회비 : {{ annualFee }}원 이상</span>
+            </label>
+            <input type="range" class="form-range" min="0" max="100000" step="10000" id="customRangeMin" v-model="annualFee"/>
           </li>
           <button @click="applyFilters" class="filter-button">
             조회하기
@@ -59,19 +65,19 @@ import { useCardStore } from "@/stores/card"
 const store = useCardStore()
 
 const selectedBrands = ref([])
-const performance = ref(0)
+const record = ref(0)
 const annualFee = ref(0)
 const emit = defineEmits(["sortName", "sortRecord", "sortAnnualFee", "filterCards"])
 
-const sortName = (_) => emit("sortName")
-const sortRecord = (_) => emit("sortRecord")
-const sortAnnualFee = (_) => emit("sortAnnualFee")
+const sortName = () => emit("sortName")
+const sortRecord = () => emit("sortRecord")
+const sortAnnualFee = () => emit("sortAnnualFee")
 
 const applyFilters = () => {
-  emit.filterCards({
+  emit('filterCards', {
     brands: selectedBrands.value,
-    performance: performance.value,
-    annualFee: annualFee.value
+    record: Number(record.value),
+    annualFee: Number(annualFee.value),
   })
 }
 </script>

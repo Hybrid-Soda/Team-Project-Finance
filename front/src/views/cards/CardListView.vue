@@ -9,6 +9,7 @@
             @sort-name="sortName"
             @sort-record="sortRecord"
             @sort-annual-fee="sortAnnualFee"
+            @filter-cards="filterCards"
             />
           </div>
           <div class="card-list">
@@ -28,27 +29,55 @@
 </template>
 
 <script setup>
-  import CardListFilter from '@/components/CardListFilter.vue'
-  import CardListItem from '@/components/CardListItem.vue'
-  import Header from '@/components/Header.vue'
+import CardListFilter from '@/components/CardListFilter.vue'
+import CardListItem from '@/components/CardListItem.vue'
+import Header from '@/components/Header.vue'
 
-  import { ref, onMounted, computed } from 'vue'
-  import { useCardStore } from '@/stores/card'
+import { ref, onMounted, computed } from 'vue'
+import { useCardStore } from '@/stores/card'
 
-  const cardStore = useCardStore()
-  const slicedCard = computed(() => {
-    if (cardStore.cards) {
-      return cardStore.cards.slice(800, 2000)
+const cardStore = useCardStore()
+const slicedCard = ref(null)
+// const slicedCard = computed(() => {
+//   if (cardStore.cards) {
+//     return cardStore.cards.slice(800, 2000)
+//   }
+// })
+
+onMounted(() => {
+  cardStore.readCard()
+  setTimeout(() => {
+    slicedCard.value = cardStore.cards.slice(800, 2000)
+  }, 2000)
+})
+
+const sortName = () => slicedCard.value.sort((a, b) => a.name.localeCompare(b.name))
+const sortRecord = () => slicedCard.value.sort((a, b) => a.record - b.record)
+const sortAnnualFee = () => slicedCard.value.sort((a, b) => a.annual_fee1 - b.annual_fee1)
+
+const filterCards = (filters) => {
+  slicedCard.value = cardStore.cards.filter(card => {
+    let matchBrand = filters.brands.includes(card.brand)
+    if (filters.brands.length === 0) {
+      matchBrand = true
     }
-  })
 
-  onMounted(() => {
-    cardStore.readCard()
-  })
+    let matchRecord = false
+    if (filters.record <= 50) {
+      matchRecord = card.record >= filters.record
+    } else {
+      matchRecord = card.record <= filters.record
+    }
 
-  const sortName = _ => slicedCard.value.sort((a, b) => a.name.localeCompare(b.name))
-  const sortRecord = _ => slicedCard.value.sort((a, b) => a.record - b.record)
-  const sortAnnualFee = _ => slicedCard.value.sort((a, b) => a.annual_fee1 - b.annual_fee1)
+    let matchAnnualFee = false
+    if (filters.annualFee >= 100000) {
+      matchAnnualFee = card.annual_fee1 >= filters.annualFee
+    } else {
+      matchAnnualFee = card.annual_fee1 <= filters.annualFee
+    }
+    return matchBrand && matchRecord && matchAnnualFee
+  })
+}
 </script>
 
 <style scoped>
