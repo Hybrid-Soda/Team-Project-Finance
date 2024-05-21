@@ -1,7 +1,8 @@
 <template>
   <RouterLink class="wrap" :to="{ name:'cardDetail', params: { 'id': card.id } }">
     <div>
-      <img :src="card.image_url" alt="" class="card-img">
+      <img v-if="card.image_url" :src="card.image_url" alt="card image" class="card-img">
+      <img v-else src="@/assets/img/card_icon.png" alt="card image">
     </div>
     <div class="card-content">
       <h2 style="color: black;">{{ card.name }}</h2>

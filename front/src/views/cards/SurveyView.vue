@@ -9,8 +9,9 @@
           <progress :value="questionIdx" min="0" max="7"></progress>
         </div>
         <form @submit.prevent="">
+          <transition name="slide-up">
           <!-- <div v-for="surveyQ in surveyQuestions" class="content"> -->
-          <div class="content">
+          <div v-if="!isQuestionHidden" class="content">
             <div class="title">
               {{ surveyQ.question }}
             </div>
@@ -28,6 +29,7 @@
               </button>
             </div>
             </div>
+          </transition>
         </form>
       </div>
     </main>
@@ -84,6 +86,7 @@ const surveyResponses = ref({
 // ]
 
 const questionIdx = ref(0)
+const isQuestionHidden = ref(false)
 
 const surveyQuestions = ref([
   { 
@@ -143,25 +146,34 @@ const surveyQuestions = ref([
 ])
 const surveyQ = ref(surveyQuestions.value[questionIdx.value])
 const count = function(answer) {
-  if (questionIdx.value < 4) {
-    questionIdx.value += 1
-    surveyQ.value = surveyQuestions.value[questionIdx.value]
-    if (answer !== 'none') {
-      surveyResponses.value[answer] = !surveyResponses.value[answer]
+  isQuestionHidden.value = true
+  setTimeout(() => {
+    if (questionIdx.value < 4) {
+      questionIdx.value += 1
+      surveyQ.value = surveyQuestions.value[questionIdx.value]
+      if (answer !== 'none') {
+        surveyResponses.value[answer] = !surveyResponses.value[answer]
+      }
+    } else if (questionIdx.value >= 4) {
+      if (answer !== 'none') {
+        surveyResponses.value[answer] = !surveyResponses.value[answer]
+      }
     }
-  } else if (questionIdx.value >= 4) {
-    if (answer !== 'none') {
-      surveyResponses.value[answer] = !surveyResponses.value[answer]
-    }
-  }
+    isQuestionHidden.value = false
+  }, 100)
 }
+
 const next_btn = function() {
-  if (questionIdx.value < 6) {
-    questionIdx.value += 1
-    surveyQ.value = surveyQuestions.value[questionIdx.value]
-  } else {
-    submitSurvey()
-  }
+  isQuestionHidden.value = true
+  setTimeout(() => {
+    if (questionIdx.value < 6) {
+      questionIdx.value += 1
+      surveyQ.value = surveyQuestions.value[questionIdx.value]
+    } else {
+      submitSurvey()
+    }
+    isQuestionHidden.value = false;
+  }, 100)
 }
 
 const submitSurvey = function () {
@@ -220,6 +232,7 @@ img {
   flex-direction: column;
   gap: 50px;
   /* height: 70%; */
+  animation: slideUp 0.5s ease-out forwards;
 }
 .head {
   font-size: large;
@@ -261,5 +274,15 @@ progress {
 }
 .next-btn {
   background-color: rgba(0, 0, 0, 0);
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 </style>

@@ -5,7 +5,11 @@
       <div class="card-page-bg">
         <div class="content">
           <div class="filter">
-            <CardListFilter @sort-name="sortName"/>
+            <CardListFilter
+            @sort-name="sortName"
+            @sort-record="sortRecord"
+            @sort-annual-fee="sortAnnualFee"
+            />
           </div>
           <div class="card-list">
             <div class="loading-box" v-if="!slicedCard">
@@ -34,7 +38,7 @@
   const cardStore = useCardStore()
   const slicedCard = computed(() => {
     if (cardStore.cards) {
-      return cardStore.cards.slice(800, 1000)
+      return cardStore.cards.slice(800, 2000)
     }
   })
 
@@ -42,9 +46,9 @@
     cardStore.readCard()
   })
 
-  const sortName = function () {
-    slicedCard.sort(compare)
-  }
+  const sortName = _ => slicedCard.value.sort((a, b) => a.name.localeCompare(b.name))
+  const sortRecord = _ => slicedCard.value.sort((a, b) => a.record - b.record)
+  const sortAnnualFee = _ => slicedCard.value.sort((a, b) => a.annual_fee1 - b.annual_fee1)
 </script>
 
 <style scoped>
@@ -77,7 +81,7 @@
 .card-list {
   /* border: 3px solid blue; */
   width: 90%;
-  padding-left: 10%;
+  margin-left: 10%;
   height: 100%;
   overflow-y: scroll;
 }

@@ -12,9 +12,9 @@
 
       <main class="main">
         <div class="content">{{ post.content }}</div>
-        <div @click="changeLike">
-          <button v-if="userStore.userInfo.username in props.post.like_users" class="my-2">&#9829; {{ likeLength }}</button>
-          <button v-else class="my-2">&#9825; {{ likeLength }}</button>
+        <div>
+          <button v-if="username in likeUsers" @click="toggleLike" class="my-2">&#9829; {{ likeLength }}</button>
+          <button v-else @click="toggleLike" class="my-2">&#9825; {{ likeLength }}</button>
         </div>
       </main>
 
@@ -66,7 +66,7 @@ const likeUsers = ref(props.post.like_users)
 const username = userStore.userInfo.username
 
 // 좋아요 & 취소
-const changeLike = function () {
+const toggleLike = function () {
   axios({
     method: 'post',
     url: `${postStore.API_URL}/posts/${props.post.id}/likes/`,
