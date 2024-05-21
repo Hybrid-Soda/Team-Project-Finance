@@ -12,7 +12,7 @@
           <button class="go-button">
             <a :href="`https://www.card-gorilla.com/card/detail/${card.id}`">신청하러 가기</a>
           </button>
-          <button data-bs-toggle="modal" data-bs-target="#exampleModal">오프라인 매장 보기</button>    
+          <button data-bs-toggle="modal" data-bs-target="#exampleModal" @click="openMap()">오프라인 매장 보기</button>    
           <button @click="reviewActive" v-if="isActive">설명보기</button>
           <button @click="reviewActive" v-if="!isActive">후기보기</button>
         </div>
@@ -42,8 +42,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            지도
-            <KakaoMap :lat="33.450701" :lng="126.570667" />
+            <button @click="openMap">지도</button>
+            <div class="map">
+              <KakaoMap :lat="33.450701" :lng="126.570667"/>
+            </div>
           </div>
         </div>
       </div>
@@ -52,21 +54,31 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
-import { RouterLink } from 'vue-router'
-import CardDetailContent from './CardDetailContent.vue';
-// import CardReview from '@/components/CardReview.vue'
-import { KakaoMap } from 'vue3-kakao-maps';
-import CardDetailReview from '@/components/CardDetailReview.vue'
+  import { ref, defineProps } from 'vue'
+  import { RouterLink } from 'vue-router'
+  import CardDetailContent from './CardDetailContent.vue';
+  // import CardReview from '@/components/CardReview.vue'
+  import { KakaoMap, KakaoMapMarker } from 'vue3-kakao-maps';
+  import CardDetailReview from '@/components/CardDetailReview.vue'
 
-defineProps({
-  card: Object
-})
-const isActive = ref(false)
+  defineProps({
+    card: Object
+  })
+  const isActive = ref(false)
   const reviewActive = function() {
     isActive.value = !isActive.value
   }
+  const coordinate = {
+  lat: 33.450701,
+  lng: 126.570667
+  };
 
+  const map = ref(kakao.maps.Map);
+  // const map = new Map(coordinate, options);
+  const openMap = function() {
+    KakaoMap.relayout()
+    // console.log('hi')
+  }
 
 </script>
 
@@ -128,5 +140,10 @@ const isActive = ref(false)
 .review-wrap {
   width: 100%;
   /* overflow-y: scroll; */
+}
+.map {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 </style>
