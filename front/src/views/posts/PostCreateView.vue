@@ -1,8 +1,10 @@
 <template>
   <main class="container">
     <Header />
-
-    <h1>게시글 작성</h1>
+    <button @click="this.$router.go(-1)" class="backBtn">
+      <img src="@/assets/img/backArrow.png" alt="goBack" class="backImg">
+    </button>
+    <h1 class="post-title">게시글 작성</h1>
     <form @submit.prevent="createPost">
       <div class="mb-3">
         <label for="title" class="form-label">제목</label>
@@ -46,5 +48,16 @@ const createPost = function () {
 </script>
 
 <style scoped>
-
+.post-title {
+  text-align: center;
+  margin: 20px 0;
+}
+.backBtn {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0);
+}
+.backImg {
+  width: 50px;
+  opacity: .5;
+}
 </style>

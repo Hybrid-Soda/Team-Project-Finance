@@ -12,6 +12,11 @@ background-color : rgb(242, 242, 242)
 * {
   font-family: "Noto Sans KR";
   color: rgb(106, 106, 106);
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  height: 100%;
 }
 body {
   background-color: rgb(251, 251, 251);
@@ -27,4 +32,42 @@ button {
   border-radius: 38px;
   padding: 10px 20px;
   border: none;
+}
+/* scrollbar */
+::-webkit-scrollbar {
+  background-color:rgba(0, 0, 0, 0);
+  width:16px
+}
+::-webkit-scrollbar-track {
+  background-color:rgba(0, 0, 0, 0);
+}
+::-webkit-scrollbar-track:hover {
+  background-color:#f4f4f4
+}
+::-webkit-scrollbar-thumb {
+  background-color:#babac0;
+  border-radius:16px;
+  border:5px solid #fff
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color:#a0a0a5;
+  border:4px solid #f4f4f4
+}
+::-webkit-scrollbar-button {display:none}
+/* loading */
+#loading {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-sizing: border-box;
+  border-top-color: rgb(33, 95, 255);
+  border-radius: 100%;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  100%
+  {
+    transform: rotate(360deg);
+  }
 }

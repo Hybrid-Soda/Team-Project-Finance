@@ -2,14 +2,11 @@
   <div class="container">
     <Header />
     <main v-if="card">
-      <RouterLink :to="{ name: 'cardList' }">뒤로가기</RouterLink>
-      <!-- <ul>
-        <li><a href="">개요</a></li>
-        <li><a href="">혜택 정보</a></li>
-        <li><a href="">사용자 리뷰</a></li>
-      </ul> -->
       <div class="card-page-bg">
         <div class="menu-wrap">
+          <button @click="this.$router.go(-1)" class="backBtn">
+            <img src="@/assets/img/backArrow.png" alt="goBack" class="backImg">
+          </button>
           <div class="info-wrap">
             <CardDetailItem :card="card"/>
           </div>
@@ -50,18 +47,17 @@ onMounted(() => {
 main {
   display: flex;
   justify-content: center;
-  height: 843px;
-  overflow: hidden;
+  margin-top: 2%;
+  width: 100%;
 }
 .card-page-bg {
-  width: 70%;
-  height: 1000px;
   border-radius: 50px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-  margin-top: 40px;
+  width: 100%;
+  height: 100%;
 }
 .menu-wrap {
-  border: 2px solid blue;
+  /* border: 2px solid blue; */
   margin-top: 2%;
 }
 ul {
@@ -80,9 +76,20 @@ li {
   font-weight: 500;
 }
 .info-wrap {
-  border: 2px solid green;
+  /* border: 2px solid green; */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: rgba(0, 0, 0, 0);
+
+}
+.backBtn {
+  position: absolute;
+  margin: 0 15px;
+  background-color: rgba(0, 0, 0, 0);
+}
+.backImg {
+  width: 50px;
+  opacity: .5;
 }
 </style>

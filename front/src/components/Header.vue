@@ -9,13 +9,19 @@
       <nav>
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">카드 모아보기</a>
+            <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">카드 검색</a>
+          <li class="nav-item" v-if="store.isLogIn">
+            <RouterLink class="nav-link" :to="{ name:'survey', params: { username: store.userInfo.username } }">카드 검색</RouterLink>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">내 관심 카드</a>
+          <li class="nav-item" v-if="!store.isLogIn">
+            <RouterLink class="nav-link" :to="{ name:'signIn' }" onclick="alert('로그인이 필요합니다!')">카드 검색</RouterLink>
+          </li>
+          <li class="nav-item" v-if="store.isLogIn">
+            <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: store.userInfo.username } }">내 관심 카드</RouterLink>
+          </li>
+          <li class="nav-item" v-if="!store.isLogIn">
+            <RouterLink class="nav-link" :to="{ name:'signIn' }" onclick="alert('로그인이 필요합니다!')">내 관심 카드</RouterLink>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>
@@ -62,7 +68,7 @@ nav {
   gap: 30px;
 }
 .header-menu {
-  background: rgba(250,250,250,1);
+  background: white;
   border-radius: 38px;
   padding: 5px 20px;
   border: none;
@@ -76,7 +82,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin: 30px 0;
+  padding: 30px 0;
 }
 .login-menu-wrap {
   display: flex;

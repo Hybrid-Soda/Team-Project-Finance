@@ -78,7 +78,7 @@ export const useUserStore = defineStore('user', () => {
     .catch(err => console.error(err))
   }
 
-  // 프로필변경
+  // 프로필 변경
   const updateProfile = function (payload) {
     const { username, nickname, gender, email, age } = payload
 
@@ -99,8 +99,28 @@ export const useUserStore = defineStore('user', () => {
     .catch(err => console.error(err))
   }
 
+  // 비밀번호 변경
+  const changePassword = function (payload) {
+    const { new_password1, new_password2 } = payload
+
+    axios({
+      method: 'post',
+      url: `${API_URL}/accounts/password/change/`,
+      headers: {
+        Authorization: `Token ${token.value}`
+      },
+      data: {
+        new_password1, new_password2
+      }
+    })
+    .then(res => {
+      window.alert('비밀번호가 변경되었습니다!')
+      router.push({ name: 'myPage', params: { 'username': userInfo.username } })
+    })
+    .catch(err => console.error(err))
+  }
   return {
     token, isLogIn, userInfo, 
-    signUp, logIn, logOut, updateProfile
+    signUp, logIn, logOut, updateProfile, changePassword
   }
 }, { persist: true })

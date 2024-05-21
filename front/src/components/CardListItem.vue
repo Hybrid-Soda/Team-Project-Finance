@@ -1,7 +1,8 @@
 <template>
   <RouterLink class="wrap" :to="{ name:'cardDetail', params: { 'id': card.id } }">
     <div>
-      <img :src="card.image_url" alt="" class="card-img">
+      <img v-if="card.image_url" :src="card.image_url" alt="card image" class="card-img">
+      <img v-else src="@/assets/img/card_icon.png" alt="card image">
     </div>
     <div class="card-content">
       <h2 style="color: black;">{{ card.name }}</h2>
@@ -31,7 +32,7 @@
   display: flex;
   gap: 10%;
   align-items: center;
-  margin: 5% auto;
+  margin: 2% auto;
 }
 .wrap:hover {
   opacity: 0.5;
@@ -41,6 +42,8 @@
 }
 .card-img {
   width: 300px;
+  height: 300px;
+  object-fit: contain;
 }
 ul {
   padding: 10px;

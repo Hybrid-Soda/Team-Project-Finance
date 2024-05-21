@@ -5,8 +5,8 @@
         <img src="@/assets/img/PICKardº_blue.png" alt="">
       </RouterLink>
 
-      <h1>회원가입</h1>
-      <form @submit.prevent="signUp">
+      <div class="title">회원가입</div>
+      <form @submit.prevent="signUp" class="sign-up-form">
         <div class="form-floating mb-3">
           <input type="text" class="form-control" placeholder="" v-model.trim="username" id="username">
           <label for="username">아이디</label>
@@ -46,6 +46,9 @@
           </div>
         </div>
         <input type="submit" value="회원가입" class="btn btn-outline-warning login-btn">
+        <div class="kakao mt-4">
+          <img src="@/assets/img/kakao_login.png" alt="kakao_login">
+        </div>
       </form>
       <p>Already have an account? <RouterLink :to="{ name: 'signIn' }">Login</RouterLink></p>
     </main>
@@ -83,20 +86,20 @@
 
 <style scoped>
 .body {
-  height: 100vh;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 main {
   /* border: 1px solid black; */
-  width: 500px;
+  width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 50px;
-  padding: 5% 0;
+  gap: 30px;
+  padding: 40px 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 30px;
   background-color: white;
@@ -108,5 +111,10 @@ form {
   margin-top: 20px;
   width: 100%;
   font-weight: bold;
+}
+.kakao {
+  width: 100%;
+  text-align: center;
+  border-color: yellow;
 }
 </style>
