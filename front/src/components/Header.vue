@@ -12,7 +12,7 @@
             <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
           </li>
           <li class="nav-item" v-if="store.isLogIn">
-            <RouterLink class="nav-link" :to="{ name:'searchCard', params: { username: store.userInfo.username } }">카드 검색</RouterLink>
+            <RouterLink class="nav-link" :to="{ name:'survey', params: { username: store.userInfo.username } }">카드 검색</RouterLink>
           </li>
           <li class="nav-item" v-if="!store.isLogIn">
             <RouterLink class="nav-link" :to="{ name:'signIn' }" onclick="alert('로그인이 필요합니다!')">카드 검색</RouterLink>
