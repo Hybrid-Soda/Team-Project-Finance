@@ -5,6 +5,9 @@
         <img :src="card.image_url" class="card-img">
       </div>
       <div class="card-content">
+        <a href="#" @click="toggleFavoriteCard">
+          <h6>★ 관심 카드 등록</h6>
+        </a>
         <p class="card-name">{{ card.name }}</p>
         <p>{{ card.brand }}</p>
         <p>{{ card.type }}</p>
@@ -65,13 +68,15 @@
 </template>
 
 <script setup>
-  import { ref, defineProps, onMounted } from 'vue'
-  import { RouterLink } from 'vue-router'
-  import CardDetailContent from './CardDetailContent.vue';
-  // import CardReview from '@/components/CardReview.vue'
-  import { KakaoMap, KakaoMapMarker } from 'vue3-kakao-maps';
-  import CardDetailReview from '@/components/CardDetailReview.vue'
+  import { KakaoMap, KakaoMapMarker } from 'vue3-kakao-maps'
+  import { usePostStore } from '@/stores/post'
+  import { ref, defineProps } from 'vue'
 
+  import CardDetailReview from '@/components/CardDetailReview.vue'
+  import CardDetailContent from './CardDetailContent.vue'
+  import axios from 'axios'
+
+  const postStore = usePostStore()
   const props = defineProps({
     card: Object
   })
@@ -159,6 +164,12 @@
     map.relayout();
   }
 
+  const toggleFavoriteCard = function () {
+    axios({
+      method: 'post',
+      url: `${postStore.API_URL}/cards/${cardId}/favorite/`
+    })
+  }
 </script>
 
 <style scoped>
