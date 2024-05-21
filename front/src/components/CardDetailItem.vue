@@ -219,13 +219,14 @@
 }
 .btn-wrap {
   display: flex;
-  gap: 4%;
+  gap: 2%;
   width: 120%;
 }
 .card-name {
   color: black;
   font-size: 36px;
   font-weight: 800;
+  display: flex;
 }
 .detail-content {
   /* margin-top: 2%; */
@@ -250,6 +251,11 @@
   overflow: hidden;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+.my-card-btn {
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
   align-items: center;
 }
 </style>

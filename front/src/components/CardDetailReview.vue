@@ -18,9 +18,13 @@
       <div class="detail">
         <div v-for="review in reviews" class="head">
           <div class="title-wrap">
-            <div class="text"><strong>{{ review.user.nickname }}</strong> | {{ review.content }}</div>
+            <div class="text"><strong>{{ review.user.nickname }}</strong>&nbsp; | &nbsp;{{ review.content }}</div>
           </div>
-          <div>★{{ review.rating }}</div>
+          <div style="display: flex">
+            <span v-for="n in review.rating">
+              ★
+            </span>
+          </div>
           <button 
           class="delete-btn" 
           v-if="userStore.userInfo.username === review.user.username"
