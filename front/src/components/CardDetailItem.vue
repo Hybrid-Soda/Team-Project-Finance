@@ -8,6 +8,7 @@
         <p class="card-name">{{ card.name }}</p>
         <p>{{ card.brand }}</p>
         <p>{{ card.type }}</p>
+        <!-- <div>★{{ card.review_set }}</div> -->
         <div class="btn-wrap">
           <button class="go-button">
             <a :href="`https://www.card-gorilla.com/card/detail/${card.id}`">신청하러 가기</a>
@@ -223,5 +224,8 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

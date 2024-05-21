@@ -22,6 +22,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('user', 'card')
 
+
 class CardSerializer(serializers.ModelSerializer):
     benefit_set = BenefitListSerializer(many=True)
     review_set = ReviewSerializer(many=True)

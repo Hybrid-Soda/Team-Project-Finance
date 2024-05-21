@@ -6,7 +6,11 @@ import { defineStore } from 'pinia'
 export const useCardStore = defineStore('card', () => {
   const cards = ref(null)
   const API_URL = 'http://127.0.0.1:8000'
-  const brands = ['BC카드', '부산은행', '대구은행', '기업은행', '국민카드', '농협카드']
+  const brands = [
+    "신한카드", "삼성카드", "우리카드", "씨티카드", "KB국민카드", "NH농협카드", 
+    "롯데카드", "하나카드", "IBK기업은행", "SC제일은행", "현대카드", "카카오뱅크", 
+    "케이뱅크", "우체국", "DGB대구은행", "BNK부산은행", "Sh수협은행", "MG새마을금고", 
+    "제주은행", "전북은행"]
 
   const readCard = function () {
     axios({
