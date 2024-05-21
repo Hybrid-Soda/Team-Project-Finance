@@ -27,7 +27,9 @@
           />
       </div>
       <div class="review-wrap" v-if="isActive">
-        <CardReview />
+        <CardDetailReview 
+        :card="card"
+        />
       </div>
     </div>
 
@@ -57,7 +59,7 @@
 import { ref, defineProps } from 'vue'
 import { RouterLink } from 'vue-router'
 import CardDetailContent from './CardDetailContent.vue';
-import CardReview from '@/components/CardReview.vue'
+import CardDetailReview from '@/components/CardDetailReview.vue'
 
 defineProps({
   card: Object

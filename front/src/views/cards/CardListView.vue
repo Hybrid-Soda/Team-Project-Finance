@@ -5,7 +5,7 @@
       <div class="card-page-bg">
         <div class="content">
           <div class="filter">
-            <CardListFilter />
+            <CardListFilter @sort-name="sortName"/>
           </div>
           <div class="card-list">
             <div class="loading-box" v-if="!slicedCard">
@@ -41,6 +41,10 @@
   onMounted(() => {
     cardStore.readCard()
   })
+
+  const sortName = function () {
+    slicedCard.sort(compare)
+  }
 </script>
 
 <style scoped>
@@ -57,7 +61,7 @@
 .content {
   display: flex;
   justify-content: center;
-  padding: 0 5%;
+  padding: 0 3%;
   padding-top: 2%;
   align-items: center;
   height: 800px;
