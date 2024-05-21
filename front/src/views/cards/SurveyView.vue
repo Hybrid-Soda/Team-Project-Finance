@@ -6,7 +6,7 @@
         <div class="head">
           <img src="@/assets/img/CreditCard.png" alt="">
           내 카드를 찾아보자 !
-          <progress :value="questionIdx" min="0" max="10"></progress>
+          <progress :value="questionIdx" min="0" max="7"></progress>
         </div>
         <form @submit.prevent="">
           <!-- <div v-for="surveyQ in surveyQuestions" class="content"> -->
@@ -15,8 +15,16 @@
               {{ surveyQ.question }}
             </div>
             <div class="question">
-              <button class="question-item" v-for="answer in surveyQ.answers" @click="count">
-                {{ answer }}
+              <button class="question-item" :class="{'isSelected':surveyResponses[key]}" v-for="value, key in surveyQ.answers" @click="count(key)">
+                {{ value }}
+              </button>
+              <button class="next-btn" v-if="questionIdx >= 4" @click="next_btn">
+                <div v-if="questionIdx == 6">
+                  제출하기 ༼ つ ◕_◕ ༽つ
+                </div>
+                <div v-else>
+                  다음으로 →
+                </div>
               </button>
             </div>
             </div>
@@ -40,21 +48,21 @@ const cardStore = useCardStore()
 const userStore = useUserStore()
 
 const surveyResponses = ref({
-  car_owner: null,
-  live_alone: null,
-  student: null,
-  baby: null,
-  pets: null,
-  easy_pay: null,
-  healthcare: null,
-  telecom: null,
-  sports: null,
-  shopping: null,
-  friends: null,
-  fitness: null,
-  movie: null,
-  travel_inter: null,
-  trevel_dome: null,
+  car_owner: false,
+  live_alone: false,
+  student: false,
+  baby: false,
+  pets: false,
+  easy_pay: false,
+  healthcare: false,
+  telecom: false,
+  sports: false,
+  shopping: false,
+  friends: false,
+  fitness: false,
+  movie: false,
+  travel_inter: false,
+  trevel_dome: false,
 })
 
 // const surveyQuestions = [
@@ -81,48 +89,79 @@ const surveyQuestions = ref([
   { 
     question:'오늘은 놀러가는 날! 여행지까지 나는...',
     answers: {
-      true: '차가 있으니 내 차로 가야지!',
-      false: '차가 없으니 버스 타고 가야지!'
+      'car_owner': '차가 있으니 내 차로 가야지!',
+      'none': '차가 없으니 버스 타고 가야지!'
     },
-    var: 'car_owner'
   },
   { 
     question:'하루가 끝나고 집에 가는 길! 나는...',
     answers: {
-      true: '내 자취방으로 돌아가자!',
-      false: '부모님과 함께사는 집으로 돌아가자!'
+      'live_alone': '내 자취방으로 돌아가자!',
+      'none': '부모님과 함께사는 집으로 돌아가자!'
     },
-    var: 'live_alone'
-  },
-  { 
-    question:'아침에 눈을 뜨면 나는...',
-    answers: {
-      true: '학교 가자',
-      false: '다시 눕자',
-    },
-    var: 'student'
   },
   { 
     question:'날씨 좋다! 나는...',
     answers: {
-      true: '자식들과 놀러 가야지!',
-      false: '자식 없어!'
+      'friends': '나가서 친구 만나야지!',
+      'none': '집이 최고지!'
     },
-    var: 'baby' 
   },
   { 
-    question:'아침에 눈을 뜨면 나는...',
+    question:'이번 여름 휴가 여행지는...',
     answers: {
-      true: '학교 가자',
-      false: '다시 눕자'
+      'travel_inter': '국내 여행으로 가야지~!',
+      'trevel_dome': '해외 여행으로 가야지~!'
     },
-    var: 'student'
+  },
+  { 
+    question:'월요일 아침에 눈을 뜨면 나는...',
+    answers: {
+      'student': '학교 가자',
+      'baby': '애기들 학교 보내자',
+      'pets': '내 강아지/고양이 밥 주자',
+      'none': '다시 눕자',
+    },
+  },
+  { 
+    question:'밖에 나가면 주로 나는...',
+    answers: {
+      'shopping': '쇼핑',
+      'fitness': '운동',
+      'movie': '영화 및 문화 활동',
+      'sports': '스포츠 경기 관람',
+    },
+  },
+  { 
+    question:'추가로...',
+    answers: {
+      'easy_pay': '나는 삼성 페이등 간편 결제를 주로 사용해요.',
+      'healthcare': '나는 병원이나 약국을 자주 이용해요.',
+      'telecom': '나는 통신비가 많이 나와요.',
+    },
   },
 ])
 const surveyQ = ref(surveyQuestions.value[questionIdx.value])
-const count = function() {
-  questionIdx.value += 1
-  surveyQ.value = surveyQuestions.value[questionIdx.value]
+const count = function(answer) {
+  if (questionIdx.value < 4) {
+    questionIdx.value += 1
+    surveyQ.value = surveyQuestions.value[questionIdx.value]
+    if (answer !== 'none') {
+      surveyResponses.value[answer] = !surveyResponses.value[answer]
+    }
+  } else if (questionIdx.value >= 4) {
+    if (answer !== 'none') {
+      surveyResponses.value[answer] = !surveyResponses.value[answer]
+    }
+  }
+}
+const next_btn = function() {
+  if (questionIdx.value < 6) {
+    questionIdx.value += 1
+    surveyQ.value = surveyQuestions.value[questionIdx.value]
+  } else {
+    submitSurvey()
+  }
 }
 
 const submitSurvey = function () {
@@ -144,6 +183,7 @@ const submitSurvey = function () {
       },
     })
     .then(res => {
+      console.log('ok')
       router.push({ name: 'recommend', params: { 'username': userStore.userInfo.username } })
     })
     .catch(err => console.error(err))
@@ -170,7 +210,7 @@ img {
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 10%;
+  gap: 5%;
   padding-top: 2%;
 }
 .content {
@@ -211,5 +251,15 @@ progress {
   background-color: rgb(255, 199, 39);
   color: black;
   font-weight: bold;
+}
+.isSelected {
+  /* font-weight: bold; */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);
+  color: black;
+  background-color: rgb(255, 199, 39);
+  opacity: .5;
+}
+.next-btn {
+  background-color: rgba(0, 0, 0, 0);
 }
 </style>
