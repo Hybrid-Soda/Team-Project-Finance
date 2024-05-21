@@ -31,6 +31,6 @@ class Recommendation(models.Model):
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
-    rating = models.FloatField()
-    content = models.TextField(blank=True, null=True)
+    rating = models.IntegerField()
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

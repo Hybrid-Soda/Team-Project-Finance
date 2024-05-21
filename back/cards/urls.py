@@ -9,7 +9,7 @@ urlpatterns = [
     path('', views.card_list),
     path('<int:card_pk>/', views.card_detail),
     path('<int:card_pk>/review/', views.review),
-    path('<int:card_pk>/review/<int:review_pk>/', views.review),
+    path('<int:card_pk>/review/<int:review_pk>/', views.review_detail),
     path('favorite/', views.favorite),
     #카드 추천
     path('<str:username>/card_recommend/', views.card_recommend),
