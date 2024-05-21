@@ -5,7 +5,10 @@
         <img :src="card.image_url" class="card-img">
       </div>
       <div class="card-content">
-        <p class="card-name">{{ card.name }}</p>
+        <p class="card-name">
+          {{ card.name }}
+          <button class="my-card-btn"><img src="../assets/img/like.png" alt=""></button>
+        </p>
         <p>{{ card.brand }}</p>
         <p>{{ card.type }}</p>
         <!-- <div>★{{ card.review_set }}</div> -->
@@ -195,13 +198,14 @@
 }
 .btn-wrap {
   display: flex;
-  gap: 4%;
+  gap: 2%;
   width: 120%;
 }
 .card-name {
   color: black;
   font-size: 36px;
   font-weight: 800;
+  display: flex;
 }
 .detail-content {
   /* margin-top: 2%; */
@@ -226,6 +230,11 @@
   overflow: hidden;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+.my-card-btn {
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
   align-items: center;
 }
 </style>
