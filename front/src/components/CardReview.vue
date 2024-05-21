@@ -31,7 +31,10 @@
 </template>
 
 <script setup>
+import { useCardStore } from '@/stores/card'
+import { ref } from 'vue'
 
+const cardStore = useCardStore()
 </script>
 
 <style scoped>
