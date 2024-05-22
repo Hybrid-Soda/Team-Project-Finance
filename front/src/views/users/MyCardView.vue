@@ -5,7 +5,7 @@
   <main>
     <div class="main-bg">
       <h1 style="margin-top: 4%;">내 관심카드 모아보기</h1>
-      <div class="contain">
+      <div class="contain" v-if="userStore.userInfo.favorite_cards">
         <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap" :autoplay="2000">
           <Slide v-for="slide in userStore.userInfo.favorite_cards" :key="slide">
             <div class="carousel__item">
@@ -20,6 +20,13 @@
             <Navigation />
           </template>
         </Carousel>
+      </div>
+      <div class="contain" v-else>
+        <img src="@/assets/img/404Error.png" alt="" style="width: 300px;">
+        <p>관심 카드가 없어요</p>
+        <RouterLink :to="{ name:'cardList' }">
+          <button>카드 보러 가기</button>
+        </RouterLink>
       </div>
     </div>
   </main>

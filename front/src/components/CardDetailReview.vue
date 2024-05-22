@@ -3,7 +3,7 @@
     <div class="content">
       <form class="form-wrap" @submit.prevent="createReview">
         <div class="form-floating mb-3">
-          <input type="content" class="form-control" id="reviewContent" placeholder="" v-model.trim="content">
+          <input type="content" class="form-control" id="reviewContent" placeholder="" v-model.trim="content" maxlength="250">
           <label for="reviewContent">내용</label>
         </div>
         <div class="star-rating">
