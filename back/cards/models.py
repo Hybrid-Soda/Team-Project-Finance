@@ -21,11 +21,18 @@ class Benefit(models.Model):
 # 카드추천
 class Recommendation(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    first_card_pk = models.IntegerField()
-    second_card_pk = models.IntegerField()
-    third_card_pk = models.IntegerField()
-    fourth_card_pk = models.IntegerField()
-    fifth_card_pk = models.IntegerField()
+    # 콘텐츠 기반 필터링
+    content_first_card_pk = models.IntegerField()
+    content_second_card_pk = models.IntegerField()
+    content_third_card_pk = models.IntegerField()
+    content_fourth_card_pk = models.IntegerField()
+    content_fifth_card_pk = models.IntegerField()
+    # 협업 필터링
+    coop_first_card_pk = models.IntegerField()
+    coop_second_card_pk = models.IntegerField()
+    coop_third_card_pk = models.IntegerField()
+    coop_fourth_card_pk = models.IntegerField()
+    coop_fifth_card_pk = models.IntegerField()
     
 # 카드리뷰
 class Review(models.Model):

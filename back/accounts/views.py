@@ -24,7 +24,7 @@ def profile(request, username):
         if request.user.username == username:
             serializer = UserProfileSerializer(request.user)
             return Response(serializer.data)
-    
+
     if request.method == "PUT":
         if request.user.username == username:
             serializer = EditProfileSerializer(request.user, data=request.data, partial=True)
@@ -56,6 +56,14 @@ def survey(request, username):
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+from rest_framework import generics
+class UserProfileView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserProfileSerializer
+
+    def get_object(self):
+        return get_object_or_404(User, username=self.kwargs['username'])
 
 @api_view(["GET"])
 def favorite(request, username):
