@@ -6,7 +6,8 @@
       </div>
       <div class="card-content">
         <a href="#" @click="toggleFavoriteCard">
-          <h6>⭐ 관심 카드 등록</h6>
+          <h6 v-if="!isFavorite">관심 카드 등록</h6>
+          <h6 v-if="isFavorite">관심 카드 등록 취소</h6>
         </a>
         <p class="card-name">{{ card.name }}</p>
         <p>{{ card.brand }}</p>
@@ -71,7 +72,8 @@
   import { KakaoMap, KakaoMapMarker } from 'vue3-kakao-maps'
   import { usePostStore } from '@/stores/post'
   import { useCardStore } from '@/stores/card'
-  import { ref, defineProps, computed } from 'vue'
+  import { useUserStore } from '@/stores/user'
+  import { ref, defineProps, computed, onMounted } from 'vue'
 
   import CardDetailReview from '@/components/CardDetailReview.vue'
   import CardDetailContent from './CardDetailContent.vue'
@@ -79,6 +81,7 @@
 
   const postStore = usePostStore()
   const cardStore = useCardStore()
+  const userStore = useUserStore()
   const props = defineProps({
     card: {
       type: Object,
@@ -98,33 +101,42 @@
     return `https://www.card-gorilla.com/card/detail/${cardId}`
   }
 
+  // 관심 카드 등록
+  const isFavorite = ref(false)
+  onMounted(() => {
+    axios({
+      method: 'get',
+      url: `${postStore.API_URL}/cards/${props.card.id}/favorite/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`
+      }
+    })
+    .then(res => {
+      isFavorite.value = res.data.is_favorite
+    })
+  })
+
+  const toggleFavoriteCard = function () {
+    axios({
+      method: 'post',
+      url: `${postStore.API_URL}/cards/${props.card.id}/favorite/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`
+      }
+    })
+    .then(res => {
+      // console.log(res.data)
+      isFavorite.value = res.data.is_favorite
+      console.log(isFavorite.value)
+    })
+    .catch(err => {
+      console.error(err)
+      console.log(props.card)
+    })
+  }
+
   // kakaomap
   const kakao_api_key = import.meta.env.VITE_KAKAO_API
-  // let map = null;
-
-  // onMounted(() => {
-  //   if (window.kakao && window.kakao.maps) {
-  //     initMap();
-  //   } else {
-  //     const script = document.createElement('script');
-  //     /* global kakao */
-  //     script.onload = () => kakao.maps.load(initMap);
-  //     script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${kakao_api_key}`;
-  //     document.head.appendChild(script);
-  //   }
-  // });
-
-  //   const initMap = () => {
-  //   const container = document.getElementById('map');
-  //   const options = {
-  //     center: new kakao.maps.LatLng(35.0961457, 128.8538772),
-  //     level: 5,
-  //   };
-
-  //   // 지도 객체를 등록합니다.
-  //   // 지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
-  //   map = new kakao.maps.Map(container, options);
-  // };
 
   let map = null;
   const markerList = ref([]);
@@ -177,12 +189,6 @@
     map.relayout();
   }
 
-  const toggleFavoriteCard = function () {
-    axios({
-      method: 'post',
-      url: `${postStore.API_URL}/cards/${cardId}/favorite/`
-    })
-  }
 </script>
 
 <style scoped>

@@ -2,6 +2,7 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
 from rest_framework import serializers
 from cards.models import Recommendation
+from cards.models import Card
 from .models import *
 
 
@@ -41,7 +42,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'nickname', 'email', 'age', 'gender', 'recommendations')
+        fields = ('username', 'nickname', 'email', 'age', 'gender', 'recommendations', 'favorite_cards')
 
 class EditProfileSerializer(serializers.ModelSerializer):
     class Meta:
