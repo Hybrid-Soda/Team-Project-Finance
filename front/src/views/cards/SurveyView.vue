@@ -3,6 +3,7 @@
     <Header />
     <main>
       <div class="bg">
+        {{ userStore.userInfo.survey_set }}
         <div class="head">
           <img src="@/assets/img/CreditCard.png" alt="">
           내 카드를 찾아보자 !

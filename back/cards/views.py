@@ -26,7 +26,6 @@ def cos_similarity(x, y, eps=1e-8):
 
 User = get_user_model()
 
-
 # 카드 추천
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])

@@ -127,7 +127,6 @@
     .then(res => {
       // console.log(res.data)
       isFavorite.value = res.data.is_favorite
-      console.log(isFavorite.value)
     })
     .catch(err => {
       console.error(err)
