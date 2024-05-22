@@ -1,7 +1,7 @@
 <template>
   <div class="body">
     <Header />
-    <main>
+    <main @scroll="handleScroll" ref="scrollContainer">
       <div class="card-page-bg">
         <div class="content">
           <div class="filter">
@@ -13,7 +13,7 @@
             />
           </div>
           <div class="card-list">
-            <div class="loading-box" v-if="!slicedCard">
+            <div class="loading-box" v-if="!slicedCard.length">
               <div id="loading"></div>
             </div>
             <CardListItem
@@ -21,6 +21,17 @@
             :key="card.id"
             :card="card"
             />
+            <div v-if="isLoading">
+              <div class="search-result--loading-card" v-for="_ in 3">
+                <div class="search-result--loading-img"></div>
+                <div class="search-result--loading-text">
+                  <h2 class="search-result--loading-cardName"></h2>
+                  <p class="search-result--loading-cardContent"></p>
+                  <p class="search-result--loading-cardContent"></p>
+                  <p class="search-result--loading-cardContent"></p>
+                </div>
+              </div><hr>
+            </div>
           </div>
         </div>
       </div>
@@ -32,23 +43,41 @@
 import CardListFilter from '@/components/CardListFilter.vue'
 import CardListItem from '@/components/CardListItem.vue'
 import Header from '@/components/Header.vue'
+import '@/assets/loader.css'
 
 import { ref, onMounted, computed } from 'vue'
 import { useCardStore } from '@/stores/card'
 
 const cardStore = useCardStore()
-const slicedCard = ref(null)
-// const slicedCard = computed(() => {
-//   if (cardStore.cards) {
-//     return cardStore.cards.slice(800, 2000)
-//   }
-// })
+const isLoading = ref(false)
+const batchSize = 20
+const slicedCard = ref([])
+const loadedCount = ref(0)
+const scrollContainerRef = ref(null)
+
+const loadMoreCards = () => {
+  if (isLoading.value) return
+  isLoading.value = true
+  setTimeout(() => {
+    const start = loadedCount.value
+    const end = loadedCount.value + batchSize
+    slicedCard.value.push(...cardStore.cards.slice(start, end))
+    loadedCount.value += batchSize
+    isLoading.value = false
+  }, 1000)
+}
+
+const handleScroll = () => {
+  const scrollContainer = scrollContainerRef.value
+  console.log(scrollContainer)
+  if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight - 10) {
+    loadMoreCards()
+  }
+}
 
 onMounted(() => {
   cardStore.readCard()
-  setTimeout(() => {
-    slicedCard.value = cardStore.cards.slice(800, 2000)
-  }, 2000)
+  loadMoreCards()
 })
 
 const sortName = () => slicedCard.value.sort((a, b) => a.name.localeCompare(b.name))
