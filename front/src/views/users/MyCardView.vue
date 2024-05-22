@@ -4,17 +4,19 @@
   </div>
   <main>
     <div class="main-bg">
+      <h1 style="margin-top: 4%;">내 관심카드 모아보기</h1>
       <div class="contain">
-        <Carousel v-bind="settings" :breakpoints="breakpoints" class="carousel-wrap">
-          <Slide v-for="card_id in card_numbers">
+        <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap" :autoplay="2000">
+          <Slide v-for="slide in userStore.userInfo.favorite_cards" :key="slide">
             <div class="carousel__item">
               <MyCardItem
-                :card_id="card_id"
+              :card_id="slide"
               />
             </div>
           </Slide>
-            
+          
           <template #addons>
+            <Pagination style="position: absolute; bottom: 5%;"/>
             <Navigation />
           </template>
         </Carousel>
@@ -30,32 +32,15 @@
   import { ref, onMounted, defineComponent } from 'vue'
   import { Carousel, Navigation, Slide, Pagination } from 'vue3-carousel'
   import 'vue3-carousel/dist/carousel.css'
-  
-  const settings = ref({
-    itemsToShow: 1,
-    snapAlign: 'center',
-  });
-  const breakpoints = ref({
-    // 700px and up
-    700: {  
-        itemsToShow: 3.5,
-        snapAlign: 'center',
-      },
-      // 1024 and up
-      1024: {
-        itemsToShow: 5,
-        snapAlign: 'start'
-      }
-  })
 
   import { useUserStore } from '@/stores/user';
-  import axios from 'axios'
   const userStore = useUserStore()
   
-  const card_numbers = ref(null)
+  const cards = ref(null)
   onMounted(() => {
-    card_numbers.value = userStore.userInfo.favorite_cards
+    cards.value = userStore.userInfo.favorite_cards
   })
+
 </script>
 
 
@@ -90,6 +75,7 @@ main {
 /* ca */
 .carousel__item {
   min-height: 200px;
+  height: 100%;
   width: 100%;
   background-color: var(--vc-clr-primary);
   color: var(--vc-clr-white);
@@ -98,6 +84,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: white;
 }
 
 .carousel__slide {
@@ -118,8 +105,11 @@ main {
   justify-content: center;
 }
 .carousel-wrap {
-  border: 4px solid pink;
+  /* border: 4px solid pink; */
   width: 90%;
   height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -73,7 +73,7 @@
   import { usePostStore } from '@/stores/post'
   import { useCardStore } from '@/stores/card'
   import { useUserStore } from '@/stores/user'
-  import { ref, defineProps, computed, onMounted } from 'vue'
+  import { ref, defineProps, computed, onMounted, } from 'vue'
 
   import CardDetailReview from '@/components/CardDetailReview.vue'
   import CardDetailContent from './CardDetailContent.vue'
@@ -127,6 +127,14 @@
     .then(res => {
       // console.log(res.data)
       isFavorite.value = res.data.is_favorite
+    })
+    .then(() => {
+      if (isFavorite.value) {
+        userStore.userInfo.favorite_cards.push(props.card.id)
+      } else {
+        const idx = userStore.userInfo.favorite_cards.findIndex(x => x === props.card.id)
+        userStore.userInfo.favorite_cards.splice(idx, 1)
+      }
     })
     .catch(err => {
       console.error(err)
