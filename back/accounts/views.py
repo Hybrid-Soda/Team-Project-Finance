@@ -65,16 +65,6 @@ class UserProfileView(generics.RetrieveAPIView):
     def get_object(self):
         return get_object_or_404(User, username=self.kwargs['username'])
 
-# 관심 카드 조회
-@api_view(["GET"])
-def favorite(request, username):
-    user = get_object_or_404(get_user, username=username)
-
-    if request.method == "GET":
-        serializer = UserProfileSerializer(user)
-        return Response(serializer.data)
-    
-
 # @api_view(["GET"])
 # def kakaoSignIn(request):
 #     app_key = ''
