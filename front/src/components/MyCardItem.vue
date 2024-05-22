@@ -1,10 +1,10 @@
 <template>
   <div class="wrap">
     <header>
-      <img src="../assets/img/example_card.png" alt="">
-      <div class="title">신한카드 Point Plan</div>
+      <img :src="card.image_url" alt="">
+      <div class="title">{{ card.title }}</div>
     </header>
-    <main>
+    <main> 
       <p>혜택</p>
       <p>실적</p>
     </main>
@@ -12,6 +12,24 @@
 </template>
 
 <script setup>
+  import { ref, defineProps } from 'vue'
+
+  const props = defineProps({
+    card_id: Number
+  })
+
+  const card = ref(null)
+  onMounted(() => {
+    axios({
+      method: 'get',
+      url: `${cardStore.API_URL}/cards/${props.card_id}/`,
+    })
+    .then(res => {
+      card.value = res.data
+      
+    })
+    .catch(err => console.error(err))
+  })
 
 </script>
 

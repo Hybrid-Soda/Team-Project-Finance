@@ -6,8 +6,12 @@
     <div class="main-bg">
       <div class="contain">
         <Carousel v-bind="settings" :breakpoints="breakpoints" class="carousel-wrap">
-          <Slide v-for="slide in 10" :key="slide">
-            <div class="carousel__item">{{ slide }}</div>
+          <Slide v-for="card_id in card_numbers">
+            <div class="carousel__item">
+              <MyCardItem
+                :card_id="card_id"
+              />
+            </div>
           </Slide>
             
           <template #addons>
@@ -21,7 +25,7 @@
 
 <script setup>
   import Header from '@/components/Header.vue'
-  // import MyCardItem from '@/components/MyCardItem.vue'
+  import MyCardItem from '@/components/MyCardItem.vue'
   // import axios from 'axios';
   import { ref, onMounted, defineComponent } from 'vue'
   import { Carousel, Navigation, Slide, Pagination } from 'vue3-carousel'
@@ -45,13 +49,13 @@
   })
 
   import { useUserStore } from '@/stores/user';
+  import axios from 'axios'
   const userStore = useUserStore()
   
-  const cards = ref(null)
+  const card_numbers = ref(null)
   onMounted(() => {
-    cards.value = userStore.userInfo.favorite_cards
+    card_numbers.value = userStore.userInfo.favorite_cards
   })
-
 </script>
 
 
