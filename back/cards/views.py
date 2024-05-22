@@ -273,21 +273,32 @@ def card_detail(request, card_pk):
     return Response(serializer.data)
 
 # 관심 카드 등록 및 해제
-@api_view(["POST"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def favorite(request, card_pk):
     card = get_object_or_404(Card, pk=card_pk)
 
-    if request.user in card.favorite_users.all():
-        card.favorite_users.remove(request.user)
-        is_favorite = False
-    else:
-        card.favorite_users.add(request.user)
-        is_favorite = True
-    context = {
-        'is_favorite': is_favorite,
-    }
-    return Response(context, status=status.HTTP_200_OK)
+    if request.method == "GET":
+        if request.user in card.favorite_users.all():
+            is_favorite = True
+        else:
+            is_favorite = False
+        context = {
+            'is_favorite': is_favorite,
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    elif request.method == "POST":
+        if request.user in card.favorite_users.all():
+            card.favorite_users.remove(request.user)
+            is_favorite = False
+        else:
+            card.favorite_users.add(request.user)
+            is_favorite = True
+        context = {
+            'is_favorite': is_favorite,
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
 # 카드 리뷰 전체 조회 / 생성
 @api_view(["GET", "POST"])

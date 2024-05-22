@@ -2,6 +2,7 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
 from rest_framework import serializers
 from cards.models import Recommendation
+from cards.models import Card
 from .models import *
 
 
@@ -30,6 +31,23 @@ class CustomRegisterSerializer(RegisterSerializer):
         adapter.save_user(request, user, self)
         self.custom_signup(request, user)
         return user
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class RecommedationSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Recommendation
+            fields = '__all__'
+
+    recommendations = RecommedationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'nickname', 'email', 'age', 'gender', 'recommendations', 'favorite_cards')
+
+class EditProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'nickname', 'email', 'age', 'gender')
 
 class SurveySerializer(serializers.ModelSerializer):
     class Meta:
