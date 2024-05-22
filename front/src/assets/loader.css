@@ -1,0 +1,41 @@
+/* ===== 로더 ===== */
+.search-result--loadingList {
+  display: none;
+}
+
+.search-result--loading-card {
+  display: flex;
+  height: 210px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background-color: #F9FAFB;
+}
+
+.search-result--loading-img {
+  width: 280px;
+  min-width: 280px;
+  height: 180px;
+  margin-right: 24px;
+  background-color: #E5E7EB;
+}
+
+.search-result--loading-text {
+  margin-left: 9%;
+  width: 60%;
+}
+
+.search-result--loading-cardName {
+  width: 60%;
+  height: 24px;
+  margin-bottom: 50px;
+  background: #E5E7EB;
+  animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite;
+}
+
+.search-result--loading-cardContent {
+  width: 30%;
+  height: 18px;
+  background: #E5E7EB;
+  animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite;
+}
