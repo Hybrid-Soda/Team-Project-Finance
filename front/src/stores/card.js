@@ -21,7 +21,7 @@ export const useCardStore = defineStore('card', () => {
     { brand: 'NH농협카드', url: 'https://card.nonghyup.com/' },
     { brand: '롯데카드', url: 'https://www.lottecard.co.kr/' },
     { brand: '하나카드', url: 'https://www.hanacard.co.kr/' },
-    { brand: 'IBK기업은행', url: 'https://www.ibk.co.kr/card/' },
+    { brand: 'IBK기업은행', url: 'https://www.ibk.co.kr/card/mainList.ibk' },
     { brand: 'SC제일은행', url: 'https://www.standardchartered.co.kr/' },
     { brand: '현대카드', url: 'https://www.hyundaicard.com/' },
     { brand: '카카오뱅크', url: 'https://www.kakaobank.com/' },
