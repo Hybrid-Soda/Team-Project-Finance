@@ -25,7 +25,7 @@ def cos_similarity(x, y, eps=1e-8):
 
 User = get_user_model()
 
-# 카드 추천 - 콘텐츠 기반 필터링
+# 카드 추천
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def card_recommend(request, username):
@@ -80,10 +80,12 @@ def card_recommend(request, username):
     }
     BN = len(benefit_dict)
 
+    ###########################################################
+    ##################### 콘텐츠 기반 필터링 #####################
+    ###########################################################
+
     # 설문
-    user = get_object_or_404(User, username=username)
-    survey = get_object_or_404(Survey, user=user)
-    # survey = get_object_or_404(Survey, pk=1)
+    survey = get_object_or_404(Survey, user=request.user)
     survey = list(model_to_dict(survey).values())[2:]
     survey_vector = [0] * (BN + 1)
 
@@ -153,27 +155,86 @@ def card_recommend(request, username):
         benefit_matrix.append(benefit_vector)
     
     # 코사인 유사도 측정
-    similarity_vector = []
+    content_similarity_vector = []  # 예시: [(0.8, 0), (0.75, 1), ...]
     for idx, benefit_vector in enumerate(benefit_matrix):
         similarity = cos_similarity(np.array(benefit_vector[:BN+1]), np.array(survey_vector))
-
-        # 협업 필터링
-        if sum(benefit_vector) > 8: similarity /= 0.2
-        if benefit_vector[19] == 1: similarity -= 0.3
-
-        similarity_vector.append((similarity, idx))
+        content_similarity_vector.append((similarity, idx))
     
     # 코사인 유사도가 높은 순으로 정렬
-    similarity_vector.sort(reverse=True)
+    content_similarity_vector.sort(reverse=True)
 
-    # 카드 추출
+    # 콘텐츠 기반 필터링으로 상위 5개의 카드 선택
+    recommended_card_pks_content = [benefit_matrix[idx][-1] for _, idx in content_similarity_vector[:5]]
+
+    ###########################################################
+    ######################## 협업 필터링 ########################
+    ###########################################################
+
+    # 사용자-카드 매트릭스 생성
+    reviews = get_list_or_404(Review)
+    user_card_matrix = {}  # 예시: {1: {123: 5, 456: 3}, 2: {123: 4, 789: 5}, ...}
+    for review in reviews:
+        user_id = review.user
+        card_id = review.card
+        if user_id not in user_card_matrix:
+            user_card_matrix[user_id] = {}
+        user_card_matrix[user_id][card_id] = review.rating
+
+    # 현재 사용자 정보
+    my_ratings = user_card_matrix.get(request.user.id, {})
+    coop_similarity_vector = []  # 예시: [(0.8, 0), (0.75, 1), ...]
+    for user_id, other_ratings in user_card_matrix.items():
+        if user_id == request.user.id:
+            continue
+        other_user = get_object_or_404(User, id=user_id)
+
+        # 성별 및 나이 고려
+        gender_similarity = 1 if request.user.gender == other_user.gender else 0
+        age_similarity = 1 - abs(request.user.age - other_user.age) / 100  # 나이 차이가 클수록 유사도 감소
+
+        common_cards = set(my_ratings.keys()) & set(other_ratings.keys())
+        if not common_cards:
+            continue
+
+        current_user_vector = np.array([my_ratings[card] for card in common_cards])
+        other_user_vector = np.array([other_ratings[card] for card in common_cards])
+
+        recommend_similarity = cos_similarity(current_user_vector, other_user_vector)
+        overall_similarity = (recommend_similarity + gender_similarity + age_similarity) / 3  # 종합 유사도
+
+        coop_similarity_vector.append((overall_similarity, user_id))
+
+    # 유사도가 높은 순으로 정렬
+    coop_similarity_vector.sort(reverse=True)
+
+    # 상위 N명의 사용자를 기반으로 카드 추천
+    top_n_users = [user_id for _, user_id in coop_similarity_vector[:20]]  # 상위 20명 선택 / 예시: [186, 372, 474, 5, 63, ...]
+    recommended_cards = {}  # 예시: {789: [5, 4], 1011: [4, 4, 3], ...}
+    for user_id in top_n_users:
+        for card_id, rating in user_card_matrix[user_id].items():
+            if card_id not in my_ratings:
+                if card_id not in recommended_cards:
+                    recommended_cards[card_id] = []
+                recommended_cards[card_id].append(rating)
+
+    # 평균 평점이 높은 카드 선택
+    recommended_cards = sorted(recommended_cards.items(), key=lambda x: np.mean(x[1]), reverse=True)
+    recommended_card_pks_coop = [card_id for card_id, _ in recommended_cards[:5]]  # 상위 5개 카드 / 예시: [789, 1011, 1213, 456, 654]
+
+    # 콘텐츠 기반 필터링과 협업 필터링 결과 병합
     card_data = {
-        'first_card_pk': similarity_vector[0][1],
-        'second_card_pk': similarity_vector[1][1],
-        'third_card_pk': similarity_vector[2][1],
-        'fourth_card_pk': similarity_vector[3][1],
-        'fifth_card_pk': similarity_vector[4][1],
+        'content_first_card_pk': recommended_card_pks_content[0],
+        'content_second_card_pk': recommended_card_pks_content[1],
+        'content_third_card_pk': recommended_card_pks_content[2],
+        'content_fourth_card_pk': recommended_card_pks_content[3],
+        'content_fifth_card_pk': recommended_card_pks_content[4],
+        'coop_first_card_pk': recommended_card_pks_coop[0],
+        'coop_second_card_pk': recommended_card_pks_coop[1],
+        'coop_third_card_pk': recommended_card_pks_coop[2],
+        'coop_fourth_card_pk': recommended_card_pks_coop[3],
+        'coop_fifth_card_pk': recommended_card_pks_coop[4],
     }
+
     serializer = RecommendationSerializer(data=card_data)
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user)

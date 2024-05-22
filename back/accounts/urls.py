@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('<str:username>/', views.profile),
+    path('<str:username>/', views.UserProfileView.as_view(), name='userProfile'),
     path('<str:username>/survey/', views.survey),
     # path('signin/kakao/callback', views.kakaoSignIn),
 ]

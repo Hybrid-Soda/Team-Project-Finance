@@ -3,6 +3,7 @@
     <Header />
     <main>
       <div class="bg">
+        {{ userStore.userInfo.survey_set }}
         <div class="head">
           <img src="@/assets/img/CreditCard.png" alt="">
           내 카드를 찾아보자 !
@@ -16,11 +17,11 @@
               {{ surveyQ.question }}
             </div>
             <div class="question">
-              <button class="question-item" :class="{'isSelected':surveyResponses[key]}" v-for="value, key in surveyQ.answers" @click="count(key)">
+              <button class="question-item" :class="{'isSelected': surveyResponses[key]}" v-for="value, key in surveyQ.answers" @click="count(key)">
                 {{ value }}
               </button>
               <button class="next-btn" v-if="questionIdx >= 4" @click="next_btn">
-                <div v-if="questionIdx == 6">
+                <div v-if="questionIdx === 6">
                   제출하기 ༼ つ ◕_◕ ༽つ
                 </div>
                 <div v-else>
@@ -66,24 +67,6 @@ const surveyResponses = ref({
   travel_inter: false,
   trevel_dome: false,
 })
-
-// const surveyQuestions = [
-//   { question: '자차를 갖고 계십니까?', var: 'car_owner' },
-//   { question: '자취를 하십니까?', var: 'live_alone' },
-//   { question: '학생이십니까?', var: 'student' },
-//   { question: '육아를 하고 계십니까?', var: 'baby' },
-//   { question: '반려동물이 있습니까?', var: 'pets' },
-//   { question: '간편결제를 사용하십니까?', var: 'easy_pay' },
-//   { question: '병원이나 약국을 자주 이용하십니까?', var: 'healthcare' },
-//   { question: '통신 관련 서비스를 이용하십니까?', var: 'telecom' },
-//   { question: '스포츠를 좋아하십니까?', var: 'sports' },
-//   { question: '쇼핑을 즐기십니까?', var: 'shopping' },
-//   { question: '친구들과 자주 어울리십니까?', var: 'friends' },
-//   { question: '운동을 즐기십니까?', var: 'fitness' },
-//   { question: '영화를 자주 보십니까?', var: 'movie' },
-//   { question: '해외여행을 좋아하십니까?', var: 'travel_inter' },
-//   { question: '국내여행을 좋아하십니까?', var: 'trevel_dome' },
-// ]
 
 const questionIdx = ref(0)
 const isQuestionHidden = ref(false)
@@ -176,9 +159,29 @@ const next_btn = function() {
   }, 100)
 }
 
-const submitSurvey = function () {
+const genRecommend = function () {
   axios({
     method: 'post',
+    url: `${cardStore.API_URL}/cards/${userStore.userInfo.username}/card_recommend/`,
+    headers: {
+      Authorization: `Token ${userStore.token}`,
+    },
+  })
+  .then(res => {
+    console.log('ok')
+    router.push({ name: 'recommend', params: { 'username': userStore.userInfo.username } })
+  })
+  .catch(err => console.error(err))
+}
+
+const submitSurvey = function () {
+  let method = 'post'
+  if (userStore.userInfo.survey_set.length > 0) {
+    method = 'put'
+  }
+  console.log(method)
+  axios({
+    method: method,
     url: `${cardStore.API_URL}/users/${userStore.userInfo.username}/survey/`,
     headers: {
       Authorization: `Token ${userStore.token}`,
@@ -186,19 +189,11 @@ const submitSurvey = function () {
     data: surveyResponses.value
   })
   .then(res => {
+    if (method === 'post') {
+      userStore.userInfo.survey_set.push(res.data.id)
+    }
     window.alert('설문이 완료되었습니다!')
-    axios({
-      method: 'post',
-      url: `${cardStore.API_URL}/cards/${userStore.userInfo.username}/card_recommend/`,
-      headers: {
-        Authorization: `Token ${userStore.token}`,
-      },
-    })
-    .then(res => {
-      console.log('ok')
-      router.push({ name: 'recommend', params: { 'username': userStore.userInfo.username } })
-    })
-    .catch(err => console.error(err))
+    genRecommend()
   })
   .catch(err => console.error(err))
 }

@@ -31,25 +31,25 @@ class CustomRegisterSerializer(RegisterSerializer):
         self.custom_signup(request, user)
         return user
 
-class UserProfileSerializer(serializers.ModelSerializer):
-    class RecommedationSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Recommendation
-            fields = '__all__'
-
-    recommendations = RecommedationSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = User
-        fields = ('username', 'nickname', 'email', 'age', 'gender', 'recommendations')
-
-class EditProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username', 'nickname', 'email', 'age', 'gender')
-
 class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = Survey
         fields = '__all__'
         read_only_fields = ('user',)
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    # class RecommedationSerializer(serializers.ModelSerializer):
+    #     class Meta:
+    #         model = Recommendation
+    #         fields = '__all__'
+
+    # recommendations = RecommedationSerializer()
+
+    class Meta:
+        model = User
+        fields = ('username', 'nickname', 'email', 'age', 'gender', 'survey_set')
+
+class EditProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'nickname', 'email', 'age', 'gender')

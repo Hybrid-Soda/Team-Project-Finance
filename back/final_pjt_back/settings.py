@@ -86,6 +86,9 @@ SOCIALACCOUNT_FORMS = {
     'signup': 'allauth.socialaccount.forms.SignupForm',
 }
 
+# 이메일 필드 필수 해제
+ACCOUNT_EMAIL_REQUIRED = False
+# 이메일 확인절차 삭제
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_ADAPTER = 'accounts.models.CustomAccountAdapter'
