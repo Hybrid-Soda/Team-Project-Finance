@@ -1,16 +1,17 @@
 import axios from 'axios'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 
 export const useCardStore = defineStore('card', () => {
   const cards = ref(null)
+  const tempCards = ref([])
   const API_URL = 'http://127.0.0.1:8000'
   const brands = [
     "신한카드", "삼성카드", "우리카드", "씨티카드", "KB국민카드", "NH농협카드", 
     "롯데카드", "하나카드", "IBK기업은행", "SC제일은행", "현대카드", "카카오뱅크", 
     "케이뱅크", "우체국", "DGB대구은행", "BNK부산은행", "Sh수협은행", "MG새마을금고", 
-    "제주은행", "전북은행"]
+    "제주은행", "전북은행"
+  ]
 
   const BRAND_URLS = [
     { brand: '신한카드', url: 'https://www.shinhancard.com/' },
@@ -60,17 +61,6 @@ export const useCardStore = defineStore('card', () => {
     { brand: '현대백화점', url: 'http://www.ehyundai.com/newPortal/card/main.do' }
   ]
 
-  const readCard = function () {
-    axios({
-      method: 'get',
-      url: `${API_URL}/cards/`,
-    })
-    .then(res => {
-      cards.value = res.data
-    })
-    .catch(err => console.error(err))
-  }
-  
   const benefit_dict = ref({
     "간편결제": 0,
     "공과금/렌탈": 1,
@@ -94,10 +84,56 @@ export const useCardStore = defineStore('card', () => {
     "항공마일리지": 19,
     "항공": 20,
     "해외": 21,
-})
+  })
+  
+  const readCard = function () {
+    axios({
+      method: 'get',
+      url: `${API_URL}/cards/`,
+    })
+    .then(res => {
+      cards.value = res.data
+      tempCards.value = res.data.slice(0, 40)
+    })
+    .catch(err => console.error(err))
+  }
+
+  const sortCard = function (method) {
+    if (method === 'sortName') {
+      cards.value.sort((a, b) => a.name.localeCompare(b.name))
+    } else if (method === 'sortRecord') {
+      cards.value.sort((a, b) => a.record - b.record)
+    } else if (method === 'sortAnnualFee') {
+      cards.value.sort((a, b) => a.annual_fee1 - b.annual_fee1)
+    }
+    tempCards.value = cards.value.slice(0, 40)
+  }
+
+  const filterCard = (filters) => {
+    tempCards.value = cards.value.filter((card) => {
+      let matchA = filters.brands.includes(card.brand)
+
+      if (!filters.brands.length) { matchA = true }
+
+      let matchB = false
+      if (filters.record < 50) {
+        matchB = card.record <= filters.record
+      } else {
+        matchB = card.record >= filters.record
+      }
+
+      let matchC = false
+      if (filters.annualFee < 100000) {
+        matchC = card.annual_fee1 <= filters.annualFee
+      } else {
+        matchC = card.annual_fee1 >= filters.annualFee
+      }
+      return matchA && matchB && matchC
+    })
+  }
 
   return {
-    cards, brands, API_URL, benefit_dict, BRAND_URLS,
-    readCard,
+    cards, tempCards, brands, benefit_dict, API_URL, BRAND_URLS,
+    readCard, sortCard, filterCard
   }
 }, { persist: true })

@@ -1,175 +1,127 @@
 <template>
-  <div>
-    <div class="card-list-content">
-      <div class="filter-wrap">
-        <ul class="filter-list">
-          <div class="category">정렬</div>
-          <li
-            class="filter-sort"
-            :class="{ isActivate: activeSort === 'nameSort' }"
-            @click="sortBy('nameSort')"
-          >
-            <a href="#">이름순</a>
-          </li>
-          <li
-            class="filter-sort"
-            :class="{ isActivate: activeSort === 'recordSort' }"
-            @click="sortBy('recordSort')"
-          >
-            <a href="#">전월실적순</a>
-          </li>
-          <li
-            class="filter-sort"
-            :class="{ isActivate: activeSort === 'annualFeeSort' }"
-            @click="sortBy('annualFeeSort')"
-          >
-            <a href="#">연회비순</a>
-          </li>
-        </ul>
-        <br/>
-        <ul>
-          <div class="category">필터</div>
-          <li class="filter-comp">
-            <label for="">카드사</label>
-            <div class="card-brand-list">
-              <div class="form-check" v-for="brand in store.brands" :key="brand">
-                <input class="form-check-input" type="checkbox" :value="brand" :id="brand" v-model="selectedBrands"/>
-                <label class="form-check-label" :for="brand">{{ brand }}</label>
-              </div>
-            </div>
-          </li>
-          <li class="filter-comp" style="margin-top: 10px">
-            <label for="customRange3" class="form-label">
-              <span v-if="recordValue < 50">실적 : {{ recordValue }}만원 이하</span>
-              <span v-else>실적 : {{ recordValue }}만원 이상</span>
-            </label>
-            <input type="range" class="form-range" min="0" max="50" step="5" id="customRange3" v-model="recordValue"/>
-          </li>
-          <li class="filter-comp">
-            <label for="customRangeMin" class="form-label">
-              <span v-if="annualFeeValue < 100000"
-                >연회비 : {{ annualFeeValue }}원 이하</span
-              >
-              <span v-else>연회비 : {{ annualFeeValue }}원 이상</span>
-            </label>
-            <input type="range" class="form-range" min="0" max="100000" step="10000" id="customRangeMin" v-model="annualFeeValue"/>
-          </li>
-          <button @click="applyFilters" class="filter-button">조회하기</button>
-        </ul>
+  <div class="filter-container">
+    <ul class="filter-list">
+      <input type="text" class="form-control" v-model="search">
+      <button class="filter-button" @click="searchCard">검색</button>
+    </ul>
+
+    <ul class="filter-list">
+      <div class="category">정렬</div>
+      <button class="sort-item" @click="store.sortCard('sortName')">이름순</button>
+      <button class="sort-item" @click="store.sortCard('sortRecord')">전월실적순</button>
+      <button class="sort-item" @click="store.sortCard('sortAnnualFee')">연회비순</button>
+    </ul>
+
+    <ul class="filter-list">
+      <div class="category">필터</div>
+      <label class="label">카드사</label>
+      <div class="card-brand-list">
+        <div class="form-check" v-for="brand in store.brands" :key="brand">
+          <input class="form-check-input" type="checkbox" :value="brand" :id="brand" v-model="condA"/>
+          <label class="form-check-label" :for="brand">{{ brand }}</label>
+        </div>
       </div>
-    </div>
+      <li class="filter-comp mt-3">
+        <label for="range1" class="form-label">
+          <span v-if="condB < 50">실적 : {{ condB }}만원 이하</span>
+          <span v-else>실적 : {{ condB }}만원 이상</span>
+        </label>
+        <input type="range" class="form-range" min="0" max="50" step="5" id="range1" v-model="condB"/>
+      </li>
+      <li class="filter-comp">
+        <label for="range2" class="form-label">
+          <span v-if="condC < 100000">연회비 : {{ condC }}원 이하</span>
+          <span v-else>연회비 : {{ condC }}원 이상</span>
+        </label>
+        <input type="range" class="form-range" min="0" max="100000" step="10000" id="range2" v-model="condC"/>
+      </li>
+
+      <button class="filter-button" @click="filterCard">조회하기</button>
+    </ul>
   </div>
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue"
+import { ref } from "vue"
 import { useCardStore } from "@/stores/card"
 
 const store = useCardStore()
+const condA = ref([])
+const condB = ref(0)
+const condC = ref(0)
+const search = ref('')
 
-const recordValue = ref(0)
-const annualFeeValue = ref(0)
-const selectedBrands = ref([])
-const activeSort = ref("nameSort")
-
-const emit = defineEmits([
-  "sortName",
-  "sortRecord",
-  "sortAnnualFee",
-  "filterCards",
-])
-
-
-const sortBy = (criteria) => {
-  activeSort.value = criteria
-  switch(criteria) {
-    case 'nameSort':
-      emit('sortName')
-      break
-    case 'recordSort':
-      emit('sortRecord')
-      break
-    case 'annualFeeSort':
-      emit('sortAnnualFee')
-      break
-  }
+const filterCard = () => {
+  store.filterCard({
+    brands: condA.value,
+    record: Number(condB.value),
+    annualFee: Number(condC.value),
+  })
 }
 
-const applyFilters = () => {
-  emit("filterCards", {
-    brands: selectedBrands.value,
-    record: Number(recordValue.value),
-    annualFee: Number(annualFeeValue.value),
-  })
+const searchCard = function () {
+  store.tempCards = store.cards.filter(card => 
+    card.name.includes(search.value)
+  )
+  search.value = ''
 }
 </script>
 
 <style scoped>
-.isActivate {
-  color: rgb(255, 199, 39);
-}
-.filter-wrap {
+.filter-container {
   width: 14vw;
+  display: flex;
+  flex-direction: column;
 }
-.filter-comp {
-  margin: 15px auto;
+.filter-list {
+  padding: 0;
+  display: flex;
   font-size: large;
   font-weight: 500;
+  text-align: center;
+  flex-direction: column;
 }
-.card-brand-list {
-  /* border: 2px solid red; */
-  height: 150px;
-  padding: 10px;
-  overflow-y: scroll;
+.form-check {
+  text-align: start;
+}
+.sort-item {
+  padding: 0;
+  margin-block: 3px;
+  background-color: white;
+}
+.sort-item:focus {
+  color: rgb(255, 199, 39);
 }
 .category {
-  text-align: center;
-  /* color: rgb(204, 204, 204); */
-  font-weight: 700;
   padding: 5px;
+  cursor: default;
+  font-weight: 700;
+  text-align: center;
   margin-bottom: 5px;
   background-color: white;
   border-bottom: 2px solid rgb(219, 219, 219);
-  /* border-radius: 37px; */
-  cursor: default;
 }
-.filter-list {
-  /* border: 1px solid blue; */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
+.label {
+  text-align: start;
+  padding: 0 10px;
 }
-.filter-sort {
-  font-size: large;
-  font-weight: 500;
-  margin-top: 5px;
-}
-.filter-sort a {
-  text-decoration: none;
-  color: inherit;
-}
-.filter-sort a:active {
-  color: rgb(255, 199, 39);
+.card-brand-list {
+  height: 160px;
+  padding: 10px;
+  overflow-y: scroll;
 }
 .filter-button {
   width: 100%;
-  text-align: center;
-  font-weight: 700;
   padding: 5px;
-  border: 2px solid rgb(255, 199, 39);
-  border-radius: 37px;
-  background-color: rgba(0, 0, 0, 0);
-  color: rgb(255, 199, 39);
+  font-weight: 600;
   text-align: center;
-}
-.card-list-content {
-  display: flex;
-  flex-direction: column;
-  align-items: end;
+  border-radius: 37px;
+  color: rgb(255, 199, 39);
+  border: 2px solid rgb(255, 199, 39);
+  background-color: rgba(0, 0, 0, 0);
 }
 .filter-button:hover {
-  background-color: rgb(255, 199, 39);
   color: rgb(255, 255, 255);
+  background-color: rgb(255, 199, 39);
 }
 </style>
