@@ -22,7 +22,7 @@
             </RouterLink>
           </li>
           <li>
-            <a href="">
+            <a href="" @click="leave">
               회원 탈퇴
             </a>
           </li>
@@ -51,6 +51,14 @@
   import { useUserStore } from '@/stores/user'
 
   const userStore = useUserStore()
+
+  // const leave = function() {
+  //   Swal.fire({
+  //     'Alert가 실행되었습니다.',         // Alert 제목
+  //     '이곳은 내용이 나타나는 곳입니다.',  // Alert 내용
+  //     'success',                         // Alert 타입
+  //   });
+  // }
 </script>
 
 <style scoped>

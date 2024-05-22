@@ -4,9 +4,12 @@
     <main v-if="card">
       <div class="card-page-bg">
         <div class="menu-wrap">
-          <button @click="this.$router.go(-1)" class="backBtn">
-            <img src="@/assets/img/backArrow.png" alt="goBack" class="backImg">
-          </button>
+          <!-- <button @click="this.$router.go(-1)" class="backBtn"> -->
+          <RouterLink :to="{ name:'cardList' }">
+            <button class="backBtn">
+              <img src="@/assets/img/backArrow.png" alt="goBack" class="backImg">
+            </button>
+          </RouterLink>
           <div class="info-wrap">
             <CardDetailItem :card="card"/>
           </div>
