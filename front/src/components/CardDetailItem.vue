@@ -6,7 +6,8 @@
       </div>
       <div class="card-content">
         <a href="#" @click="toggleFavoriteCard">
-          <h6>★ 관심 카드 등록</h6>
+          <h6 v-if="!isFavorite">관심 카드 등록</h6>
+          <h6 v-if="isFavorite">관심 카드 등록 취소</h6>
         </a>
         <p class="card-name">{{ card.name }}</p>
         <p>{{ card.brand }}</p>
@@ -14,7 +15,7 @@
         <!-- <div>★{{ card.review_set }}</div> -->
         <div class="btn-wrap">
           <button class="go-button">
-            <a :href="`https://www.card-gorilla.com/card/detail/${card.id}`">신청하러 가기</a>
+            <a :href="redirectUrl(card.brand, card.id)">신청하러 가기</a>
           </button>
           <button data-bs-toggle="modal" data-bs-target="#exampleModal" @click="openMap()">오프라인 매장 보기</button>    
           <button @click="reviewActive" v-if="isActive">설명보기</button>
@@ -70,48 +71,79 @@
 <script setup>
   import { KakaoMap, KakaoMapMarker } from 'vue3-kakao-maps'
   import { usePostStore } from '@/stores/post'
-  import { ref, defineProps } from 'vue'
+  import { useCardStore } from '@/stores/card'
+  import { useUserStore } from '@/stores/user'
+  import { ref, defineProps, computed, onMounted, } from 'vue'
 
   import CardDetailReview from '@/components/CardDetailReview.vue'
   import CardDetailContent from './CardDetailContent.vue'
   import axios from 'axios'
 
   const postStore = usePostStore()
+  const cardStore = useCardStore()
+  const userStore = useUserStore()
   const props = defineProps({
-    card: Object
+    card: {
+      type: Object,
+      required: true
+    }
   })
   const isActive = ref(false)
   const reviewActive = function() {
     isActive.value = !isActive.value
   }
 
+  const redirectUrl = (brand, cardId) => {
+    const brandInfo = cardStore.BRAND_URLS.find(item => item.brand === brand)
+    if (brandInfo) {
+      return brandInfo.url;
+    }
+    return `https://www.card-gorilla.com/card/detail/${cardId}`
+  }
+
+  // 관심 카드 등록
+  const isFavorite = ref(false)
+  onMounted(() => {
+    axios({
+      method: 'get',
+      url: `${postStore.API_URL}/cards/${props.card.id}/favorite/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`
+      }
+    })
+    .then(res => {
+      isFavorite.value = res.data.is_favorite
+    })
+  })
+
+  const toggleFavoriteCard = function () {
+    axios({
+      method: 'post',
+      url: `${postStore.API_URL}/cards/${props.card.id}/favorite/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`
+      }
+    })
+    .then(res => {
+      // console.log(res.data)
+      isFavorite.value = res.data.is_favorite
+    })
+    .then(() => {
+      if (isFavorite.value) {
+        userStore.userInfo.favorite_cards.push(props.card.id)
+      } else {
+        const idx = userStore.userInfo.favorite_cards.findIndex(x => x === props.card.id)
+        userStore.userInfo.favorite_cards.splice(idx, 1)
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      console.log(props.card)
+    })
+  }
+
   // kakaomap
   const kakao_api_key = import.meta.env.VITE_KAKAO_API
-  // let map = null;
-
-  // onMounted(() => {
-  //   if (window.kakao && window.kakao.maps) {
-  //     initMap();
-  //   } else {
-  //     const script = document.createElement('script');
-  //     /* global kakao */
-  //     script.onload = () => kakao.maps.load(initMap);
-  //     script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${kakao_api_key}`;
-  //     document.head.appendChild(script);
-  //   }
-  // });
-
-  //   const initMap = () => {
-  //   const container = document.getElementById('map');
-  //   const options = {
-  //     center: new kakao.maps.LatLng(35.0961457, 128.8538772),
-  //     level: 5,
-  //   };
-
-  //   // 지도 객체를 등록합니다.
-  //   // 지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
-  //   map = new kakao.maps.Map(container, options);
-  // };
 
   let map = null;
   const markerList = ref([]);
@@ -164,12 +196,6 @@
     map.relayout();
   }
 
-  const toggleFavoriteCard = function () {
-    axios({
-      method: 'post',
-      url: `${postStore.API_URL}/cards/${cardId}/favorite/`
-    })
-  }
 </script>
 
 <style scoped>
@@ -206,13 +232,14 @@
 }
 .btn-wrap {
   display: flex;
-  gap: 4%;
+  gap: 2%;
   width: 120%;
 }
 .card-name {
   color: black;
   font-size: 36px;
   font-weight: 800;
+  display: flex;
 }
 .detail-content {
   /* margin-top: 2%; */
@@ -237,6 +264,11 @@
   overflow: hidden;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+.my-card-btn {
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
   align-items: center;
 }
 </style>

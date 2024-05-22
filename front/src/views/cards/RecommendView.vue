@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Header />
-      <h1>Recommend</h1>
+    <h1>Recommend</h1>
     <div v-for="card in recommendCards" :key="card.id">
       <p>{{ card.name }}</p>
       <img :src="card.image_url" width="300px">
@@ -20,12 +20,6 @@
   </div>
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="..." class="d-block w-100" alt="...">
-    </div>
-    <div class="carousel-item">
-      <img src="..." class="d-block w-100" alt="...">
-    </div>
-    <div class="carousel-item">
       <img src="..." class="d-block w-100" alt="...">
     </div>
   </div>

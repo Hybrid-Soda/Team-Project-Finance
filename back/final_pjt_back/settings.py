@@ -72,6 +72,23 @@ REST_AUTH = {
     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
 }
 
+SOCIALACCOUNT_PROVIDERS = {
+    "github": {
+        "VERIFIED_EMAIL": True
+    },
+    'google': {
+        'EMAIL_AUTHENTICATION': True
+    }
+}
+
+SOCIALACCOUNT_FORMS = {
+    'disconnect': 'allauth.socialaccount.forms.DisconnectForm',
+    'signup': 'allauth.socialaccount.forms.SignupForm',
+}
+
+# 이메일 필드 필수 해제
+ACCOUNT_EMAIL_REQUIRED = False
+# 이메일 확인절차 삭제
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_ADAPTER = 'accounts.models.CustomAccountAdapter'

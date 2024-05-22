@@ -37,12 +37,12 @@ def post_detail(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
     
     if request.method == "GET":
-        serializer = PostDetailSerializer(post)
+        serializer = PostListSerializer(post)
         return Response(serializer.data)
 
     elif request.method == "PUT":
         if request.user == post.user:
-            serializer = PostDetailSerializer(post, data=request.data, partial=True)
+            serializer = PostListSerializer(post, data=request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)

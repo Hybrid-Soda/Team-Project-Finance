@@ -24,15 +24,14 @@
 <script setup>
   import { usePostStore } from '@/stores/post'
   import { useRoute } from 'vue-router'
-  import { ref } from 'vue'
   import Header from '@/components/Header.vue'
 
   const postStore = usePostStore()
   const route = useRoute()
   
-  const postId = route.params.id
-  const title = postStore.currentPost.title
   const content = postStore.currentPost.content
+  const title = postStore.currentPost.title
+  const postId = route.params.id
 
   const updatePost = function () {
     const payload = {

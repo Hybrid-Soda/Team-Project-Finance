@@ -69,9 +69,6 @@
       </main>
     </div>
   </div>
-  <button class="chatbot main-text-btn">
-    <RouterLink :to="{ name: 'chatBot' }">chatbot</RouterLink>
-  </button>
   <Footer />
 </template>
 

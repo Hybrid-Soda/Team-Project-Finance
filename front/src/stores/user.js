@@ -30,7 +30,6 @@ export const useUserStore = defineStore('user', () => {
   // 회원가입
   const signUp = function (payload) {
     const { username, password1, password2, nickname, gender, email, age } = payload
-    console.log(username, password1, password2, nickname, gender, email, age)
     axios({
       method: 'post',
       url: `${API_URL}/accounts/signup/`,
@@ -42,7 +41,7 @@ export const useUserStore = defineStore('user', () => {
       window.alert('회원가입이 완료되었습니다!')
       router.push({ name: 'signIn' })
     })
-    .catch(err => console.error(err))
+    .catch(err => {console.error(err)})
   }
 
   // 로그인

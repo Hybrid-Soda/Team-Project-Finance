@@ -80,6 +80,10 @@
       email: email.value,
       age: age.value,
     }
+
+    if (!email.value) {
+      delete payload.email
+    }
     store.signUp(payload)
   }
 </script>
