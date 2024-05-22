@@ -312,7 +312,7 @@ def recommend(request, username):
 # 카드 리스트
 @api_view(["GET"])
 def card_list(request):
-    cards = get_list_or_404(Card)
+    cards = Card.objects.all().order_by('-pk')
     serializer = CardSerializer(cards, many=True)
     return Response(serializer.data)
 
