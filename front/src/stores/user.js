@@ -49,7 +49,15 @@ export const useUserStore = defineStore('user', () => {
         }
       })
     })
-    .catch(err => {console.error(err)})
+    .catch(err => {
+      console.error(err)
+      Swal.fire({
+        title: '실패',
+        text: '회원가입에 실패하였습니다.',
+        icon: 'error',
+        confirmButtonText: '다시 시도'
+      })
+    })
   }
 
   // 로그인
