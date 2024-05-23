@@ -3,12 +3,12 @@
     <div style="width: 90%; height: 100%;">
       <header class="header">
         <div v-if="userStore.isLogIn && post.user.username === userStore.userInfo.username">
-          <button class="btn btn-outline-warning me-3">
+          <button class="update-button me-4 mb-4">
             <RouterLink :to="{ name: 'postUpdate', params: { 'id': post.id } }">
               수정
             </RouterLink>
           </button>
-          <button class="btn btn-outline-danger" @click="deletePost">글 삭제</button>
+          <button class="delete-button" @click="deletePost">삭제</button>
         </div>
         <div class="title">{{ post.title }}</div>
         <div class="user">
@@ -43,7 +43,7 @@
         />
         <form @submit.prevent="createComment">
           <textarea class="form-control mb-3" placeholder="댓글을 남겨보세요" v-model.trim="content" rows="3"></textarea>
-          <input type="submit" value="등록" class="btn btn-outline-success login-btn"/>
+          <input type="submit" value="등록" class="update-button"/>
         </form>
       </section>
     </div>
@@ -173,5 +173,33 @@ const updateComment = function (commentId, resData) {
 }
 .postImage {
   width: 100%;
+}
+.update-button {
+  width: 20%;
+  padding: 5px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 37px;
+  color: rgb(255, 199, 39);
+  border: 2px solid rgb(255, 199, 39);
+  background-color: rgba(0, 0, 0, 0);
+}
+.update-button:hover {
+  color: rgb(255, 255, 255);
+  background-color: rgb(255, 199, 39);
+}
+.delete-button {
+  width: 20%;
+  padding: 5px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 37px;
+  color: rgb(255, 53, 39);
+  border: 2px solid rgb(255, 53, 39);
+  background-color: rgba(0, 0, 0, 0);
+}
+.delete-button:hover {
+  color: rgb(255, 255, 255);
+  background-color: rgb(255, 53, 39);
 }
 </style>

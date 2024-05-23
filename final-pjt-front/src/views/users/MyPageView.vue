@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <div style="position: absolute; top: 100px;">
+    <div style="position: absolute; top: 100px">
       <div class="my-page-bg">
         <div class="my-info-item">
           <MyPageItem />
@@ -12,53 +12,48 @@
       <div class="my-page-menu">
         <ul class="my-page-menu-list">
           <li class="isNow">
-            <a href="#">
-              회원 정보 수정
-            </a>
+            <a href="#"> 회원 정보 수정 </a>
           </li>
           <li>
-            <RouterLink :to="{ name: 'passwordChange', params:{ 'username': userStore.userInfo.username }}">
+            <RouterLink :to="{ name: 'passwordChange', params: { username: userStore.userInfo.username } }">
               비밀번호 변경
             </RouterLink>
           </li>
           <li>
-            <a href="" @click="leave">
-              회원 탈퇴
-            </a>
-          </li>
-          <li>
-            <RouterLink :to="{ name: 'recommend', params:{ 'username': userStore.userInfo.username }}">
-              카드 추천 받기
+            <RouterLink :to="{ name: 'recommend', params: { username: userStore.userInfo.username } }">
+              추천 카드 보기
             </RouterLink>
           </li>
           <li>
-            <RouterLink :to="{ name:'home' }">
+            <RouterLink :to="{ name: 'home' }">
               홈으로 가기
             </RouterLink>
           </li>
+          <li>
+            <a href="" @click="leave"> 회원 탈퇴 </a>
+          </li>
         </ul>
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup>
-  import MyPageItem from '@/components/MyPageItem.vue'
-  import Header from '@/components/Header.vue'
-  import { RouterLink } from 'vue-router'
-  import { ref } from 'vue'
-  import { useUserStore } from '@/stores/user'
+import MyPageItem from "@/components/MyPageItem.vue"
+import Header from "@/components/Header.vue"
 
-  const userStore = useUserStore()
+import { useUserStore } from "@/stores/user"
+import { RouterLink } from "vue-router"
 
-  const leave = function() {
-    Swal.fire({
-  title: "Good job!",
-  text: "You clicked the button!",
-  icon: "success"
-});
-  }
+const userStore = useUserStore()
+
+const leave = function () {
+  Swal.fire({
+    title: "Good job!",
+    text: "You clicked the button!",
+    icon: "success",
+  })
+}
 </script>
 
 <style scoped>
@@ -76,7 +71,7 @@
   display: flex;
   justify-content: end;
   margin-top: 100px;
-  margin-right: 90px
+  margin-right: 90px;
 }
 .my-page-menu {
   padding: 10px auto;
@@ -87,7 +82,7 @@
   display: flex;
   justify-content: left;
   flex-direction: column;
-  gap: 30px
+  gap: 30px;
 }
 .isNow {
   color: rgb(33, 95, 255);
