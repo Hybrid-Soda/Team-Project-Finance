@@ -43,12 +43,12 @@ const router = createRouter({
       path: '/:username/survey',
       name: 'survey',
       component: SurveyView,
-      beforeEnter: () => {
-        const userStore = useUserStore()
-        if (userStore.userInfo.survey_set.length > 0) {
-          router.push({name:'recommend', params:{username:userStore.userInfo.username}})
-        }
-      }
+      // beforeEnter: () => {
+      //   const userStore = useUserStore()
+      //   if (userStore.userInfo.survey_set.length > 0) {
+      //     router.push({name:'recommend', params:{username:userStore.userInfo.username}})
+      //   }
+      // }
     },
     {
       path: '/:username/recommend',

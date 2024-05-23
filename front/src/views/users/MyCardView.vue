@@ -4,14 +4,29 @@
   </div>
   <main>
     <div class="main-bg">
-      <h1 style="margin-top: 4%;">내 관심카드 모아보기</h1>
-      <div class="contain" v-if="userStore.userInfo.favorite_cards">
-        <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap" :autoplay="2000">
+      <div class="title">내 관심카드 모아보기</div>
+      <div class="contain" v-if="(userStore.userInfo.favorite_cards.length < 4) && (userStore.userInfo.favorite_cards.length > 0)" style="width: 50%;">
+        <Carousel :items-to-show="userStore.userInfo.favorite_cards.length" class="carousel-wrap">
           <Slide v-for="slide in userStore.userInfo.favorite_cards" :key="slide">
             <div class="carousel__item">
-              <MyCardItem
-              :card_id="slide"
-              />
+              <RouterLink :to="{ name:'cardDetail', params:{ id:slide }}">
+                <MyCardItem
+                :card_id="slide"
+                />
+              </RouterLink>
+            </div>
+          </Slide>
+        </Carousel>
+      </div>
+      <div class="contain" v-if="userStore.userInfo.favorite_cards.length >= 4">
+        <Carousel :items-to-show="3.95" :wrap-around="true" class="carousel-wrap" :autoplay="2000" :loop="true" :pauseAutoplayOnHover="true">
+          <Slide v-for="slide in userStore.userInfo.favorite_cards" :key="slide">
+            <div class="carousel__item">
+              <RouterLink :to="{ name:'cardDetail', params:{ id:slide }}">
+                <MyCardItem
+                :card_id="slide"
+                />
+              </RouterLink>
             </div>
           </Slide>
           
@@ -21,11 +36,11 @@
           </template>
         </Carousel>
       </div>
-      <div class="contain" v-else>
-        <img src="@/assets/img/404Error.png" alt="" style="width: 300px;">
-        <p>관심 카드가 없어요</p>
+      <div class="contain" v-if="userStore.userInfo.favorite_cards.length == 0">
+        <img src="@/assets/img/Empty.png" alt="" style="width: 30%; margin-top: -2%;">
         <RouterLink :to="{ name:'cardList' }">
-          <button>카드 보러 가기</button>
+          <div style="margin-top: -15%; margin-bottom: 15%;">관심 카드가 없어요.</div>
+          <button style="font-weight: bold;">카드 보러 가기</button>
         </RouterLink>
       </div>
     </div>
@@ -63,6 +78,13 @@ main {
   align-items: center;
   height: 100%;
 }
+.title {
+  width: 100%;
+  margin-top: 3%;
+  margin-left: 8%;
+  font-size: 20px;
+  font-weight: bold;
+}
 .card-wrap {
   width: 100%;
   height: 100%;
@@ -81,7 +103,6 @@ main {
 }
 /* ca */
 .carousel__item {
-  min-height: 200px;
   height: 100%;
   width: 100%;
   background-color: var(--vc-clr-primary);
@@ -93,7 +114,6 @@ main {
   align-items: center;
   background-color: white;
 }
-
 .carousel__slide {
   padding: 10px;
 }
@@ -103,6 +123,9 @@ main {
   box-sizing: content-box;
   border: 5px solid white;
 }
+.carousel__viewport {
+  height: 100% !important;
+}
 
 .contain {
   width: 100%;
@@ -110,6 +133,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 .carousel-wrap {
   /* border: 4px solid pink; */

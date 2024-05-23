@@ -3,12 +3,12 @@
     <Header />
   </div>
   <main>
-    <div class="main-bg">
+    <div class="main-bg" @mousewheel="goWheel">
       <div id="rec_cards" class="page-wrap">
-        <h1 style="margin-top: 4%;">추천 카드 모아보기</h1>
+        <div class="title">추천 카드 모아보기</div>
         <div class="contain">
           <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap">
-            <Slide v-for="slide in userStore.userInfo.survey_set" :key="slide">
+            <Slide v-for="slide in rec_cardList" :key="slide">
               <RouterLink :to="{ name:'cardDetail', params:{id:slide} }">
                 <div class="carousel__item">
                   <RecommendationItem
@@ -23,14 +23,16 @@
               <Navigation />
             </template>
           </Carousel>
-          <button @click="goDown()">아래로</button>
+          <button class="move-button" @click="goDown()">↓</button>
         </div>
       </div>
+
       <div id="sim_cards" class="page-wrap">
-        <h1 style="margin-top: 4%;">나와 비슷한 사용자는 이런 카드를 사용했어요</h1>
+        <div style="height: 13.5%;"> </div>
+        <div class="title">나와 비슷한 사용자는 이런 카드를 사용했어요</div>
         <div class="contain">
           <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap">
-            <Slide v-for="slide in userStore.userInfo.survey_set" :key="slide">
+            <Slide v-for="slide in sim_cardList" :key="slide">
               <RouterLink :to="{ name:'cardDetail', params:{id:slide} }">
                 <div class="carousel__item">
                   <RecommendationItem
@@ -45,7 +47,7 @@
               <Navigation />
             </template>
           </Carousel>
-          <button @click="goUp()">위로</button>
+          <button class="move-button" @click="goUp()">↑</button>
         </div>
       </div>
     </div>
@@ -60,9 +62,12 @@
   import { RouterLink } from 'vue-router'
   import { Carousel, Navigation, Slide, Pagination } from 'vue3-carousel'
   import 'vue3-carousel/dist/carousel.css'
-
+  
+  import { useCardStore } from '@/stores/card'
   import { useUserStore } from '@/stores/user';
+  import axios from 'axios'
   const userStore = useUserStore()
+  const cardStore = useCardStore()
 
   function goDown() {
     document.querySelector(".main-bg").scrollTo({top: document.querySelector("#sim_cards").offsetTop, behavior: 'smooth'});
@@ -70,6 +75,29 @@
   function goUp() {
     document.querySelector(".main-bg").scrollTo({top: document.querySelector("html").offsetTop, behavior: 'smooth'});
   }
+  function goWheel(e) {
+    if (e.wheelDelta >= 0) {
+      goUp()
+    } else {
+      goDown()
+    }
+  }
+
+  const sim_cardList = ref(null)
+  const rec_cardList = ref(null)
+  onMounted(() => {
+    axios({
+      method: 'get',
+      url: `${cardStore.API_URL}/${userStore.userInfo.username}/recommend`,
+      headers: {
+        Authorization: `Token ${userStore.token.value}`
+      }
+    })
+    .then(res => {
+      console.log(res.data)
+    })
+    .catch(err => console.error(err))
+    })
 </script>
 
 
@@ -85,6 +113,12 @@ main {
   align-items: center;
   height: 100%;
   overflow: hidden;
+}
+.title {
+  width: 100%;
+  margin-top: 3.5%;
+  font-size: 20px;
+  font-weight: bold;
 }
 .card-wrap {
   width: 100%;
@@ -104,8 +138,7 @@ main {
 }
 .page-wrap {
   width: 100%;
-  height: 1000px;
-  border: 2px solid red;
+  padding: 0 4%
 }
 /* ca */
 .carousel__item {
@@ -138,15 +171,17 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 5%;
-  border: 1px solid blue;
+  margin: 2.5% 0;
 }
 .carousel-wrap {
   /* border: 4px solid pink; */
   width: 90%;
-  height: 90%;
+  height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.move-button {
+  background-color: rgba(0, 0, 0, 0);
 }
 </style>

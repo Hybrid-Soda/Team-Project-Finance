@@ -1,13 +1,17 @@
 <template>
-  <div class="wrap">
-    <header>
-      <img :src="card?.image_url" class="card-img">
-      <div class="title">{{ card?.title }}</div>
-    </header>
-    <main> 
-      <p>혜택</p>
-      <p>실적</p>
-    </main>
+  <div class="container">
+    <div class="box">
+      <div class="imgBox" @mouseover="hover()" @mouseout="hover()">
+        <img :src="card?.image_url" ref="itemRefs" :class="{'vertical':isRotate}">
+      </div>
+      <div class="card-name" v-if="isHovered">
+        <div class="card-content">
+          {{ card?.name }}
+        </div>
+      </div>
+      <main> 
+      </main>
+    </div>
   </div>
 </template>
 
@@ -22,6 +26,8 @@
   })
 
   const card = ref(null)
+  const itemRefs = ref(null)
+  const isRotate = ref(false)
   onMounted(() => {
     axios({
       method: 'get',
@@ -29,41 +35,64 @@
     })
     .then(res => {
       card.value = res.data
-      console.log(card.value.image_url)
+      // console.log(card.value)
+    })
+    .then(() => {
+      // console.log('w',itemRefs.value.width)
+      // console.log('h',itemRefs.value.height)
+      if (itemRefs.value.width > itemRefs.value.height) {
+        isRotate.value = true
+      }
     })
     .catch(err => console.error(err))
   })
 
+  const isHovered = ref(false)
+  const hover = function() {
+    isHovered.value = !isHovered.value
+  }
+
 </script>
 
 <style scoped>
-.wrap {
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  width: 100%;
-  height: 100%;
-}
-header, main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-header {
-  gap: 20px;
+  justify-content: center;
+  width: 25rem;
 }
 img {
-  width: 50%;
+  width: 70%;
+  height: 100%;
 }
-.title {
-  font-size: 24px;
-  color: black;
+img:hover {
+  filter: blur(4px);
+  -webkit-filter: blur(4px);
+  transition-duration: .3s;
+  filter: brightness(10%);
+}
+.vertical {
+  transform: rotate(90deg);
+  scale: 1.6;
+}
+.card-name {
+  position: absolute;
+  width: 50%;
+  display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card-content {
+  color: white;
+  word-break: keep-all; 
+  font-size: 24px; 
   font-weight: bold;
 }
-.card-img {
-  width: 90%;
-  height: 90%;
-  object-fit: contain;
-}
-</style>
+</style> 
