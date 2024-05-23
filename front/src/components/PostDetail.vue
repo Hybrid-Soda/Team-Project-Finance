@@ -2,6 +2,14 @@
   <div class="wrap">
     <div style="width: 90%; height: 100%;">
       <header class="header">
+        <div v-if="userStore.isLogIn && post.user.username === userStore.userInfo.username">
+          <button class="btn btn-outline-warning me-3">
+            <RouterLink :to="{ name: 'postUpdate', params: { 'id': post.id } }">
+              수정
+            </RouterLink>
+          </button>
+          <button class="btn btn-outline-danger" @click="deletePost">글 삭제</button>
+        </div>
         <div class="title">{{ post.title }}</div>
         <div class="user">
           닉네임 : {{ post.user.nickname }} | 
@@ -39,7 +47,7 @@
 
 <script setup>
 import PostComment from '@/components/PostComment.vue'
-import { ref, onMounted, computed, defineProps } from 'vue'
+import { ref, defineEmits, computed, defineProps } from 'vue'
 import { usePostStore } from '@/stores/post'
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
@@ -52,6 +60,13 @@ const props = defineProps({
     required: true
   }
 })
+
+const emit = defineEmits(['closeDetail'])
+
+const deletePost = function () {
+  postStore.deletePost(props.post.id)
+  emit('closeDetail')
+}
 
 const comments = computed(() => {
   return props.post.comment_set

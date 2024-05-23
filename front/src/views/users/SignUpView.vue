@@ -47,9 +47,6 @@
         </div>
         <input type="submit" value="회원가입" class="btn btn-outline-warning login-btn"><hr>
       </form>
-      <button class="kakao" @click="kakaoLogin">
-        <img src="@/assets/img/kakao_login_medium.png" alt="kakao_login">
-      </button>
       <p>Already have an account? <RouterLink :to="{ name: 'signIn' }">Login</RouterLink></p>
     </main>
   </div>
@@ -89,17 +86,6 @@
     }
     store.signUp(payload)
   }
-
-const kakaoLogin = function () {
-  axios({
-    method: 'get',
-    url: `${API_URL}/users/kakao/callback/`,
-  })
-  .then(res => {
-    console.log(res)
-  })
-  .catch(err => console.log(err))
-}
 </script>
 
 <style scoped>
