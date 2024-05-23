@@ -85,12 +85,13 @@
 
   const sim_cardList = ref(null)
   const rec_cardList = ref(null)
+
   onMounted(() => {
     axios({
       method: 'get',
-      url: `${cardStore.API_URL}/${userStore.userInfo.username}/recommend`,
+      url: `${cardStore.API_URL}/cards/${userStore.userInfo.username}/recommend/`,
       headers: {
-        Authorization: `Token ${userStore.token.value}`
+        Authorization: `Token ${userStore.token}`
       }
     })
     .then(res => {

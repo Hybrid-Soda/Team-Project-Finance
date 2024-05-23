@@ -12,18 +12,18 @@ export const usePostStore = defineStore('post', () => {
   const tempPosts = ref([])
 
   // 게시글 생성
-  const createPost = function (payload) {
-    const { title, content } = payload
-  
+  const createPost = function (formData) {
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(key, value);
+    // }
     axios({
       method: 'post',
       url: `${API_URL}/posts/`,
+      data: formData,
       headers: {
         Authorization: `Token ${userStore.token}`,
+        'content-type': 'multipart/form-data'
       },
-      data: {
-        title, content
-      }
     })
     .then(res => {
       router.push({ name: 'postList' })
@@ -33,7 +33,7 @@ export const usePostStore = defineStore('post', () => {
       console.error(err)
     })
   }
-  
+
   // 게시글 조회
   const readPost = function () {
     axios({

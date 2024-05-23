@@ -17,7 +17,7 @@
       <label class="label">카드사</label>
       <div class="card-brand-list">
         <div class="form-check" v-for="brand in store.brands" :key="brand">
-          <input class="form-check-input" type="checkbox" :value="brand" :id="brand" v-model="condA"/>
+          <input class="form-check-input" type="checkbox" :value="brand" :id="brand" v-model.number="condA"/>
           <label class="form-check-label" :for="brand">{{ brand }}</label>
         </div>
       </div>
@@ -26,7 +26,7 @@
           <span v-if="condB < 50">실적 : {{ condB }}만원 이하</span>
           <span v-else>실적 : {{ condB }}만원 이상</span>
         </label>
-        <input type="range" class="form-range" min="0" max="50" step="5" id="range1" v-model="condB"/>
+        <input type="range" class="form-range" min="0" max="50" step="5" id="range1" v-model.number="condB"/>
       </li>
       <li class="filter-comp">
         <label for="range2" class="form-label">
@@ -54,8 +54,8 @@ const search = ref('')
 const filterCard = () => {
   store.filterCard({
     brands: condA.value,
-    record: Number(condB.value),
-    annualFee: Number(condC.value),
+    record: condB.value,
+    annualFee: condC.value,
   })
 }
 
