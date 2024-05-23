@@ -12,23 +12,23 @@
             <li class="nav-item">
               <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
             </li>
-            <li class="nav-item" v-if="userStore.isLogIn">
-              <RouterLink class="nav-link" :to="{ name:'survey', params: { username: userStore.userInfo?.username } }">추천 카드</RouterLink>
+            <li class="nav-item" v-if="userStore.isLogIn && userStore.userInfo">
+              <RouterLink class="nav-link" :to="{ name:'survey', params: { username: userStore.userInfo.username } }">추천 카드</RouterLink>
             </li>
-            <li class="nav-item" v-if="!userStore.isLogIn">
+            <li class="nav-item" v-if="!userStore.isLogIn || !userStore.userInfo">
               <button class="nav-link" @click="userStore.login_alert()">추천 카드</button>
             </li>
-            <li class="nav-item" v-if="userStore.isLogIn">
-              <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: userStore.userInfo?.username } }">내 관심 카드</RouterLink>
+            <li class="nav-item" v-if="userStore.isLogIn && userStore.userInfo">
+              <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: userStore.userInfo.username } }">내 관심 카드</RouterLink>
             </li>
-            <li class="nav-item" v-if="!userStore.isLogIn">
+            <li class="nav-item" v-if="!userStore.isLogIn || !userStore.userInfo">
               <button class="nav-link" @click="userStore.login_alert()">내 관심 카드</button>
             </li>
             <li class="nav-item">
               <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>
             </li>
             <li class="nav-item">
-              <div v-if="!userStore.isLogIn" class="user-menu">
+              <div v-if="!userStore.isLogIn || !userStore.userInfo" class="user-menu">
                 <RouterLink :to="{ name: 'signIn' }">
                   <button class="login-btn">로그인</button>
                 </RouterLink>
@@ -38,7 +38,7 @@
                   </button>
                 </RouterLink>
               </div>
-              <div v-else class="user-menu">
+              <div v-if="userStore.isLogIn && userStore.userInfo" class="user-menu">
                 <RouterLink :to="{ name: 'myPage', params: { 'username': userStore.userInfo.username } }">
                   <button class="login-btn" style=" font-weight: bold; background-color: rgb(255, 199, 39); color: black;">
                     마이페이지
@@ -59,7 +59,7 @@
             내게 필요한 신용카드<br/>
             <span style="color: rgb(255, 199, 39)">1분만에</span> 추천 받기
           </div>
-          <button v-if="!userStore.isLogIn" class="main-text-btn">
+          <button v-if="!userStore.isLogIn || !userStore.userInfo" class="main-text-btn">
             <RouterLink :to="{ name: 'signUp' }">가입하고 시작하기</RouterLink>
           </button>
           <button v-else class="main-text-btn">

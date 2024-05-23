@@ -2,7 +2,7 @@
   <div class="filter-container">
     <ul class="filter-list">
       <input type="text" class="form-control" v-model="search">
-      <button class="filter-button" @click="searchCard">검색</button>
+      <button class="filter-button mt-3" @click="searchCard">검색</button>
     </ul>
 
     <ul class="filter-list">

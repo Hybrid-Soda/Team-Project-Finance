@@ -159,15 +159,23 @@ const next_btn = function() {
 }
 
 const genRecommend = function () {
+  let myMethod = 'post'
+  if (userStore.userInfo.recommendation_set.length > 0) {
+    myMethod = 'put'
+  }
+  console.log(myMethod)
   axios({
-    method: 'post',
-    url: `${cardStore.API_URL}/cards/${userStore.userInfo.username}/card_recommend/`,
+    method: myMethod,
+    url: `${cardStore.API_URL}/cards/${userStore.userInfo.username}/gen_recommend/`,
     headers: {
       Authorization: `Token ${userStore.token}`,
     },
   })
   .then(res => {
-    console.log('ok')
+    console.log(res.data)
+    if (userStore.userInfo.recommendation_set.length === 0) {
+      userStore.userInfo.recommendation_set = [1]
+    }
     router.push({ name: 'recommend', params: { 'username': userStore.userInfo.username } })
   })
   .catch(err => console.error(err))
@@ -178,7 +186,6 @@ const submitSurvey = function () {
   if (userStore.userInfo.survey_set.length > 0) {
     method = 'put'
   }
-  console.log(method)
   axios({
     method: method,
     url: `${cardStore.API_URL}/users/${userStore.userInfo.username}/survey/`,
@@ -198,7 +205,7 @@ const submitSurvey = function () {
       icon: 'success',
       confirmButtonText: '확인'
     }).then (() => {
-      router.push({ name:'recommend', params:{ 'username':userStore.userInfo.username }})
+      router.push({ name:'recommend', params:{ 'username': userStore.userInfo.username }})
     })
     genRecommend()
   })

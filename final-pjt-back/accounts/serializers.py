@@ -35,8 +35,8 @@ class CustomRegisterSerializer(RegisterSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'nickname', 'email', 'age', 'gender', 'favorite_cards', 'survey_set')
-        read_only_fields = ('favorite_cards', 'survey_set')
+        fields = ('id', 'username', 'nickname', 'email', 'age', 'gender', 'favorite_cards', 'survey_set', 'recommendation_set')
+        read_only_fields = ('favorite_cards', 'survey_set', 'recommendation_set')
 
 class EditProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,4 +52,4 @@ class SurveySerializer(serializers.ModelSerializer):
 class EditProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'nickname', 'email', 'age', 'gender')
+        fields = ('id', 'username', 'nickname', 'email', 'age', 'gender')

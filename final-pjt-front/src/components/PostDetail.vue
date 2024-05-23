@@ -76,11 +76,13 @@ const deletePost = function () {
 const comments = computed(() => {
   return props.post.comment_set
 })
-const postId = props.post.id
-
 const content = ref('')
-const userId = userStore.userInfo.id
-const likeUsers = ref(postStore.tempPosts.find(post => post.id === postId).like_users)
+const postId = props.post.id
+const userId = userStore.userInfo ? userStore.userInfo.id : 0
+
+const likeUsers = computed(() => {
+  return postStore.tempPosts.find(post => post.id === postId).like_users
+})
 const likeLength = ref(likeUsers.value.length)
 
 // 좋아요 & 취소

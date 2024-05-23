@@ -1,1 +1,1 @@
-python manage.py loaddata user.json card.json benefit.json review.json
+python manage.py loaddata user.json card.json benefit.json review.json post.json comment.json

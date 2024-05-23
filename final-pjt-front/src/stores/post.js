@@ -14,7 +14,7 @@ export const usePostStore = defineStore('post', () => {
   // 게시글 생성
   const createPost = function (formData) {
     // for (let [key, value] of formData.entries()) {
-    //   console.log(key, value);
+    //   console.log(key, value)
     // }
     axios({
       method: 'post',

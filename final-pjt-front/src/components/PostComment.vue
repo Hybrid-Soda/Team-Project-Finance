@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div class="row">
     <!-- 댓글 본문 -->
-    <div class="col-10">
+    <div class="col-8">
       <p class="m-0">{{ comment.user.nickname }}</p>
       <p v-if="editValueId !== comment.id" class="fw-light mb-1">{{ comment.content }}</p>
       <textarea v-else class="form-control" v-model.trim="editValue" rows="2"></textarea>
       <p class="fw-lighter">{{ comment.created_at.slice(0, 10) }}</p>
     </div>
 
-    <div v-if="comment.user.username === userStore.userInfo?.username" class="d-flex justify-content-end align-self-center col-2">
-      <div v-if="editValueId !== comment.id">
+    <div v-if="comment.user.username === userStore.userInfo?.username" class="d-flex align-self-start col-4 justify-content-end">
+      <div v-if="editValueId !== comment.id" class="d-flex">
         <button @click="startEdit(comment)" class="btn btn-outline-primary btn-sm me-2">
           수정
         </button>

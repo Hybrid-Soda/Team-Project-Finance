@@ -37,11 +37,13 @@ const loading = ref(false)
 const trigger = ref(null)
 
 const loadCard = () => {
-  if (cardStore.tempCards.length >= cardStore.cards.length) return
-  loading.value = true
-  const nextCards = cardStore.cards.slice(cardLength.value, cardLength.value + 40)
-  cardStore.tempCards.push(...nextCards)
-  loading.value = false
+  if (cardStore.cards && cardStore.tempCards) {
+    if (cardStore.tempCards.length >= cardStore.cards.length) return
+    loading.value = true
+    const nextCards = cardStore.cards.slice(cardLength.value, cardLength.value + 40)
+    cardStore.tempCards.push(...nextCards)
+    loading.value = false
+  }
 }
 
 const observer = new IntersectionObserver((entries) => {

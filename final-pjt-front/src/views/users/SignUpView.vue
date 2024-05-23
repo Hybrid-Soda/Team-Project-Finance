@@ -16,8 +16,11 @@
           <label for="password1">비밀번호</label>
         </div>
         <div class="form-floating mb-3">
-          <input type="password" class="form-control" placeholder="" v-model.trim="password2" id="password2">
+          <input type="password" class="form-control" placeholder="" v-model.trim="password2" id="password2" @blur="checkPassword">
           <label for="password2">비밀번호 확인</label>
+        </div>
+        <div v-show="!isRight">
+          <p class="text-danger mt-3">비밀번호가 일치하지 않습니다.</p>
         </div>
         <hr>
         <div class="form-floating mb-3">
@@ -53,14 +56,11 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import { useRouter, RouterLink } from 'vue-router'
+  import { ref, watch } from 'vue'
+  import { RouterLink } from 'vue-router'
   import { useUserStore } from '@/stores/user'
-  import axios from 'axios'
 
   const store = useUserStore()
-  const API_URL = 'http://127.0.0.1:8000'
-  const router = useRouter()
 
   const password1 = ref(null)
   const password2 = ref(null)
@@ -86,6 +86,16 @@
     }
     store.signUp(payload)
   }
+
+  const isRight = ref(true)
+
+  const checkPassword = () => {
+      if (password1.value !== password2.value) {
+        isRight.value = false
+      } else {
+        isRight.value = true
+      }
+    }
 </script>
 
 <style scoped>

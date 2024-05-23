@@ -139998,4 +139998,46 @@
 		"is_staff": false,
 		"is_superuser": false
 	}
+},{
+	"model": "accounts.user",
+	"pk": 10001,
+	"fields": {
+		"password": "pbkdf2_sha256$600000$zGO7kGP7FsfidrpbEvIKH4$EH+2Ue8/4AKP+w0NsLpazT/vfbcm+74T//ZtcqmmXFA=",
+		"last_login": "2024-05-23T13:45:33.436Z",
+		"first_name": "",
+		"last_name": "",
+		"date_joined": "2024-05-23T11:57:16.030Z",
+		"username": "user",
+		"nickname": "user123",
+		"email": "user123@gmail.com",
+		"age": 25,
+		"gender": "남자",
+		"is_active": true,
+		"is_staff": false,
+		"is_superuser": false,
+		"groups": [],
+		"user_permissions": [],
+		"favorite_cards": [791, 2257, 2424, 2433, 2483, 2485, 2494]
+	}
+},{
+	"model": "accounts.user",
+	"pk": 10002,
+	"fields": {
+			"password": "pbkdf2_sha256$600000$xBcCPSAiHbBjTZtOjiC1zi$AEFyCKAYdRwDgwRA4p15gAE++SXMKB0uUB/JRIid8EE=",
+			"last_login": "2024-05-23T13:17:18.894Z",
+			"first_name": "",
+			"last_name": "",
+			"date_joined": "2024-05-23T13:17:06.393Z",
+			"username": "user2",
+			"nickname": "resu321",
+			"email": "qwerty@gmail.com",
+			"age": 28,
+			"gender": "여자",
+			"is_active": true,
+			"is_staff": false,
+			"is_superuser": false,
+			"groups": [],
+			"user_permissions": [],
+			"favorite_cards": []
+	}
 }]

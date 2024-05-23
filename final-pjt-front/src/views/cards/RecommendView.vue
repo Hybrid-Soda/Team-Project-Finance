@@ -17,7 +17,7 @@
                 </div>
               </RouterLink>
             </Slide>
-            
+
             <template #addons>
               <Pagination style="position: absolute; bottom: 5%;"/>
               <Navigation />
@@ -35,13 +35,11 @@
             <Slide v-for="slide in sim_cardList" :key="slide">
               <RouterLink :to="{ name:'cardDetail', params:{id:slide} }">
                 <div class="carousel__item">
-                  <RecommendationItem
-                  :card_id="slide"
-                  />
+                  <RecommendationItem :card_id="slide"/>
                 </div>
               </RouterLink>
             </Slide>
-            
+
             <template #addons>
               <Pagination style="position: absolute; bottom: 5%;"/>
               <Navigation />
@@ -64,7 +62,7 @@
   import 'vue3-carousel/dist/carousel.css'
   
   import { useCardStore } from '@/stores/card'
-  import { useUserStore } from '@/stores/user';
+  import { useUserStore } from '@/stores/user'
   import axios from 'axios'
   const userStore = useUserStore()
   const cardStore = useCardStore()

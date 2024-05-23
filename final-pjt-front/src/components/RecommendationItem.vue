@@ -13,8 +13,8 @@
 
 <script setup>
   import { ref, defineProps, onMounted } from 'vue'
-  import axios from 'axios';
-  import { useCardStore } from '@/stores/card';
+  import axios from 'axios'
+  import { useCardStore } from '@/stores/card'
   const cardStore = useCardStore()
 
 </script>

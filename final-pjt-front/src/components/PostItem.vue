@@ -54,6 +54,7 @@ const likeLength = computed(() => {
   margin-bottom: 5%;
 }
 .postImage {
-  width: 80%;
+  max-width: 50%;
+  max-height: fit-content;
 }
 </style>
