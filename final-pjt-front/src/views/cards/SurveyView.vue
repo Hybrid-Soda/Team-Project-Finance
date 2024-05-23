@@ -21,7 +21,7 @@
               </button>
               <button class="next-btn" v-if="questionIdx >= 4" @click="next_btn">
                 <div v-if="questionIdx === 6">
-                  제출하기 ༼ つ ◕_◕ ༽つ
+                  <input type="submit" value="제출하기" class="btn btn-outline-warning submit-btn">
                 </div>
                 <div v-else>
                   다음으로 →
@@ -286,5 +286,11 @@ progress {
     transform: translateY(0);
     opacity: 1;
   }
+}
+.submit-btn {
+  width: 110%;
+  border-radius: 38px;
+  font-weight: bold;
+  margin: 0% -20%;
 }
 </style>

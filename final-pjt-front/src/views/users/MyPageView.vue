@@ -22,15 +22,11 @@
             </RouterLink>
           </li>
           <li>
-            <a href="" @click="leave">
+            <span @click="leave">
               회원 탈퇴
-            </a>
+            </span>
           </li>
-          <li>
-            <RouterLink :to="{ name: 'recommend', params:{ 'username': userStore.userInfo.username }}">
-              카드 추천 받기
-            </RouterLink>
-          </li>
+
           <li>
             <RouterLink :to="{ name:'home' }">
               홈으로 가기
@@ -49,15 +45,24 @@
   import { RouterLink } from 'vue-router'
   import { ref } from 'vue'
   import { useUserStore } from '@/stores/user'
+  import { useRouter } from 'vue-router'
+  const router = useRouter()
 
   const userStore = useUserStore()
 
   const leave = function() {
     Swal.fire({
-  title: "Good job!",
-  text: "You clicked the button!",
-  icon: "success"
-});
+        title: '회원 탈퇴',
+        text: '정말 탈퇴하시겠습니까?',
+        icon: 'warning',
+        confirmButtonText: '확인',
+        showCancelButton: true,
+        denyButtonText: `취소`
+      }).then ((res) => {
+        if (res.isConfirmed) {
+          router.push({ name:'home' })
+        }
+      })
   }
 </script>
 
@@ -101,5 +106,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+span {
+  cursor: pointer;
 }
 </style>

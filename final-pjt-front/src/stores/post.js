@@ -29,7 +29,12 @@ export const usePostStore = defineStore('post', () => {
       router.push({ name: 'postList' })
     })
     .catch(err => {
-      alert('게시글 업로드에 실패했습니다.')
+      Swal.fire({
+        title: '실패',
+        text: '게시글 작성에 실패하였습니다.',
+        icon: 'error',
+        confirmButtonText: '확인'
+      })
       console.error(err)
     })
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="filter-container">
     <ul class="filter-list">
-      <input type="text" class="form-control" v-model="search">
+      <input type="text" class="form-control" v-model="search" placeholder="검색어를 입력하세요." style="margin-bottom: 4%;">
       <button class="filter-button" @click="searchCard">검색</button>
     </ul>
 
