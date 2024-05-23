@@ -37,9 +37,17 @@ export const useUserStore = defineStore('user', () => {
         username, password1, password2, nickname, gender, email, age
       }
     })
-    .then(res => {
-      window.alert('회원가입이 완료되었습니다!')
-      router.push({ name: 'signIn' })
+    .then((res) => {
+      Swal.fire({
+        title: '성공',
+        text: '회원가입이 완료되었습니다.',
+        icon: 'success',
+        confirmButtonText: '로그인 하러 가기'
+      }).then ((res) => {
+        if (res.isConfirmed) {
+          router.push({ name:'signIn' })
+        }
+      })
     })
     .catch(err => {console.error(err)})
   }
@@ -118,8 +126,22 @@ export const useUserStore = defineStore('user', () => {
     })
     .catch(err => console.error(err))
   }
+
+  // 로그인 창 경고
+  const login_alert = function() {
+    Swal.fire({
+      title: '잠시만요.',
+      text: '로그인이 필요한 페이지입니다!',
+      icon: 'info',
+      confirmButtonText: '로그인 하러 가기'
+    }).then ((res) => {
+      if (res.isConfirmed) {
+        router.push({ name:'signIn' })
+      }
+    })
+  }
   return {
     token, isLogIn, userInfo, 
-    signUp, logIn, logOut, updateProfile, changePassword
+    signUp, logIn, logOut, updateProfile, changePassword, login_alert
   }
 }, { persist: true })

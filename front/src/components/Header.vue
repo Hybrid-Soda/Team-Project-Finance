@@ -12,16 +12,16 @@
             <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
           </li>
           <li class="nav-item" v-if="store.isLogIn">
-            <RouterLink class="nav-link" :to="{ name:'survey', params: { username: store.userInfo.username } }">카드 검색</RouterLink>
+            <RouterLink class="nav-link" :to="{ name:'survey', params: { username: store.userInfo.username } }">추천 카드</RouterLink>
           </li>
           <li class="nav-item" v-if="!store.isLogIn">
-            <RouterLink class="nav-link" :to="{ name:'signIn' }" onclick="alert('로그인이 필요합니다!')">카드 검색</RouterLink>
+            <button class="nav-link" @click="userStore.login_alert()">추천 카드</button>
           </li>
           <li class="nav-item" v-if="store.isLogIn">
             <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: store.userInfo.username } }">내 관심 카드</RouterLink>
           </li>
           <li class="nav-item" v-if="!store.isLogIn">
-            <RouterLink class="nav-link" :to="{ name:'signIn' }" onclick="alert('로그인이 필요합니다!')">내 관심 카드</RouterLink>
+            <button class="nav-link" @click="userStore.login_alert()">내 관심 카드</button>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>
@@ -42,6 +42,11 @@
       </RouterLink>
     </div>
     <div v-else class="login-menu-wrap">
+      <RouterLink :to="{ name: 'myPage', params: { 'username': store.userInfo.username } }">
+        <button class="header-menu nav-link" style=" font-weight: bold; background-color: rgb(255, 199, 39); color: black;">
+          마이페이지
+        </button>
+      </RouterLink>
       <button class="header-menu nav-link" @click.prevent="store.logOut">로그아웃</button>
     </div>
   </div>

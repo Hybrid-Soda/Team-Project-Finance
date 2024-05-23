@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
 // cards
 import HomeView from '@/views/cards/HomeView.vue'
 import SurveyView from '@/views/cards/SurveyView.vue'
@@ -40,7 +42,13 @@ const router = createRouter({
     {
       path: '/:username/survey',
       name: 'survey',
-      component: SurveyView
+      component: SurveyView,
+      beforeEnter: () => {
+        const userStore = useUserStore()
+        if (userStore.userInfo.survey_set.length > 0) {
+          router.push({name:'recommend', params:{username:userStore.userInfo.username}})
+        }
+      }
     },
     {
       path: '/:username/recommend',

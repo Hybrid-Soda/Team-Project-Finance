@@ -16,13 +16,13 @@
               <RouterLink class="nav-link" :to="{ name:'survey', params: { username: userStore.userInfo.username } }">추천 카드</RouterLink>
             </li>
             <li class="nav-item" v-if="!userStore.isLogIn">
-              <RouterLink class="nav-link" :to="{ name:'signIn' }" @click="login_alert">추천 카드</RouterLink>
+              <button class="nav-link" @click="userStore.login_alert()">추천 카드</button>
             </li>
             <li class="nav-item" v-if="userStore.isLogIn">
               <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: userStore.userInfo.username } }">내 관심 카드</RouterLink>
             </li>
             <li class="nav-item" v-if="!userStore.isLogIn">
-            <RouterLink class="nav-link" :to="{ name:'signIn' }" @click="login_alert">내 관심 카드</RouterLink>
+              <button class="nav-link" @click="userStore.login_alert()">내 관심 카드</button>
             </li>
             <li class="nav-item">
               <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>
@@ -70,23 +70,18 @@
     </div>
   </div>
   <Footer />
-  <button @click="leave()">test</button>
 </template>
 
 <script setup>
   import { ref } from "vue"
+  import { useRouter } from "vue-router"
   import { RouterLink } from "vue-router"
   import { useUserStore } from "@/stores/user"
   import Footer from '@/components/Footer.vue'
+  const router = useRouter()
 
   const userStore = useUserStore()
-  const leave = function() {
-    Swal.fire({
-  title: "Good job!",
-  text: "You clicked the button!",
-  icon: "success"
-});
-  }
+
 </script>
 
 <style scoped>
