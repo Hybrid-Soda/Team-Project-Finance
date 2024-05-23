@@ -12,7 +12,10 @@
             <li class="nav-item">
               <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
             </li>
-            <li class="nav-item" v-if="userStore.isLogIn && userStore.userInfo">
+            <li class="nav-item" v-if="userStore.isLogIn && userStore.userInfo && userStore.userInfo.recommendation_set.length > 0">
+              <RouterLink class="nav-link" :to="{ name:'recommend', params: { username: userStore.userInfo.username } }">추천 카드</RouterLink>
+            </li>
+            <li class="nav-item" v-if="userStore.isLogIn && userStore.userInfo && userStore.userInfo.recommendation_set.length == 0">
               <RouterLink class="nav-link" :to="{ name:'survey', params: { username: userStore.userInfo.username } }">추천 카드</RouterLink>
             </li>
             <li class="nav-item" v-if="!userStore.isLogIn || !userStore.userInfo">

@@ -64,7 +64,10 @@ const deleteComment = function () {
         Authorization: `Token ${userStore.token}`
       }
     })
-    .then(res => emit('deleteComment', props.comment.id))
+    .then(res => {
+      emit('deleteComment', props.comment.id)
+      window.alert('삭제가 완료되었습니다')
+    })
     .catch(err => console.error(err))
   }
 }

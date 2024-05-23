@@ -8,7 +8,7 @@
           <form class="filter" @submit.prevent="searchPost">
             <select name="" id="" class="form-select" style="width: 30%" v-model="searchOption">
               <option value="writer">작성자</option>
-              <option value="content">글 내용</option>
+              <option value="content">내용</option>
             </select>
             <input type="text" class="form-control" placeholder="검색어를 입력해주세요." v-model="searchValue"/>
             <input type="submit" class="button" value="검색" />

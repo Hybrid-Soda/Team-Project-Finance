@@ -283,7 +283,6 @@ def recommend(request, username):
     content_first_card = model_to_dict(
         get_object_or_404(Card, pk=recommend.content_first_card_pk)
     )
-    print(content_first_card)
     content_second_card = model_to_dict(
         get_object_or_404(Card, pk=recommend.content_second_card_pk)
     )
@@ -453,9 +452,7 @@ def card_gorilla_selenium(request):
     static_dir = "cards/"
     csv_data1 = open(f"{static_dir}\\card_data.csv", "w", encoding="CP949", newline="")
     card_data = csv.writer(csv_data1)
-    csv_data2 = open(
-        f"{static_dir}\\benefit_data.csv", "w", encoding="CP949", newline=""
-    )
+    csv_data2 = open(f"{static_dir}\\benefit_data.csv", "w", encoding="CP949", newline="")
     benefit_data = csv.writer(csv_data2)
 
     card_data.writerow(
@@ -471,21 +468,11 @@ def card_gorilla_selenium(request):
     for idx in range(1, 2498):
         try:
             driver.get(f"https://www.card-gorilla.com/card/detail/{idx}")
-            driver.execute_script(
-                'document.querySelector("#q-app > header").style.visibility="hidden";'
-            )
+            driver.execute_script('document.querySelector("#q-app > header").style.visibility="hidden";')
 
             try:
-                if driver.find_element(
-                    By.CSS_SELECTOR,
-                    f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b",
-                ):
-                    print(
-                        driver.find_element(
-                            By.CSS_SELECTOR,
-                            f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b",
-                        )
-                    )
+                if driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b"):
+                    print(driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b"))
                     continue
             except:
                 pass
@@ -503,54 +490,38 @@ def card_gorilla_selenium(request):
                 By.CSS_SELECTOR, f"{CARD_URL} > div.plate_area > div.card_img > img"
             ).get_attribute("src")
             # 연회비 1
-            card_annual_fee1 = (
-                driver.find_element(
-                    By.CSS_SELECTOR,
-                    f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(1) > b",
-                )
-                .text.replace(",", "")
-                .replace("원", "")
-            )
+            card_annual_fee1 = (driver.find_element(
+                By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(1) > b"
+            ).text.replace(",", "").replace("원", ""))
             # 전월 실적
-            card_record = (
-                driver.find_element(
-                    By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(2) > dd > b"
-                )
-                .text.replace(",", "")
-                .replace("원", "")
-            )
+            card_record = (driver.find_element(
+                By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(2) > dd > b"
+            ).text.replace(",", "").replace("원", ""))
             # 연회비 2
             try:
-                card_annual_fee2 = (
-                    driver.find_element(
-                        By.CSS_SELECTOR,
-                        f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(2) > b",
-                    )
-                    .text.replace(",", "")
-                    .replace("원", "")
-                )
+                card_annual_fee2 = (driver.find_element(
+                    By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(2) > b"
+                    ).text.replace(",", "").replace("원", ""))
             except NoSuchElementException:
                 card_annual_fee2 = None
             # 타입
             try:
                 card_type = driver.find_element(
-                    By.CSS_SELECTOR,
-                    f"{CARD_URL} > div.bnf2 > dl:nth-child(3) > dd > span",
-                ).text
+                    By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(3) > dd > span"
+                    ).text
             except NoSuchWindowException:
                 card_type = None
-            card_data.writerow(
-                [
-                    pk,
-                    card_name,
-                    card_brand,
-                    card_image,
-                    card_annual_fee1,
-                    card_annual_fee2,
-                    card_record,
-                    card_type,
-                ]
-            )
+
+            card_data.writerow([
+                pk,
+                card_name,
+                card_brand,
+                card_image,
+                card_annual_fee1,
+                card_annual_fee2,
+                card_record,
+                card_type,
+            ])
 
             # 혜택
             benefit_name = driver.find_elements(
@@ -566,6 +537,7 @@ def card_gorilla_selenium(request):
                 bnf_content = benefit_content[i].text
                 benefit_data.writerow([pk, bnf_name, bnf_content])
             pk += 1
+
         except:
             continue
 

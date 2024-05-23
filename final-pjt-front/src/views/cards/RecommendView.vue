@@ -7,15 +7,15 @@
       <div id="rec_cards" class="page-wrap">
         <div class="title">추천 카드 모아보기</div>
         <div class="contain">
-          <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap">
+          <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap"  :autoplay="2000" :loop="true" :pauseAutoplayOnHover="true">
             <Slide v-for="slide in rec_cardList" :key="slide">
-              <RouterLink :to="{ name:'cardDetail', params:{id:slide} }">
-                <div class="carousel__item">
+              <div class="carousel__item">
+                <RouterLink :to="{ name:'cardDetail', params:{ id:slide.id } }">
                   <RecommendationItem
-                  :card_id="slide"
+                  :card="slide"
                   />
-                </div>
-              </RouterLink>
+                </RouterLink>
+              </div>
             </Slide>
 
             <template #addons>
@@ -31,13 +31,15 @@
         <div style="height: 13.5%;"> </div>
         <div class="title">나와 비슷한 사용자는 이런 카드를 사용했어요</div>
         <div class="contain">
-          <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap">
+          <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap" :autoplay="2000" :loop="true" :pauseAutoplayOnHover="true">
             <Slide v-for="slide in sim_cardList" :key="slide">
-              <RouterLink :to="{ name:'cardDetail', params:{id:slide} }">
-                <div class="carousel__item">
-                  <RecommendationItem :card_id="slide"/>
-                </div>
-              </RouterLink>
+              <div class="carousel__item">
+                <RouterLink :to="{ name:'cardDetail', params:{ id:slide.id } }">
+                  <RecommendationItem
+                  :card="slide"
+                  />
+                </RouterLink>
+              </div>
             </Slide>
 
             <template #addons>
@@ -55,7 +57,6 @@
 <script setup>
   import Header from '@/components/Header.vue'
   import RecommendationItem from '@/components/RecommendationItem.vue'
-  // import axios from 'axios';
   import { ref, onMounted, defineComponent } from 'vue'
   import { RouterLink } from 'vue-router'
   import { Carousel, Navigation, Slide, Pagination } from 'vue3-carousel'
@@ -64,6 +65,7 @@
   import { useCardStore } from '@/stores/card'
   import { useUserStore } from '@/stores/user'
   import axios from 'axios'
+
   const userStore = useUserStore()
   const cardStore = useCardStore()
 
@@ -81,8 +83,8 @@
     }
   }
 
-  const sim_cardList = ref(null)
-  const rec_cardList = ref(null)
+  const sim_cardList = ref([])
+  const rec_cardList = ref([])
 
   onMounted(() => {
     axios({
@@ -93,7 +95,15 @@
       }
     })
     .then(res => {
-      console.log(res.data)
+  
+    for (const [key, value] of Object.entries(res.data)) {
+      if (key.startsWith('content')) {
+        rec_cardList.value.push(value)
+      } else if (key.startsWith('coop')) {
+        sim_cardList.value.push(value)
+      }
+    }
+    console.log(rec_cardList.value)
     })
     .catch(err => console.error(err))
     })
@@ -116,6 +126,7 @@ main {
 .title {
   width: 100%;
   margin-top: 3.5%;
+  margin-left: 8%;
   font-size: 20px;
   font-weight: bold;
 }
@@ -163,14 +174,19 @@ main {
   box-sizing: content-box;
   border: 5px solid white;
 }
+
+.carousel__viewport {
+  height: 100% !important;
+}
+
 /* main */
 .contain {
   width: 100%;
-  height: 90%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 2.5% 0;
+  flex-direction: column;
 }
 .carousel-wrap {
   /* border: 4px solid pink; */

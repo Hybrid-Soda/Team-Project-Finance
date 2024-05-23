@@ -11,17 +11,20 @@
           <li class="nav-item">
             <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
           </li>
-          <li class="nav-item" v-if="store.isLogIn">
+          <li class="nav-item" v-if="store.isLogIn && store.userInfo && store.userInfo.recommendation_set.length > 0">
+            <RouterLink class="nav-link" :to="{ name:'recommend', params: { username: store.userInfo.username } }">추천 카드</RouterLink>
+          </li>
+          <li class="nav-item" v-if="store.isLogIn && store.userInfo && store.userInfo.recommendation_set.length == 0">
             <RouterLink class="nav-link" :to="{ name:'survey', params: { username: store.userInfo.username } }">추천 카드</RouterLink>
           </li>
           <li class="nav-item" v-if="!store.isLogIn">
-            <button class="nav-link" @click="userStore.login_alert()">추천 카드</button>
+            <button class="nav-link" @click="store.login_alert()">추천 카드</button>
           </li>
           <li class="nav-item" v-if="store.isLogIn">
             <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: store.userInfo.username } }">내 관심 카드</RouterLink>
           </li>
           <li class="nav-item" v-if="!store.isLogIn">
-            <button class="nav-link" @click="userStore.login_alert()">내 관심 카드</button>
+            <button class="nav-link" @click="store.login_alert()">내 관심 카드</button>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" :to="{ name:'postList' }">커뮤니티</RouterLink>

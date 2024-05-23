@@ -17,7 +17,7 @@
       <div class="mb-3">
         <input type="file" class="form-control" id="upload-image" @change="handleFileUpload">
       </div>
-      <input type="submit" value="등록" class="btn btn-outline-warning login-btn">
+      <input type="submit" value="등록" class="submit-button">
     </form>
   </main>
 </template>
@@ -61,5 +61,19 @@ const createPost = function () {
 .backImg {
   width: 50px;
   opacity: .5;
+}
+.submit-button {
+  width: 10%;
+  padding: 5px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 37px;
+  color: rgb(255, 199, 39);
+  border: 2px solid rgb(255, 199, 39);
+  background-color: rgba(0, 0, 0, 0);
+}
+.submit-button:hover {
+  color: rgb(255, 255, 255);
+  background-color: rgb(255, 199, 39);
 }
 </style>
