@@ -52,13 +52,13 @@
 
   const userStore = useUserStore()
 
-  // const leave = function() {
-  //   Swal.fire({
-  //     'Alert가 실행되었습니다.',         // Alert 제목
-  //     '이곳은 내용이 나타나는 곳입니다.',  // Alert 내용
-  //     'success',                         // Alert 타입
-  //   });
-  // }
+  const leave = function() {
+    Swal.fire({
+  title: "Good job!",
+  text: "You clicked the button!",
+  icon: "success"
+});
+  }
 </script>
 
 <style scoped>

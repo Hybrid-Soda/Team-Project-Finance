@@ -70,6 +70,7 @@
     </div>
   </div>
   <Footer />
+  <button @click="leave()">test</button>
 </template>
 
 <script setup>
@@ -79,6 +80,13 @@
   import Footer from '@/components/Footer.vue'
 
   const userStore = useUserStore()
+  const leave = function() {
+    Swal.fire({
+  title: "Good job!",
+  text: "You clicked the button!",
+  icon: "success"
+});
+  }
 </script>
 
 <style scoped>
