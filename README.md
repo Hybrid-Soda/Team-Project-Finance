@@ -17,7 +17,8 @@
 1. [⭐ 팀원 및 역할 ⭐](#🦸-팀원-및-역할)
 2. [⭐ 기술 스택 및 설계 내용 ⭐](#📚-기술-스택-및-설계-내용)
 3. [⭐ 카드 상품 추천 알고리즘 ⭐](#💳-카드-상품-추천-알고리즘)
-4. [⭐ 주요 기능 소개 ⭐](#🧰-주요-기능-소개) 
+4. [⭐ AI 적용 내용 ⭐](#🧰-AI-적용-내용) 
+5. [⭐ 주요 기능 소개 ⭐](#🧰-주요-기능-소개) 
 
 
 
@@ -58,6 +59,13 @@ user_profile = [1, 1, 0, 0, 1, 0, 1, 1]  # 주유, 하이패스, 배달앱, 스�
 # 카드 1 : 병원/약국, 마트/편의점, 쇼핑, 주유
 # 카드 2 : 주유, 비즈니스, 자동차/하이패스
 # 카드 3 : 바우처, 프리미엄, 항공마일리지, 적립
+# ...
+cards = Card.objects.all().order_by("annual_fee1", "record")
+benefit_matrix = []  # 혜택 벡터 배열을 가지는 혜택 행렬
+for card in cards:
+    benefits = card.benefit_set.all()
+    benefit = [bn.title for bn in benefits]  # ['쇼핑', '모든가맹점', '주유', '금융', '통신', '기타', '적립']
+    benefit_vector = [0] * (BN + 1)  # 코사인 유사도를 판단하기 위한 벡터 배열
 ...
 ```
 3. **카드 속성 벡터 매트릭스 생성** : 카드들의 속성을 인덱싱화시켜 벡터로 제작한다.
@@ -83,16 +91,69 @@ similarities = cosine_similarity(user_profile, cards)
 ### 💎 협업 필터링 (Collaborative Filtering)
 1. **사용자-카드 매트릭스 생성** : 사용자들이 사용하거나 선호하는 카드 정보를 매트릭스로 만든다.
 ```python
-
+    user_card_matrix = {
+        1: {123: 5, 456: 3},
+        2: {123: 4, 789: 8},
+        3: {473: 7, 921: 5},
+        ...
+    }
 ```
 2. **유사 사용자 찾기** : 사용자 간의 유사도를 계산하여 비슷한 사용자들을 찾는다.
 ```python
+# 전체 유사도 = (협업 유사도 + 성별 유사도 + 나이 유사도) / 3
+current_user_vector = [my_ratings[card] for card in common_cards]
+other_user_vector = [other_ratings[card] for card in common_cards]
 
+recommend_similarity = cos_similarity(current_user_vector, other_user_vector)
+overall_similarity = (recommend_similarity + gender_similarity + age_similarity) / 3
 ```
 3. **카드 추천** : 유사한 사용자가 선호하는 카드를 추천한다.
 ```python
+# 유사도가 높은 순으로 정렬
+coop_similarity_vector.sort(reverse=True)
 
+# 상위 N명의 사용자를 기반으로 카드 추천
+top_n_users = [
+    user_id for _, user_id in coop_similarity_vector[:20]
+]  # 상위 20명 선택 / 예시: [186, 372, 474, 5, 63, ...]
+recommended_cards = {}  # 예시: {789: [5, 4], 1011: [4, 4, 3], ...}
+for user_id in top_n_users:
+    for card_id, rating in user_card_matrix[user_id].items():
+        if card_id not in my_ratings:
+            if card_id not in recommended_cards:
+                recommended_cards[card_id] = []
+            recommended_cards[card_id].append(rating)
+
+# 평균 평점이 높은 카드 선택
+recommended_cards = sorted(recommended_cards.items(), key=lambda x: np.mean(x[1]), reverse=True)
+recommended_card_pks_coop = [card_id for card_id, _ in recommended_cards[:5]]
 ```
+
+
+## 🧰 AI 적용 내용
+
+### 💎 SandBird Chatbot
+```python
+//app.vue
+!function(w, d, s, ...args){
+    var div = d.createElement('div')
+    div.id = 'aichatbot'
+    d.body.appendChild(div)
+    w.chatbotConfig = args
+    var f = d.getElementsByTagName(s)[0],
+    j = d.createElement(s)
+    j.defer = true
+    j.type = 'module'
+    j.src = 'https://aichatbot.sendbird.com/index.js'
+    f.parentNode.insertBefore(j, f)
+}(window, document, 'script', 'C70DB29C-C1EF-407A-98F7-175C6AA6BBC6', 'onboarding_bot', {
+    apiHost: 'https://api-cf-ap-2.sendbird.com',
+})
+```
+
+### 💎 Chat-GPT 4o
+```mark
+
 
 ## 🧰 주요 기능 소개
 
