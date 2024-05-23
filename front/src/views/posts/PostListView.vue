@@ -5,31 +5,33 @@
       <div class="community-bg">
         <div class="head">
           <div></div>
-          <form class="filter">
-            <select name="" id="" class="form-select" style="width: 30%">
-              <option value="작성자">작성자</option>
-              <option value="글 내용">글 내용</option>
+          <form class="filter" @submit.prevent="searchPost">
+            <select name="" id="" class="form-select" style="width: 30%" v-model="searchOption">
+              <option value="writer">작성자</option>
+              <option value="content">글 내용</option>
             </select>
-            <input type="text" class="form-control" placeholder="검색어를 입력해주세요."/>
+            <input type="text" class="form-control" placeholder="검색어를 입력해주세요." v-model="searchValue"/>
             <input type="submit" class="button" value="검색" />
           </form>
           <RouterLink :to="{ name: 'postCreate' }">
             글 작성하기
           </RouterLink>
         </div>
-        <div v-if="postStore.posts" class="wrap-content">
+        <div v-if="postStore.tempPosts" class="wrap-content">
           <div class="content">
             <div class="list">
               <PostItem
-                v-for="post in postStore.posts"
+                v-for="post in postStore.tempPosts"
                 :key="post.id"
                 :post="post"
                 @click="activeDetail(post)"
                 class="touch"
-              />
-            </div>
-            <div class="detail" v-if="isActive">
-              <PostDetail :post="selectedPost" />
+                />
+              </div>
+              <div class="detail" v-if="isActive">
+              <PostDetail
+              :post="selectedPost"
+              @close-detail="closeDetail"/>
             </div>
           </div>
         </div>
@@ -49,6 +51,8 @@ import { ref } from "vue"
 const postStore = usePostStore()
 const selectedPost = ref(null)
 const isActive = ref(false)
+const searchValue = ref('')
+const searchOption = ref('writer')
 
 onMounted(() => {
   postStore.readPost()
@@ -63,6 +67,18 @@ const activeDetail = function (post) {
   }
 }
 
+const closeDetail = function () {
+  isActive.value = false
+}
+
+const searchPost = function () {
+  const payload = {
+    searchValue: searchValue.value,
+    searchOption: searchOption.value
+  }
+  postStore.searchPost(payload)
+  searchValue.value = ''
+}
 </script>
 
 <style scoped>
