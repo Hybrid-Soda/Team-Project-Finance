@@ -4,7 +4,6 @@
   </div>
   <main>
     <div class="main-bg">
-      <div class="title">내 관심카드 모아보기</div>
       <div class="contain" v-if="(userStore.userInfo.favorite_cards.length < 4) && (userStore.userInfo.favorite_cards.length > 0)" style="width: 50%;">
         <Carousel :items-to-show="userStore.userInfo.favorite_cards.length" class="carousel-wrap">
           <Slide v-for="slide in userStore.userInfo.favorite_cards" :key="slide">
@@ -37,9 +36,9 @@
         </Carousel>
       </div>
       <div class="contain" v-if="userStore.userInfo.favorite_cards.length == 0">
+        <div style="margin-bottom: 1%;">관심 카드가 없어요</div>
         <img src="@/assets/img/Empty.png" alt="" style="width: 30%; margin-top: -2%;">
         <RouterLink :to="{ name:'cardList' }">
-          <div style="margin-top: -15%; margin-bottom: 15%;">관심 카드가 없어요.</div>
           <button style="font-weight: bold;">카드 보러 가기</button>
         </RouterLink>
       </div>
@@ -79,7 +78,7 @@ main {
   height: 100%;
 }
 .title {
-  width: 100%;
+  width: 92%;
   margin-top: 3%;
   margin-left: 8%;
   font-size: 20px;

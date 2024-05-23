@@ -20,10 +20,11 @@
             </RouterLink>
           </li>
           <li>
-            <RouterLink :to="{ name: 'recommend', params: { username: userStore.userInfo.username } }">
-              추천 카드 보기
-            </RouterLink>
+            <span @click="leave">
+              회원 탈퇴
+            </span>
           </li>
+
           <li>
             <RouterLink :to="{ name: 'home' }">
               홈으로 가기
@@ -39,21 +40,21 @@
 </template>
 
 <script setup>
-import MyPageItem from "@/components/MyPageItem.vue"
-import Header from "@/components/Header.vue"
-
-import { useUserStore } from "@/stores/user"
-import { RouterLink } from "vue-router"
+  import MyPageItem from '@/components/MyPageItem.vue'
+  import Header from '@/components/Header.vue'
+  import { RouterLink } from 'vue-router'
+  import { ref } from 'vue'
+  import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 
-const leave = function () {
-  Swal.fire({
-    title: "Good job!",
-    text: "You clicked the button!",
-    icon: "success",
-  })
-}
+  const leave = function() {
+    Swal.fire({
+  title: "Good job!",
+  text: "You clicked the button!",
+  icon: "success"
+});
+  }
 </script>
 
 <style scoped>
@@ -96,5 +97,8 @@ const leave = function () {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+span {
+  cursor: pointer;
 }
 </style>

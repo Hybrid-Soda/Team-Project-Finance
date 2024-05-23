@@ -14,7 +14,9 @@
             <input type="submit" class="button" value="검색" />
           </form>
           <RouterLink :to="{ name: 'postCreate' }">
-            글 작성하기
+            <button>
+              글 작성하기
+            </button>
           </RouterLink>
         </div>
         <div v-if="postStore.tempPosts" class="wrap-content">
