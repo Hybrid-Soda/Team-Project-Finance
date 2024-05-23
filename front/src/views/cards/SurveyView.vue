@@ -105,7 +105,6 @@ const surveyQuestions = ref([
       'student': '학교 가자',
       'baby': '애기들 학교 보내자',
       'pets': '내 강아지/고양이 밥 주자',
-      'none': '다시 눕자',
     },
   },
   { 
@@ -129,20 +128,21 @@ const surveyQuestions = ref([
 const surveyQ = ref(surveyQuestions.value[questionIdx.value])
 const count = function(answer) {
   isQuestionHidden.value = true
-  setTimeout(() => {
-    if (questionIdx.value < 4) {
+  if (questionIdx.value < 4) {
+    setTimeout(() => {
       questionIdx.value += 1
       surveyQ.value = surveyQuestions.value[questionIdx.value]
       if (answer !== 'none') {
         surveyResponses.value[answer] = !surveyResponses.value[answer]
       }
-    } else if (questionIdx.value >= 4) {
-      if (answer !== 'none') {
-        surveyResponses.value[answer] = !surveyResponses.value[answer]
-      }
-    }
+      isQuestionHidden.value = false
+    }, 100)
+  } else if (questionIdx.value >= 4) {
     isQuestionHidden.value = false
-  }, 100)
+    if (answer !== 'none') {
+      surveyResponses.value[answer] = !surveyResponses.value[answer]
+    }
+  }
 }
 
 const next_btn = function() {
@@ -191,7 +191,15 @@ const submitSurvey = function () {
     if (method === 'post') {
       userStore.userInfo.survey_set.push(res.data.id)
     }
-    window.alert('설문이 완료되었습니다!')
+    // window.alert('설문이 완료되었습니다!')
+    Swal.fire({
+      title: '설문 완료',
+      text: `${userStore.userInfo.username}님께 추천하는 카드를 찾았어요!`,
+      icon: 'success',
+      confirmButtonText: '확인'
+    }).then (() => {
+      router.push({ name:'recommend', params:{ 'username':userStore.userInfo.username }})
+    })
     genRecommend()
   })
   .catch(err => console.error(err))
