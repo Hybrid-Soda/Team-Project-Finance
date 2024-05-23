@@ -1,11 +1,18 @@
 <template>
   <div class="wrap">
+    <div class="headerImage">
+      <img
+        v-if="post.image"
+        class="postImage mt-3"
+        :src="`${postStore.API_URL}${post.image}`"
+        alt="image">
+    </div>
     <div class="header">
       <p>{{ post.title }}</p>
       <p>{{ post.user.nickname }}</p>
     </div>
     <div class="main">
-      <p>{{ post.content.slice(0, 20) }}...</p>
+      <p>{{ post.content.slice(0, 20) }}<span v-if="post.content.length > 20">...</span></p>
       <p>&hearts; {{ likeLength }}</p>
     </div>
     <hr>
@@ -14,6 +21,7 @@
 
 <script setup>
 import { ref, computed, defineProps } from 'vue'
+import { usePostStore } from '@/stores/post'
 
 const props = defineProps({
   post: {
@@ -22,8 +30,9 @@ const props = defineProps({
   }
 })
 
+const postStore = usePostStore()
 const likeLength = computed(() => {
-  return props.post.like_users.length
+  return postStore.tempPosts.find(post => post.id === props.post.id).like_users.length
 })
 </script>
 
@@ -39,5 +48,12 @@ const likeLength = computed(() => {
 .main {
   display: flex;
   justify-content: space-between;
+}
+.headerImage {
+  text-align: center;
+  margin-bottom: 5%;
+}
+.postImage {
+  width: 80%;
 }
 </style>

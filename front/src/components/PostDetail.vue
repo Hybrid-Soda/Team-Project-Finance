@@ -19,9 +19,14 @@
       </header>
 
       <main class="main">
+        <img
+        v-if="post.image"
+        class="postImage mt-3"
+        :src="`${postStore.API_URL}${post.image}`"
+        alt="image">
         <div class="content">{{ post.content }}</div>
         <div>
-          <button v-if="username in likeUsers" @click="toggleLike" class="my-2">&#9829; {{ likeLength }}</button>
+          <button v-if="likeUsers.includes(userId)" @click="toggleLike" class="my-2">&#9829; {{ likeLength }}</button>
           <button v-else @click="toggleLike" class="my-2">&#9825; {{ likeLength }}</button>
         </div>
       </main>
@@ -71,14 +76,12 @@ const deletePost = function () {
 const comments = computed(() => {
   return props.post.comment_set
 })
-
-const likeLength = computed(() => {
-  return props.post.like_users.length
-})
+const postId = props.post.id
 
 const content = ref('')
-const likeUsers = ref(props.post.like_users)
-const username = userStore.userInfo.username
+const userId = userStore.userInfo.id
+const likeUsers = ref(postStore.tempPosts.find(post => post.id === postId).like_users)
+const likeLength = ref(likeUsers.value.length)
 
 // 좋아요 & 취소
 const toggleLike = function () {
@@ -91,12 +94,11 @@ const toggleLike = function () {
   })
   .then(res => {
     if (res.data.is_liked) {
-      likeUsers.value.push(username)
+      postStore.tempPosts.find(post => post.id === postId).like_users.push(userId)
+      likeLength.value += 1
     } else {
-      const idx = likeUsers.value.indexOf(username)
-      if (idx > -1) {
-        likeUsers.value.splice(idx, 1)
-      }
+      postStore.tempPosts.find(post => post.id === postId).like_users = postStore.tempPosts.find(post => post.id === postId).like_users.filter(user => user !== userId)
+      likeLength.value -= 1
     }
   })
   .catch(err => console.error(err))
@@ -166,5 +168,8 @@ const updateComment = function (commentId, resData) {
 }
 .comment {
   margin-top: 3%;
+}
+.postImage {
+  width: 100%;
 }
 </style>

@@ -262,11 +262,13 @@ def card_recommend(request, username):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def recommend(request, username):
+    print(request)
     user = get_object_or_404(User, username=username)
     recommend = get_object_or_404(Recommendation, user=user)
     content_first_card = model_to_dict(
         get_object_or_404(Card, pk=recommend.content_first_card_pk)
     )
+    print(content_first_card)
     content_second_card = model_to_dict(
         get_object_or_404(Card, pk=recommend.content_second_card_pk)
     )

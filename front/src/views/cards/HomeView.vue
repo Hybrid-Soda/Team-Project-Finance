@@ -13,13 +13,13 @@
               <RouterLink class="nav-link" :to="{ name:'cardList' }">카드 모아보기</RouterLink>
             </li>
             <li class="nav-item" v-if="userStore.isLogIn">
-              <RouterLink class="nav-link" :to="{ name:'survey', params: { username: userStore.userInfo.username } }">추천 카드</RouterLink>
+              <RouterLink class="nav-link" :to="{ name:'survey', params: { username: userStore.userInfo?.username } }">추천 카드</RouterLink>
             </li>
             <li class="nav-item" v-if="!userStore.isLogIn">
               <button class="nav-link" @click="userStore.login_alert()">추천 카드</button>
             </li>
             <li class="nav-item" v-if="userStore.isLogIn">
-              <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: userStore.userInfo.username } }">내 관심 카드</RouterLink>
+              <RouterLink class="nav-link" :to="{ name:'myCard', params: { username: userStore.userInfo?.username } }">내 관심 카드</RouterLink>
             </li>
             <li class="nav-item" v-if="!userStore.isLogIn">
               <button class="nav-link" @click="userStore.login_alert()">내 관심 카드</button>
@@ -87,6 +87,7 @@
 <style scoped>
 .body {
   min-width: 900px;
+  user-select: none;
 }
 .main-background {
   background-color: rgb(33, 95, 255);

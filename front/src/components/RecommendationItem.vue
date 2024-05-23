@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <!-- <div class="wrap">
     <header>
       <img :src="card?.image_url" class="card-img">
       <div class="title">{{ card?.title }}</div>
@@ -8,7 +8,7 @@
       <p>혜택</p>
       <p>실적</p>
     </main>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
@@ -16,23 +16,6 @@
   import axios from 'axios';
   import { useCardStore } from '@/stores/card';
   const cardStore = useCardStore()
-
-  const props = defineProps({
-    card_id: Number
-  })
-
-  const card = ref(null)
-  onMounted(() => {
-    axios({
-      method: 'get',
-      url: `${cardStore.API_URL}/cards/${props.card_id}/`,
-    })
-    .then(res => {
-      card.value = res.data
-      console.log(card.value.image_url)
-    })
-    .catch(err => console.error(err))
-  })
 
 </script>
 
