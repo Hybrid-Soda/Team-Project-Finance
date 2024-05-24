@@ -6,7 +6,10 @@
     <div class="main-bg" @mousewheel="goWheel">
       <div id="rec_cards" class="page-wrap">
         <div class="title">추천 카드 모아보기</div>
-        <div class="contain">
+        <div class="loading-box" v-if="!rec_cardList.length">
+            <div id="loading"></div>
+        </div>
+        <div class="contain" v-if="rec_cardList.length">
           <Carousel :items-to-show="3.95" :wrap-around="true" class="carousel-wrap"  :autoplay="2000" :loop="true" :pauseAutoplayOnHover="true">
             <Slide v-for="slide in rec_cardList" :key="slide">
               <div class="carousel__item">
@@ -30,7 +33,10 @@
       <div id="sim_cards" class="page-wrap">
         <div style="height: 13.5%;"> </div>
         <div class="title">나와 비슷한 사용자는 이런 카드를 사용했어요</div>
-        <div class="contain">
+        <div class="loading-box" v-if="!sim_cardList.length">
+            <div id="loading"></div>
+        </div>
+        <div class="contain" v-if="rec_cardList.length">
           <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap" :autoplay="2000" :loop="true" :pauseAutoplayOnHover="true">
             <Slide v-for="slide in sim_cardList" :key="slide">
               <div class="carousel__item">
@@ -197,5 +203,13 @@ main {
 }
 .move-button {
   background-color: rgba(0, 0, 0, 0);
+}
+.loading-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20% 0;
 }
 </style>
