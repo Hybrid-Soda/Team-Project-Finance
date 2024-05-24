@@ -31,7 +31,6 @@
             </RouterLink>
           </li>
           <li>
-            <a href="" @click="leave"> 회원 탈퇴 </a>
           </li>
         </ul>
       </div>
