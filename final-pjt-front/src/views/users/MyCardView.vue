@@ -4,6 +4,7 @@
   </div>
   <main>
     <div class="main-bg">
+      <h3 style="margin-top: 5%;">관심카드 모아보기</h3>
       <div class="contain" v-if="(userStore.userInfo.favorite_cards.length < 4) && (userStore.userInfo.favorite_cards.length > 0)" style="width: 50%;">
         <Carousel :items-to-show="userStore.userInfo.favorite_cards.length" class="carousel-wrap">
           <Slide v-for="slide in userStore.userInfo.favorite_cards" :key="slide">
