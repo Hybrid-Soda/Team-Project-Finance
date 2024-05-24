@@ -2,7 +2,7 @@
   <div class="container">
     <div class="box">
       <div class="imgBox" @mouseover="hover()" @mouseout="hover()">
-        <img :src="card?.image_url" ref="itemRefs" :class="{'vertical':isRotate}">
+        <img :src="card?.image_url" ref="itemRefs">
       </div>
       <div class="card-name" v-if="isHovered">
         <div class="card-content">
@@ -34,6 +34,7 @@ const hover = function() {
 
 onMounted(() => {
   if (itemRefs.value.width > itemRefs.value.height) {
+    // console.log(itemRefs.value.width)
     isRotate.value = true
   }
 })
@@ -50,7 +51,7 @@ onMounted(() => {
   width: 25rem;
 }
 img {
-  width: 50%;
+  width: 80%;
   object-fit: contain;
 }
 img:hover {
@@ -81,5 +82,8 @@ img:hover {
   word-break: keep-all; 
   font-size: 24px; 
   font-weight: bold;
+}
+.imgBox {
+  width: 100%;
 }
 </style>

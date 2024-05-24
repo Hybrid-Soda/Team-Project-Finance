@@ -42,7 +42,7 @@ import Header from '@/components/Header.vue'
 import { useCardStore } from '@/stores/card'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 const router = useRouter()
@@ -211,6 +211,15 @@ const submitSurvey = function () {
   })
   .catch(err => console.error(err))
 }
+
+onMounted(() => {
+  Swal.fire({
+        title: '카드 추천 설문',
+        text: '자신에게 해당하는 내용에 체크해주세요!',
+        icon: 'question',
+        confirmButtonText: '확인'
+      })  
+})
 </script>
 
 <style scoped>

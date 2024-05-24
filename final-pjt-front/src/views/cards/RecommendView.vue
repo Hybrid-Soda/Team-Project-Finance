@@ -7,7 +7,7 @@
       <div id="rec_cards" class="page-wrap">
         <div class="title">추천 카드 모아보기</div>
         <div class="contain">
-          <Carousel :items-to-show="4" :wrap-around="true" class="carousel-wrap"  :autoplay="2000" :loop="true" :pauseAutoplayOnHover="true">
+          <Carousel :items-to-show="3.95" :wrap-around="true" class="carousel-wrap"  :autoplay="2000" :loop="true" :pauseAutoplayOnHover="true">
             <Slide v-for="slide in rec_cardList" :key="slide">
               <div class="carousel__item">
                 <RouterLink :to="{ name:'cardDetail', params:{ id:slide.id } }">
@@ -152,9 +152,8 @@ main {
 }
 /* ca */
 .carousel__item {
-  min-height: 200px;
+  /* min-height: 200px; */
   height: 100%;
-  width: 100%;
   background-color: var(--vc-clr-primary);
   color: var(--vc-clr-white);
   font-size: 20px;
