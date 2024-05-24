@@ -41,7 +41,7 @@
 
 ### 💎 설계 내용
 #### FRONTEND - Page Layout
-![Figma Image]()
+![Figma Image](assets/layout.png)
 
 #### BACKEND - ERD
 ![ERD Image](assets/ERD.png)
@@ -247,13 +247,13 @@ A. 카드 추천 알고리즘에 어떤 알고리즘을 사용할지 결정하�
 - 마이페이지에는 개인 정보를 조회 & 수정이 가능하게 하였고, 추천된 카드를 볼 수 있는 링크 버튼이 있습니다.
 
 ### 💎 설문 페이지
-<img src='assets' alt='SurveyStartView' width="800">
 <img src='assets/survey.png' alt='SurveyView' width="800">
 
 - 많은 카테고리를 분류할 수 있는 질문을 기획하였고, 사용자가 읽기 편한 감성의 어조를 사용하였습니다.
 
 ### 💎 추천 페이지
-<img src='assets' alt='RecommendView' width="800">
+<img src='assets/recommend1.PNG' alt='RecommendView1' width="800">
+<img src='assets/recommend2.PNG' alt='RecommendView2' width="800">
 
 - 설문을 통해 도출된 정보를 이용해 카드를 추천하였습니다.
 
