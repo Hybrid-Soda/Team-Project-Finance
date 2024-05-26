@@ -27,9 +27,9 @@ def cos_similarity(x, y, eps=1e-8):
 User = get_user_model()
 
 # 카드 추천
-@api_view(["POST"])
+@api_view(["POST", "PUT"])
 @permission_classes([IsAuthenticated])
-def card_recommend(request, username):
+def gen_recommend(request, username):
     benefit_all = [
         # 설문항목
         "간편결제","공과금/렌탈","공항라운지/PP","교육/육아","교통","레저/스포츠","마트/편의점","배달앱","병원/약국",
@@ -133,14 +133,14 @@ def card_recommend(request, username):
         survey_vector[12] = 1  # 여행/숙박
 
     # 카드별 혜택 대분류 추출 및 가공
-    cards = Card.objects.all().order_by("annual_fee1", "record")
+    cards = Card.objects.all().order_by("annual_fee1")
     benefit_matrix = []  # 혜택 벡터 배열을 가지는 혜택 행렬
     for card in cards:
         benefits = card.benefit_set.all()
         benefit = [
             bn.title for bn in benefits
         ]  # ['쇼핑', '모든가맹점', '주유', '금융', '통신', '기타', '적립']
-        benefit_vector = [0] * (BN + 1)  # 코사인 유사도를 판단하기 위한 벡터 배열
+        benefit_vector = [0] * (BN + 2)  # 코사인 유사도를 판단하기 위한 벡터 배열
 
         for bene in benefit:
             # 항목이 메인 대분류에 있다면 해당 위치 벡터 활성화
@@ -201,10 +201,15 @@ def card_recommend(request, username):
 
         common_cards = set(my_ratings.keys()) & set(other_ratings.keys())
         if not common_cards:
+            overall_similarity = (
+                gender_similarity + age_similarity
+            ) / 2
+            coop_similarity_vector.append((overall_similarity, user_id))
             continue
 
         current_user_vector = np.array([my_ratings[card] for card in common_cards])
         other_user_vector = np.array([other_ratings[card] for card in common_cards])
+
 
         recommend_similarity = cos_similarity(current_user_vector, other_user_vector)
         overall_similarity = (
@@ -250,12 +255,23 @@ def card_recommend(request, username):
         "coop_fifth_card_pk": recommended_card_pks_coop[4],
     }
 
-    serializer = RecommendationSerializer(data=card_data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save(user=request.user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == "POST":
+        serializer = RecommendationSerializer(data=card_data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == "PUT":
+        recommend = get_object_or_404(Recommendation, user=request.user)
+        if request.user == recommend.user:
+            serializer = RecommendationSerializer(recommend, data=card_data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 # 추천 카드 조회
@@ -436,9 +452,7 @@ def card_gorilla_selenium(request):
     static_dir = "cards/"
     csv_data1 = open(f"{static_dir}\\card_data.csv", "w", encoding="CP949", newline="")
     card_data = csv.writer(csv_data1)
-    csv_data2 = open(
-        f"{static_dir}\\benefit_data.csv", "w", encoding="CP949", newline=""
-    )
+    csv_data2 = open(f"{static_dir}\\benefit_data.csv", "w", encoding="CP949", newline="")
     benefit_data = csv.writer(csv_data2)
 
     card_data.writerow(
@@ -454,21 +468,11 @@ def card_gorilla_selenium(request):
     for idx in range(1, 2498):
         try:
             driver.get(f"https://www.card-gorilla.com/card/detail/{idx}")
-            driver.execute_script(
-                'document.querySelector("#q-app > header").style.visibility="hidden";'
-            )
+            driver.execute_script('document.querySelector("#q-app > header").style.visibility="hidden";')
 
             try:
-                if driver.find_element(
-                    By.CSS_SELECTOR,
-                    f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b",
-                ):
-                    print(
-                        driver.find_element(
-                            By.CSS_SELECTOR,
-                            f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b",
-                        )
-                    )
+                if driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b"):
+                    print(driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.btn_wrap > div.app_btn > a.inactive > span > b"))
                     continue
             except:
                 pass
@@ -486,54 +490,38 @@ def card_gorilla_selenium(request):
                 By.CSS_SELECTOR, f"{CARD_URL} > div.plate_area > div.card_img > img"
             ).get_attribute("src")
             # 연회비 1
-            card_annual_fee1 = (
-                driver.find_element(
-                    By.CSS_SELECTOR,
-                    f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(1) > b",
-                )
-                .text.replace(",", "")
-                .replace("원", "")
-            )
+            card_annual_fee1 = (driver.find_element(
+                By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(1) > b"
+            ).text.replace(",", "").replace("원", ""))
             # 전월 실적
-            card_record = (
-                driver.find_element(
-                    By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(2) > dd > b"
-                )
-                .text.replace(",", "")
-                .replace("원", "")
-            )
+            card_record = (driver.find_element(
+                By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(2) > dd > b"
+            ).text.replace(",", "").replace("원", ""))
             # 연회비 2
             try:
-                card_annual_fee2 = (
-                    driver.find_element(
-                        By.CSS_SELECTOR,
-                        f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(2) > b",
-                    )
-                    .text.replace(",", "")
-                    .replace("원", "")
-                )
+                card_annual_fee2 = (driver.find_element(
+                    By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(2) > b"
+                    ).text.replace(",", "").replace("원", ""))
             except NoSuchElementException:
                 card_annual_fee2 = None
             # 타입
             try:
                 card_type = driver.find_element(
-                    By.CSS_SELECTOR,
-                    f"{CARD_URL} > div.bnf2 > dl:nth-child(3) > dd > span",
-                ).text
+                    By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(3) > dd > span"
+                    ).text
             except NoSuchWindowException:
                 card_type = None
-            card_data.writerow(
-                [
-                    pk,
-                    card_name,
-                    card_brand,
-                    card_image,
-                    card_annual_fee1,
-                    card_annual_fee2,
-                    card_record,
-                    card_type,
-                ]
-            )
+
+            card_data.writerow([
+                pk,
+                card_name,
+                card_brand,
+                card_image,
+                card_annual_fee1,
+                card_annual_fee2,
+                card_record,
+                card_type,
+            ])
 
             # 혜택
             benefit_name = driver.find_elements(
@@ -549,6 +537,7 @@ def card_gorilla_selenium(request):
                 bnf_content = benefit_content[i].text
                 benefit_data.writerow([pk, bnf_name, bnf_content])
             pk += 1
+
         except:
             continue
 

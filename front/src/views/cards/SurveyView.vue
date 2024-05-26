@@ -21,7 +21,7 @@
               </button>
               <button class="next-btn" v-if="questionIdx >= 4" @click="next_btn">
                 <div v-if="questionIdx === 6">
-                  제출하기 ༼ つ ◕_◕ ༽つ
+                  <input type="submit" value="제출하기" class="btn btn-outline-warning submit-btn">
                 </div>
                 <div v-else>
                   다음으로 →
@@ -42,7 +42,7 @@ import Header from '@/components/Header.vue'
 import { useCardStore } from '@/stores/card'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 const router = useRouter()
@@ -105,7 +105,6 @@ const surveyQuestions = ref([
       'student': '학교 가자',
       'baby': '애기들 학교 보내자',
       'pets': '내 강아지/고양이 밥 주자',
-      'none': '다시 눕자',
     },
   },
   { 
@@ -129,20 +128,21 @@ const surveyQuestions = ref([
 const surveyQ = ref(surveyQuestions.value[questionIdx.value])
 const count = function(answer) {
   isQuestionHidden.value = true
-  setTimeout(() => {
-    if (questionIdx.value < 4) {
+  if (questionIdx.value < 4) {
+    setTimeout(() => {
       questionIdx.value += 1
       surveyQ.value = surveyQuestions.value[questionIdx.value]
       if (answer !== 'none') {
         surveyResponses.value[answer] = !surveyResponses.value[answer]
       }
-    } else if (questionIdx.value >= 4) {
-      if (answer !== 'none') {
-        surveyResponses.value[answer] = !surveyResponses.value[answer]
-      }
-    }
+      isQuestionHidden.value = false
+    }, 100)
+  } else if (questionIdx.value >= 4) {
     isQuestionHidden.value = false
-  }, 100)
+    if (answer !== 'none') {
+      surveyResponses.value[answer] = !surveyResponses.value[answer]
+    }
+  }
 }
 
 const next_btn = function() {
@@ -159,15 +159,23 @@ const next_btn = function() {
 }
 
 const genRecommend = function () {
+  let myMethod = 'post'
+  if (userStore.userInfo.recommendation_set.length > 0) {
+    myMethod = 'put'
+  }
+  console.log(myMethod)
   axios({
-    method: 'post',
-    url: `${cardStore.API_URL}/cards/${userStore.userInfo.username}/card_recommend/`,
+    method: myMethod,
+    url: `${cardStore.API_URL}/cards/${userStore.userInfo.username}/gen_recommend/`,
     headers: {
       Authorization: `Token ${userStore.token}`,
     },
   })
   .then(res => {
-    console.log('ok')
+    console.log(res.data)
+    if (userStore.userInfo.recommendation_set.length === 0) {
+      userStore.userInfo.recommendation_set = [1]
+    }
     router.push({ name: 'recommend', params: { 'username': userStore.userInfo.username } })
   })
   .catch(err => console.error(err))
@@ -178,7 +186,6 @@ const submitSurvey = function () {
   if (userStore.userInfo.survey_set.length > 0) {
     method = 'put'
   }
-  console.log(method)
   axios({
     method: method,
     url: `${cardStore.API_URL}/users/${userStore.userInfo.username}/survey/`,
@@ -191,11 +198,28 @@ const submitSurvey = function () {
     if (method === 'post') {
       userStore.userInfo.survey_set.push(res.data.id)
     }
-    window.alert('설문이 완료되었습니다!')
+    // window.alert('설문이 완료되었습니다!')
+    Swal.fire({
+      title: '설문 완료',
+      text: `${userStore.userInfo.username}님께 추천하는 카드를 찾았어요!`,
+      icon: 'success',
+      confirmButtonText: '확인'
+    }).then (() => {
+      router.push({ name:'recommend', params:{ 'username': userStore.userInfo.username }})
+    })
     genRecommend()
   })
   .catch(err => console.error(err))
 }
+
+onMounted(() => {
+  Swal.fire({
+        title: '카드 추천 설문',
+        text: '자신에게 해당하는 내용에 체크해주세요!',
+        icon: 'question',
+        confirmButtonText: '확인'
+      })  
+})
 </script>
 
 <style scoped>
@@ -278,5 +302,11 @@ progress {
     transform: translateY(0);
     opacity: 1;
   }
+}
+.submit-btn {
+  width: 110%;
+  border-radius: 38px;
+  font-weight: bold;
+  margin: 0% -20%;
 }
 </style>

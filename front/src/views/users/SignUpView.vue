@@ -16,8 +16,11 @@
           <label for="password1">비밀번호</label>
         </div>
         <div class="form-floating mb-3">
-          <input type="password" class="form-control" placeholder="" v-model.trim="password2" id="password2">
+          <input type="password" class="form-control" placeholder="" v-model.trim="password2" id="password2" @blur="checkPassword">
           <label for="password2">비밀번호 확인</label>
+        </div>
+        <div v-show="!isRight">
+          <p class="text-danger mt-3">비밀번호가 일치하지 않습니다.</p>
         </div>
         <hr>
         <div class="form-floating mb-3">
@@ -45,10 +48,7 @@
             </div>
           </div>
         </div>
-        <input type="submit" value="회원가입" class="btn btn-outline-warning login-btn">
-        <div class="kakao mt-4">
-          <img src="@/assets/img/kakao_login.png" alt="kakao_login">
-        </div>
+        <input type="submit" value="회원가입" class="btn btn-outline-warning login-btn"><hr>
       </form>
       <p>Already have an account? <RouterLink :to="{ name: 'signIn' }">Login</RouterLink></p>
     </main>
@@ -56,12 +56,12 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import { RouterLink } from 'vue-router'
   import { useUserStore } from '@/stores/user'
 
   const store = useUserStore()
-  
+
   const password1 = ref(null)
   const password2 = ref(null)
   const username = ref(null) 
@@ -86,6 +86,16 @@
     }
     store.signUp(payload)
   }
+
+  const isRight = ref(true)
+
+  const checkPassword = () => {
+      if (password1.value !== password2.value) {
+        isRight.value = false
+      } else {
+        isRight.value = true
+      }
+    }
 </script>
 
 <style scoped>
@@ -117,8 +127,10 @@ form {
   font-weight: bold;
 }
 .kakao {
-  width: 100%;
+  width: 70%;
+  height: 60px;
   text-align: center;
-  border-color: yellow;
+  background-color: #FEE500;
+  border-radius: 6px;
 }
 </style>

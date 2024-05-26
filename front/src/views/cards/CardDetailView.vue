@@ -5,7 +5,11 @@
       <div class="card-page-bg">
         <div class="menu-wrap">
           <button @click="this.$router.go(-1)" class="backBtn">
-            <img src="@/assets/img/backArrow.png" alt="goBack" class="backImg">
+          <!-- <RouterLink :to="{ name:'cardList' }"> -->
+            <button class="backBtn">
+              <img src="@/assets/img/backArrow.png" alt="goBack" class="backImg">
+            </button>
+          <!-- </RouterLink> -->
           </button>
           <div class="info-wrap">
             <CardDetailItem :card="card"/>

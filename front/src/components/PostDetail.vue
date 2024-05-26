@@ -2,6 +2,14 @@
   <div class="wrap">
     <div style="width: 90%; height: 100%;">
       <header class="header">
+        <div v-if="userStore.isLogIn && post.user.username === userStore.userInfo.username">
+          <button class="update-button me-4 mb-4">
+            <RouterLink :to="{ name: 'postUpdate', params: { 'id': post.id } }">
+              수정
+            </RouterLink>
+          </button>
+          <button class="delete-button" @click="deletePost">삭제</button>
+        </div>
         <div class="title">{{ post.title }}</div>
         <div class="user">
           닉네임 : {{ post.user.nickname }} | 
@@ -11,9 +19,14 @@
       </header>
 
       <main class="main">
+        <img
+        v-if="post.image"
+        class="postImage mt-3"
+        :src="`${postStore.API_URL}${post.image}`"
+        alt="image">
         <div class="content">{{ post.content }}</div>
         <div>
-          <button v-if="username in likeUsers" @click="toggleLike" class="my-2">&#9829; {{ likeLength }}</button>
+          <button v-if="likeUsers.includes(userId)" @click="toggleLike" class="my-2">&#9829; {{ likeLength }}</button>
           <button v-else @click="toggleLike" class="my-2">&#9825; {{ likeLength }}</button>
         </div>
       </main>
@@ -30,7 +43,7 @@
         />
         <form @submit.prevent="createComment">
           <textarea class="form-control mb-3" placeholder="댓글을 남겨보세요" v-model.trim="content" rows="3"></textarea>
-          <input type="submit" value="등록" class="btn btn-outline-success login-btn"/>
+          <input type="submit" value="등록" class="update-button"/>
         </form>
       </section>
     </div>
@@ -39,7 +52,7 @@
 
 <script setup>
 import PostComment from '@/components/PostComment.vue'
-import { ref, onMounted, computed, defineProps } from 'vue'
+import { ref, defineEmits, computed, defineProps } from 'vue'
 import { usePostStore } from '@/stores/post'
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
@@ -53,17 +66,24 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['closeDetail'])
+
+const deletePost = function () {
+  postStore.deletePost(props.post.id)
+  emit('closeDetail')
+}
+
 const comments = computed(() => {
   return props.post.comment_set
 })
-
-const likeLength = computed(() => {
-  return props.post.like_users.length
-})
-
 const content = ref('')
-const likeUsers = ref(props.post.like_users)
-const username = userStore.userInfo.username
+const postId = props.post.id
+const userId = userStore.userInfo ? userStore.userInfo.id : 0
+
+const likeUsers = computed(() => {
+  return postStore.tempPosts.find(post => post.id === postId).like_users
+})
+const likeLength = ref(likeUsers.value.length)
 
 // 좋아요 & 취소
 const toggleLike = function () {
@@ -76,12 +96,11 @@ const toggleLike = function () {
   })
   .then(res => {
     if (res.data.is_liked) {
-      likeUsers.value.push(username)
+      postStore.tempPosts.find(post => post.id === postId).like_users.push(userId)
+      likeLength.value += 1
     } else {
-      const idx = likeUsers.value.indexOf(username)
-      if (idx > -1) {
-        likeUsers.value.splice(idx, 1)
-      }
+      postStore.tempPosts.find(post => post.id === postId).like_users = postStore.tempPosts.find(post => post.id === postId).like_users.filter(user => user !== userId)
+      likeLength.value -= 1
     }
   })
   .catch(err => console.error(err))
@@ -151,5 +170,36 @@ const updateComment = function (commentId, resData) {
 }
 .comment {
   margin-top: 3%;
+}
+.postImage {
+  width: 100%;
+}
+.update-button {
+  width: 20%;
+  padding: 5px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 37px;
+  color: rgb(255, 199, 39);
+  border: 2px solid rgb(255, 199, 39);
+  background-color: rgba(0, 0, 0, 0);
+}
+.update-button:hover {
+  color: rgb(255, 255, 255);
+  background-color: rgb(255, 199, 39);
+}
+.delete-button {
+  width: 20%;
+  padding: 5px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 37px;
+  color: rgb(255, 53, 39);
+  border: 2px solid rgb(255, 53, 39);
+  background-color: rgba(0, 0, 0, 0);
+}
+.delete-button:hover {
+  color: rgb(255, 255, 255);
+  background-color: rgb(255, 53, 39);
 }
 </style>

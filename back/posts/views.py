@@ -16,7 +16,7 @@ from .models import *
 # 글 전체 조회 / 생성
 @api_view(["GET", "POST"])
 def post(request):
-    
+
     if request.method == "GET":
         posts = Post.objects.all().order_by('-created_at')
         serializer = PostListSerializer(posts, many=True)

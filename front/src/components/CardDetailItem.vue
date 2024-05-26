@@ -15,7 +15,7 @@
         <!-- <div>★{{ card.review_set }}</div> -->
         <div class="btn-wrap">
           <button class="go-button">
-            <a :href="redirectUrl(card.brand, card.id)">신청하러 가기</a>
+            <a :href="redirectUrl(card.brand, card.id)" target="_blank">신청하러 가기</a>
           </button>
           <button data-bs-toggle="modal" data-bs-target="#exampleModal" @click="openMap()">오프라인 매장 보기</button>    
           <button @click="reviewActive" v-if="isActive">설명보기</button>

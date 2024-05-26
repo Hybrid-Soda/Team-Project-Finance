@@ -64,10 +64,3 @@ class UserProfileView(generics.RetrieveAPIView):
 
     def get_object(self):
         return get_object_or_404(User, username=self.kwargs['username'])
-
-# @api_view(["GET"])
-# def kakaoSignIn(request):
-#     app_key = ''
-#     redirect_url = 'http://localhost:8000/users/signin/kakao/callback'
-#     kakao_auth_api = 'https://kauth.kakao.com/oauth/authorize?response_type=code'
-#     return redirect(f'{kakao_auth_api}&client_id={app_key}&redirect_url={redirect_url}')

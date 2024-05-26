@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
 // cards
 import HomeView from '@/views/cards/HomeView.vue'
 import SurveyView from '@/views/cards/SurveyView.vue'
@@ -14,9 +16,7 @@ import PasswordChangeView from '@/views/users/PasswordChangeView.vue'
 // posts
 import PostListView from '@/views/posts/PostListView.vue'
 import PostCreateView from '@/views/posts/PostCreateView.vue'
-// import PostDetailView from '@/views/posts/PostDetailView.vue'
 import PostUpdateView from '@/views/posts/PostUpdateView.vue'
-// import FindCardView from '@/views/users/FindCardView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,7 +40,13 @@ const router = createRouter({
     {
       path: '/:username/survey',
       name: 'survey',
-      component: SurveyView
+      component: SurveyView,
+      // beforeEnter: () => {
+      //   const userStore = useUserStore()
+      //   if (userStore.userInfo.survey_set.length > 0) {
+      //     router.push({name:'recommend', params:{username:userStore.userInfo.username}})
+      //   }
+      // }
     },
     {
       path: '/:username/recommend',
