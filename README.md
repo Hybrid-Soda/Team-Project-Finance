@@ -39,6 +39,10 @@
 |FRONTEND|<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=Javascript&logoColor=white"/>|<img src="https://img.shields.io/badge/Vue.js-35495E?style=flat-square&logo=vue.js&logoColor=4FC08D"/>|Axios, Pinia (+ pinia-plugin-persistedstate), Bootstrap-Vue-3, vue-router, vue3-kakao-maps
 |BACKEND|<img src="https://img.shields.io/badge/Python-14354C?style=flat-square&logo=Python&logoColor=white"/>|<img src="https://img.shields.io/badge/Django-092E20?style=flat-square&logo=django&logoColor=white"/>|Django-Rest-Framework, Django-CORS-Headers, dj-rest-auth, Selenium, Pandas, Numpy
 
+#### DATABASE | <img src="https://img.shields.io/badge/Sqlite-003B57?style=flat-square&logo=Sqlite&logoColor=white"/>
+- 파일 하나로 데이터베이스를 관리할 수 있어 간단한 애플리케이션에 적합
+- 내장형 데이터베이스로 별도의 서버가 필요 없어 초기 개발 단계나 테스트 단계에서 편리하게 사용가능함
+
 ### 💎 설계 내용
 #### FRONTEND - Page Layout
 ![Figma Image](assets/layout.png)

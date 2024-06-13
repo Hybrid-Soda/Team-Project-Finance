@@ -11,11 +11,11 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
 
+from collections import defaultdict
 from accounts.models import Survey
 from .serializers import *
 from .models import *
 import numpy as np
-
 
 # 코사인 유사도 계산 함수
 def cos_similarity(x, y, eps=1e-8):
@@ -23,25 +23,12 @@ def cos_similarity(x, y, eps=1e-8):
     ny = y / np.sqrt(np.sum(y**2) + eps)
     return np.dot(nx, ny)
 
-
 User = get_user_model()
 
 # 카드 추천
 @api_view(["POST", "PUT"])
 @permission_classes([IsAuthenticated])
 def gen_recommend(request, username):
-    benefit_all = [
-        # 설문항목
-        "간편결제","공과금/렌탈","공항라운지/PP","교육/육아","교통","레저/스포츠","마트/편의점","배달앱","병원/약국",
-        "뷰티/피트니스","쇼핑","애완동물","여행/숙박","영화/문화","자동차/하이패스","주유","카페/디저트","통신","푸드",
-        "항공마일리지","항공","해외",
-        # 그 외
-        "APP","BC TOP","CJ ONE","OK캐쉬백","SSM","게임","국내외가맹점","국민행복","금융","기타","디지털구독","렌터카",
-        "멤버십포인트","면세점","모든가맹점","무실적","무이자할부","바우처","보험","비즈니스","생활","선택형","소셜커머스",
-        "수수료우대","연회비지원","은행사","인테리어","적립","전통시장","제휴/PLCC","지역","직장인","차/중고차","카드사",
-        "캐시백","테마파크","프리미엄","할인","해피포인트","헤어","혜택 프로모션","혜택2",
-    ]
-
     benefit_dict = {
         "간편결제": 0,
         "공과금/렌탈": 1,
@@ -68,78 +55,45 @@ def gen_recommend(request, username):
     }
     BN = len(benefit_dict)
 
-    ###########################################################
-    ##################### 콘텐츠 기반 필터링 #####################
-    ###########################################################
+    ### 콘텐츠 기반 필터링 ###
+    def update_survey_vector(survey, vector):
+        mapping = {
+            0: [14, 15],       # 자동차 유무
+            1: [1, 6, 7],      # 자취 여부
+            2: [3],            # 학생 여부
+            3: [3],            # 육아 여부
+            4: [11],           # 애완동물
+            5: [0],            # 결제 방법
+            6: [8],            # 헬스케어
+            7: [17],           # 통신
+            8: [5],            # 스포츠
+            9: [10],           # 쇼핑
+            10: [16, 18],      # 친구
+            11: [9],           # 운동
+            12: [13],          # 영화
+            13: [19, 20, 21],  # 국외여행
+            14: [4, 12]        # 국내여행
+        }
 
-    # 설문
+        for idx, value in enumerate(survey):
+            if value:
+                for pos in mapping[idx]:
+                    vector[pos] = 1
+            elif idx == 0:
+                vector[4] = 1
+        return vector
+
+    # 설문 데이터 가져오기
     survey = get_object_or_404(Survey, user=request.user)
     survey = list(model_to_dict(survey).values())[2:]
-    survey_vector = [0] * (BN + 1)
-
-    # 자동차 유무
-    if survey[0]:
-        survey_vector[14] = 1  # 자동차/하이패스
-        survey_vector[15] = 1  # 주유
-    else:
-        survey_vector[4] = 1  # 교통
-    # 자취 여부
-    if survey[1]:
-        survey_vector[1] = 1  # 공과금/렌탈
-        survey_vector[6] = 1  # 마트/편의점
-        survey_vector[7] = 1  # 배달앱
-    # 학생 여부
-    if survey[2]:
-        survey_vector[3] = 1  # 교육/육아
-    # 육아 여부
-    if survey[3]:
-        survey_vector[3] = 1  # 교육/육아
-    # 애완동물
-    if survey[4]:
-        survey_vector[11] = 1  # 애완동물
-    # 결제 방법
-    if survey[5]:
-        survey_vector[0] = 1  # 간편결제
-    # 헬스케어
-    if survey[6]:
-        survey_vector[8] = 1  # 병원/약국
-    # 통신
-    if survey[7]:
-        survey_vector[17] = 1  # 통신
-    # 스포츠
-    if survey[8]:
-        survey_vector[5] = 1  # 레저/스포츠
-    # 쇼핑
-    if survey[9]:
-        survey_vector[10] = 1  # 쇼핑
-    # 친구
-    if survey[10]:
-        survey_vector[16] = 1  # 카페/디저트
-        survey_vector[18] = 1  # 푸드
-    # 운동
-    if survey[11]:
-        survey_vector[9] = 1  # 뷰티/피트니스
-    # 영화
-    if survey[12]:
-        survey_vector[13] = 1  # 영화/문화
-    # 국외여행
-    if survey[13]:
-        survey_vector[19] = 1  # 항공마일리지
-        survey_vector[20] = 1  # 항공
-        survey_vector[21] = 1  # 해외
-    # 국내여행
-    if survey[14]:
-        survey_vector[4] = 1  # 교통
-        survey_vector[12] = 1  # 여행/숙박
+    survey_vector = update_survey_vector(survey, [0] * (BN + 1))
 
     # 카드별 혜택 대분류 추출 및 가공
     cards = Card.objects.all().order_by("annual_fee1")
     benefit_matrix = []  # 혜택 벡터 배열을 가지는 혜택 행렬
     for card in cards:
         benefits = card.benefit_set.all()
-        benefit = [
-            bn.title for bn in benefits
-        ]  # ['쇼핑', '모든가맹점', '주유', '금융', '통신', '기타', '적립']
+        benefit = [bn.title for bn in benefits]
         benefit_vector = [0] * (BN + 2)  # 코사인 유사도를 판단하기 위한 벡터 배열
 
         for bene in benefit:
@@ -155,91 +109,65 @@ def gen_recommend(request, username):
         # 혜택 벡터
         benefit_matrix.append(benefit_vector)
 
-    # 코사인 유사도 측정
-    content_similarity_vector = []  # 예시: [(0.8, 0), (0.75, 1), ...]
-    for idx, benefit_vector in enumerate(benefit_matrix):
-        similarity = cos_similarity(
-            np.array(benefit_vector[: BN + 1]), np.array(survey_vector)
-        )
-        content_similarity_vector.append((similarity, idx))
-
-    # 코사인 유사도가 높은 순으로 정렬
+    # 코사인 유사도 측정 및 내림차순 정렬
+    content_similarity_vector = [
+        (cos_similarity(np.array(bv[: BN + 1]), np.array(survey_vector)), idx)
+        for idx, bv in enumerate(benefit_matrix)
+    ]
     content_similarity_vector.sort(reverse=True)
 
     # 콘텐츠 기반 필터링으로 상위 5개의 카드 선택
-    recommended_card_pks_content = [
-        benefit_matrix[idx][-1] for _, idx in content_similarity_vector[:5]
-    ]
+    recommended_card_pks_content = [benefit_matrix[idx][-1] for _, idx in content_similarity_vector[:5]]
 
-    ###########################################################
-    ######################## 협업 필터링 ########################
-    ###########################################################
+
+    ### 협업 필터링 ###
 
     # 사용자-카드 매트릭스 생성
     reviews = get_list_or_404(Review)
-    user_card_matrix = {}  # 예시: {1: {123: 5, 456: 3}, 2: {123: 4, 789: 5}, ...}
+    user_card_matrix = defaultdict(dict)
     for review in reviews:
-        user_id = review.user.id
-        card_id = review.card.id
-        if user_id not in user_card_matrix:
-            user_card_matrix[user_id] = {}
-        user_card_matrix[user_id][card_id] = review.rating
+        user_card_matrix[review.user.id][review.card.id] = review.rating
 
     # 현재 사용자 정보
     my_ratings = user_card_matrix.get(request.user.id, {})
-    coop_similarity_vector = []  # 예시: [(0.8, 0), (0.75, 1), ...]
-    for user_id, other_ratings in user_card_matrix.items():
-        if user_id == request.user.id:
-            continue
-        other_user = get_object_or_404(User, id=user_id)
+    coop_similarity_vector = []
 
-        # 성별 및 나이 고려
+    # 협업 필터링 유사도 계산 함수
+    def calculate_coop_similarity(user_id, my_ratings, other_ratings):
+        other_user = get_object_or_404(User, id=user_id)
         gender_similarity = 1 if request.user.gender == other_user.gender else 0
-        age_similarity = (
-            1 - abs(request.user.age - other_user.age) / 100
-        )  # 나이 차이가 클수록 유사도 감소
+        age_similarity = 1 - abs(request.user.age - other_user.age) / 100
 
         common_cards = set(my_ratings.keys()) & set(other_ratings.keys())
         if not common_cards:
-            overall_similarity = (
-                gender_similarity + age_similarity
-            ) / 2
-            coop_similarity_vector.append((overall_similarity, user_id))
-            continue
+            return (gender_similarity + age_similarity) / 2
 
         current_user_vector = np.array([my_ratings[card] for card in common_cards])
         other_user_vector = np.array([other_ratings[card] for card in common_cards])
-
-
         recommend_similarity = cos_similarity(current_user_vector, other_user_vector)
-        overall_similarity = (
-            recommend_similarity + gender_similarity + age_similarity
-        ) / 3  # 종합 유사도
 
-        coop_similarity_vector.append((overall_similarity, user_id))
+        return (recommend_similarity + gender_similarity + age_similarity) / 3
+    
+    # 협업 필터링 유사도 측정 및 정렬
+    for user_id, other_ratings in user_card_matrix.items():
+        if user_id == request.user.id:
+            continue
+        similarity = calculate_coop_similarity(user_id, my_ratings, other_ratings)
+        coop_similarity_vector.append((similarity, user_id))
 
-    # 유사도가 높은 순으로 정렬
     coop_similarity_vector.sort(reverse=True)
 
     # 상위 N명의 사용자를 기반으로 카드 추천
-    top_n_users = [
-        user_id for _, user_id in coop_similarity_vector[:20]
-    ]  # 상위 20명 선택 / 예시: [186, 372, 474, 5, 63, ...]
-    recommended_cards = {}  # 예시: {789: [5, 4], 1011: [4, 4, 3], ...}
+    top_n_users = [user_id for _, user_id in coop_similarity_vector[:20]]
+    recommended_cards = defaultdict(list)
     for user_id in top_n_users:
         for card_id, rating in user_card_matrix[user_id].items():
             if card_id not in my_ratings:
-                if card_id not in recommended_cards:
-                    recommended_cards[card_id] = []
                 recommended_cards[card_id].append(rating)
 
     # 평균 평점이 높은 카드 선택
-    recommended_cards = sorted(
-        recommended_cards.items(), key=lambda x: np.mean(x[1]), reverse=True
-    )
-    recommended_card_pks_coop = [
-        card_id for card_id, _ in recommended_cards[:5]
-    ]  # 상위 5개 카드 / 예시: [789, 1011, 1213, 456, 654]
+    recommended_cards = sorted(recommended_cards.items(), key=lambda x: np.mean(x[1]), reverse=True)
+    recommended_card_pks_coop = [card_id for card_id, _ in recommended_cards[:5]]
 
     # 콘텐츠 기반 필터링과 협업 필터링 결과 병합
     card_data = {
@@ -248,6 +176,7 @@ def gen_recommend(request, username):
         "content_third_card_pk": recommended_card_pks_content[2],
         "content_fourth_card_pk": recommended_card_pks_content[3],
         "content_fifth_card_pk": recommended_card_pks_content[4],
+
         "coop_first_card_pk": recommended_card_pks_coop[0],
         "coop_second_card_pk": recommended_card_pks_coop[1],
         "coop_third_card_pk": recommended_card_pks_coop[2],
@@ -280,47 +209,18 @@ def gen_recommend(request, username):
 def recommend(request, username):
     user = get_object_or_404(User, username=username)
     recommend = get_object_or_404(Recommendation, user=user)
-    content_first_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.content_first_card_pk)
-    )
-    content_second_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.content_second_card_pk)
-    )
-    content_third_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.content_third_card_pk)
-    )
-    content_fourth_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.content_fourth_card_pk)
-    )
-    content_fifth_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.content_fifth_card_pk)
-    )
-    coop_first_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.coop_first_card_pk)
-    )
-    coop_second_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.coop_second_card_pk)
-    )
-    coop_third_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.coop_third_card_pk)
-    )
-    coop_fourth_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.coop_fourth_card_pk)
-    )
-    coop_fifth_card = model_to_dict(
-        get_object_or_404(Card, pk=recommend.coop_fifth_card_pk)
-    )
     context = {
-        "content_first_card": content_first_card,
-        "content_second_card": content_second_card,
-        "content_third_card": content_third_card,
-        "content_fourth_card": content_fourth_card,
-        "content_fifth_card": content_fifth_card,
-        "coop_first_card": coop_first_card,
-        "coop_second_card": coop_second_card,
-        "coop_third_card": coop_third_card,
-        "coop_fourth_card": coop_fourth_card,
-        "coop_fifth_card": coop_fifth_card,
+        "content_first_card": model_to_dict(get_object_or_404(Card, pk=recommend.content_first_card_pk)),
+        "content_second_card": model_to_dict(get_object_or_404(Card, pk=recommend.content_second_card_pk)),
+        "content_third_card": model_to_dict(get_object_or_404(Card, pk=recommend.content_third_card_pk)),
+        "content_fourth_card": model_to_dict(get_object_or_404(Card, pk=recommend.content_fourth_card_pk)),
+        "content_fifth_card": model_to_dict(get_object_or_404(Card, pk=recommend.content_fifth_card_pk)),
+
+        "coop_first_card": model_to_dict(get_object_or_404(Card, pk=recommend.coop_first_card_pk)),
+        "coop_second_card": model_to_dict(get_object_or_404(Card, pk=recommend.coop_second_card_pk)),
+        "coop_third_card": model_to_dict(get_object_or_404(Card, pk=recommend.coop_third_card_pk)),
+        "coop_fourth_card": model_to_dict(get_object_or_404(Card, pk=recommend.coop_fourth_card_pk)),
+        "coop_fifth_card": model_to_dict(get_object_or_404(Card, pk=recommend.coop_fifth_card_pk)),
     }
     return Response(context)
 
@@ -455,9 +355,7 @@ def card_gorilla_selenium(request):
     csv_data2 = open(f"{static_dir}\\benefit_data.csv", "w", encoding="CP949", newline="")
     benefit_data = csv.writer(csv_data2)
 
-    card_data.writerow(
-        ["pk", "name", "brand", "image", "annual_fee1", "annual_fee2", "record", "type"]
-    )
+    card_data.writerow(["pk", "name", "brand", "image", "annual_fee1", "annual_fee2", "record", "type"])
     benefit_data.writerow(["card", "title", "content"])
 
     pk = 1
@@ -478,59 +376,32 @@ def card_gorilla_selenium(request):
                 pass
 
             # 이름
-            card_name = driver.find_element(
-                By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.tit > strong"
-            ).text
+            card_name = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.tit > strong").text
             # 브랜드
-            card_brand = driver.find_element(
-                By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.tit > p"
-            ).text
+            card_brand = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.data_area > div.tit > p").text
             # 이미지
-            card_image = driver.find_element(
-                By.CSS_SELECTOR, f"{CARD_URL} > div.plate_area > div.card_img > img"
-            ).get_attribute("src")
+            card_image = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.plate_area > div.card_img > img").get_attribute("src")
             # 연회비 1
-            card_annual_fee1 = (driver.find_element(
-                By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(1) > b"
-            ).text.replace(",", "").replace("원", ""))
+            card_annual_fee1 = (driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(1) > b").text.replace(",", "").replace("원", ""))
             # 전월 실적
-            card_record = (driver.find_element(
-                By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(2) > dd > b"
-            ).text.replace(",", "").replace("원", ""))
+            card_record = (driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(2) > dd > b").text.replace(",", "").replace("원", ""))
             # 연회비 2
             try:
-                card_annual_fee2 = (driver.find_element(
-                    By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(2) > b"
-                    ).text.replace(",", "").replace("원", ""))
+                card_annual_fee2 = (driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(1) > dd.in_out > span:nth-child(2) > b").text.replace(",", "").replace("원", ""))
             except NoSuchElementException:
                 card_annual_fee2 = None
             # 타입
             try:
-                card_type = driver.find_element(
-                    By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(3) > dd > span"
-                    ).text
+                card_type = driver.find_element(By.CSS_SELECTOR, f"{CARD_URL} > div.bnf2 > dl:nth-child(3) > dd > span").text
             except NoSuchWindowException:
                 card_type = None
 
-            card_data.writerow([
-                pk,
-                card_name,
-                card_brand,
-                card_image,
-                card_annual_fee1,
-                card_annual_fee2,
-                card_record,
-                card_type,
-            ])
+            card_data.writerow([pk, card_name, card_brand, card_image, card_annual_fee1, card_annual_fee2, card_record, card_type])
 
             # 혜택
-            benefit_name = driver.find_elements(
-                By.CSS_SELECTOR, f"{BENEFIT_URL} > dt > p"
-            )
+            benefit_name = driver.find_elements(By.CSS_SELECTOR, f"{BENEFIT_URL} > dt > p")
             # 혜택 내용
-            benefit_content = driver.find_elements(
-                By.CSS_SELECTOR, f"{BENEFIT_URL} > dt > i"
-            )
+            benefit_content = driver.find_elements(By.CSS_SELECTOR, f"{BENEFIT_URL} > dt > i")
 
             for i in range(len(benefit_name)):
                 bnf_name = benefit_name[i].text

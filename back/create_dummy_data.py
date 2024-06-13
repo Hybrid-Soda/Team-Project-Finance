@@ -85,11 +85,16 @@ with open(user_save_dir, 'w', encoding="utf-8") as user_f, open(recommendation_s
         recommendation_file['pk'] = i + 1
         recommendation_file['fields'] = {
             'user': user_file['pk'],  # User 모델의 PK를 참조
-            'first_card_pk': selected_cards[0],
-            'second_card_pk': selected_cards[1],
-            'third_card_pk': selected_cards[2],
-            'fourth_card_pk': selected_cards[3],
-            'fifth_card_pk': selected_cards[4],
+            "content_first_card_pk": selected_cards[0],
+            "content_second_card_pk": selected_cards[1],
+            "content_third_card_pk": selected_cards[2],
+            "content_fourth_card_pk": selected_cards[3],
+            "content_fifth_card_pk": selected_cards[4],
+            "coop_first_card_pk": selected_cards[5],
+            "coop_second_card_pk": selected_cards[6],
+            "coop_third_card_pk": selected_cards[7],
+            "coop_fourth_card_pk": selected_cards[8],
+            "coop_fifth_card_pk": selected_cards[9],
         }
 
         json.dump(recommendation_file, rec_f, ensure_ascii=False, indent='\t')
