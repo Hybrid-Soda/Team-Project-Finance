@@ -201,7 +201,7 @@ recommended_card_pks_coop = [card_id for card_id, _ in recommended_cards[:5]]
     j.type = 'module'
     j.src = 'https://aichatbot.sendbird.com/index.js'
     f.parentNode.insertBefore(j, f)
-}(window, document, 'script', 'C70DB29C-C1EF-407A-98F7-175C6AA6BBC6', 'onboarding_bot', {
+}(window, document, 'script', 'key', 'onboarding_bot', {
     apiHost: 'https://api-cf-ap-2.sendbird.com',
 })
 ```
