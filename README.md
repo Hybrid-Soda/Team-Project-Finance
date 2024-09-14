@@ -275,7 +275,6 @@ A. 카드 추천 알고리즘에 어떤 알고리즘을 사용할지 결정하�
 ### 💎 카드 세부 페이지
 <img src='assets/carddetail.png' alt='CardDetailView' width="800">
 <img src='assets/cardreview.png' alt='CardReviewView' width="800">
-<img src='assets' alt='CardMapView' width="800">
 
 - 화면 중앙에는 카드의 이미지가 있으며, 카드 이름과 카드사가 표시되어 있습니다.
 - '신청하러 가기', '오프라인 매장 보기', '후기 보기' 버튼이 있어 사용자에게 추가적인 행동을 유도합니다.
